@@ -18,10 +18,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
-import frc.robot.Constants;
-import frc.robot.Constants.DT_PIDF;
-import frc.robot.Constants.DT_Settings;
-import frc.robot.Constants.TechnicalConstants;
+import frc.robot.util.Constants;
+import frc.robot.util.Constants.DT_PIDF;
+import frc.robot.util.Constants.DT_Settings;
+import frc.robot.util.Constants.TechnicalConstants;
 
 /** Add your docs here. */
 public class SubDriveTrain {
@@ -30,8 +30,6 @@ public class SubDriveTrain {
         private final WPI_TalonFX LEFT_BACK;
         private final WPI_TalonFX RIGHT_FRONT;
         private final WPI_TalonFX RIGHT_BACK;
-
-        // private final GYRO GYROSCOPE;
 
         // private final WPI_GYRO GYROSCOPE;
         private final DifferentialDriveKinematics KINEMATICS;
@@ -60,6 +58,14 @@ public class SubDriveTrain {
                         Constants.DT_PIDF.VELOCITY_GAIN,
                         Constants.DT_PIDF.ACCELERATION_GAIN);
 
+        /**
+         * 
+         * @param leftFront
+         * @param leftBack
+         * @param rightFront
+         * @param rightBack
+         * @param gyro
+         */
         public SubDriveTrain(int leftFront, int leftBack, int rightFront, int rightBack, int gyro) {
                 // Instance devices
                 this.LEFT_FRONT = new WPI_TalonFX(leftFront);

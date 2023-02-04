@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.util.Constants;
 
 /** Add your docs here. */
 public class IO {
@@ -21,27 +22,73 @@ public class IO {
             return Math.pow(joyDeadband(driver.getRightX()), 2) * Math.signum(driver.getRightX());
         }
 
-        public static boolean getRightTrigger() {return driver.getRightTriggerAxis() > 0.1;}
-        public static boolean getLeftTrigger() {return driver.getLeftTriggerAxis() > 0.1;}
-        public static boolean getLeftBumper(){return driver.getLeftBumper();}
-        public static boolean getRightBumper(){return driver.getRightBumper();}
-        public static boolean getButtonA() {return driver.getAButton();}
-        public static boolean getButtonB() {return driver.getBButton();}
-        public static boolean getButtonX() {return driver.getXButton();}
-        public static boolean getButtonY() {return driver.getYButton();}
+        public static boolean getRightTrigger() {
+            return driver.getRightTriggerAxis() > 0.1;
+        }
+
+        public static boolean getLeftTrigger() {
+            return driver.getLeftTriggerAxis() > 0.1;
+        }
+
+        public static boolean getLeftBumper() {
+            return driver.getLeftBumper();
+        }
+
+        public static boolean getRightBumper() {
+            return driver.getRightBumper();
+        }
+
+        public static boolean getButtonA() {
+            return driver.getAButton();
+        }
+
+        public static boolean getButtonB() {
+            return driver.getBButton();
+        }
+
+        public static boolean getButtonX() {
+            return driver.getXButton();
+        }
+
+        public static boolean getButtonY() {
+            return driver.getYButton();
+        }
     }
 
     public static class Operator {
         private static final XboxController operator = new XboxController(1);
 
-        public static boolean getRightTrigger() {return operator.getRightTriggerAxis() > 0.1;}
-        public static boolean getLeftTrigger() {return operator.getLeftTriggerAxis() > 0.1;}
-        public static boolean getLeftBumper(){return operator.getLeftBumper();}
-        public static boolean getRightBumper(){return operator.getRightBumper();}
-        public static boolean getButtonA() {return operator.getAButton();}
-        public static boolean getButtonB() {return operator.getBButton();}
-        public static boolean getButtonX() {return operator.getXButton();}
-        public static boolean getButtonY() {return operator.getYButton();}
+        public static boolean getRightTrigger() {
+            return operator.getRightTriggerAxis() > 0.1;
+        }
+
+        public static boolean getLeftTrigger() {
+            return operator.getLeftTriggerAxis() > 0.1;
+        }
+
+        public static boolean getLeftBumper() {
+            return operator.getLeftBumper();
+        }
+
+        public static boolean getRightBumper() {
+            return operator.getRightBumper();
+        }
+
+        public static boolean getButtonA() {
+            return operator.getAButton();
+        }
+
+        public static boolean getButtonB() {
+            return operator.getBButton();
+        }
+
+        public static boolean getButtonX() {
+            return operator.getXButton();
+        }
+
+        public static boolean getButtonY() {
+            return operator.getYButton();
+        }
     }
 
     /*
