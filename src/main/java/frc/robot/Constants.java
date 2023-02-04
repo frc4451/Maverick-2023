@@ -10,10 +10,10 @@ public class Constants {
     public static class RioPortMaps {
 
         // Drive Train
-        public static final int DT_LEFT_BACK = 0;
-        public static final int DT_RIGHT_BACK = 1;
         public static final int DT_LEFT_FRONT = 2;
+        public static final int DT_LEFT_BACK = 0;
         public static final int DT_RIGHT_FRONT = 3;
+        public static final int DT_RIGHT_BACK = 1;
         // Gyro(s)
         public static final int GYRO_NAME = 0;
         // Intake
