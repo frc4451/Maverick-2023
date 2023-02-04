@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    chooser.setDefaultOption("Default Auto", DEFAULT_AUTO);
     chooser.addOption("Auto 1", AUTO_ONE);
     chooser.addOption("Auto 2", AUTO_TWO);
     chooser.addOption("Auto 3", AUTO_THREE);

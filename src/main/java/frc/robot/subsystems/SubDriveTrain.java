@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -31,7 +33,7 @@ public class SubDriveTrain {
         private final WPI_TalonFX RIGHT_FRONT;
         private final WPI_TalonFX RIGHT_BACK;
 
-        // private final WPI_GYRO GYROSCOPE;
+        private final WPI_PigeonIMU GYROSCOPE;
         private final DifferentialDriveKinematics KINEMATICS;
         private final DifferentialDrivePoseEstimator ODOMETRY;
 
@@ -72,6 +74,7 @@ public class SubDriveTrain {
                 this.LEFT_BACK = new WPI_TalonFX(leftBack);
                 this.RIGHT_FRONT = new WPI_TalonFX(rightFront);
                 this.RIGHT_BACK = new WPI_TalonFX(rightBack);
+                this.GYROSCOPE = new WPI_PigeonIMU(gyro)
                 this.KINEMATICS = new DifferentialDriveKinematics(
                                 TechnicalConstants.DT_WIDTH);
                 this.ODOMETRY = new DifferentialDrivePoseEstimator(
