@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.util;
+package frc.robot;
 
 /** Add your docs here. */
 public class Constants {
@@ -17,7 +17,12 @@ public class Constants {
         // Gyro(s)
         public static final int GYRO = 0;
         // Intake
-
+        public static final int TOP_INTAKE = 6;
+        public static final int BOTTOM_INTAKE = 7;
+        // Arm
+        public static final int PIVOT = 4;
+        public static final int EXTEND = 5;
+        public static final int ARM_SOLENOID = 0;
     }
 
     public static class DT_Settings {
@@ -63,6 +68,43 @@ public class Constants {
          * report to DS if action fails.
          */
         public static final int TIMEOUT_MS = 30;
+    }
+
+    // Intake Settings
+    public static class Intake_Settings {
+        public static final double CUBE_PERCENT = 0.35;
+        public static final double CONE_PERCENT = 0.50;
+        public static final double REVERSE = -0.75;
+    }
+
+    // Arm Settings
+    public static class ARM_Settings {
+        public static final double PIVOT_ACCELERATION = 5000.0;
+        public static final double PIVOT_CRUISECONTROL = 5000.0;
+        public static final double EXTEND_ACCELERATION = 15_000.0;
+        public static final double EXTEND_CRUISECONTROL = 15_000.0;
+
+        public static final double EXTEND_MAX = 200_000;
+        public static final double EXTEND_MIN = 15_500; // soft 0
+        public static final double EXTEND_HARD_LIMIT = 0;
+    }
+
+    // Arm PID
+    public static class ARM_PIDF {
+        public static final double PIVOT_PG = 0.3; // proportional
+        public static final double PIVOT_IG = 0.0; // integral
+        public static final double PIVOT_DG = 0.0; // derivative
+        public static final double PIVOT_F = 1023.0 / 20300.0; // feedforward
+
+        public static final double EXTEND_PG = 0.3; // proportional
+        public static final double EXTEND_IG = 0.0; // integral
+        public static final double EXTEND_DG = 0.0; // derivative
+        public static final double EXTEND_F = 1023.0 / 20300.0; // feedforward
+
+        public static final int ARM_PID_SLOT_INDEX = 0;
+        public static final int ARM_PID_LOOP_INDEX = 0;
+        public static final int ARM_TIMEOUT_MS = 30;
+
     }
 
     public static class Autonomous {

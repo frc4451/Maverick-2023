@@ -20,10 +20,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
-import frc.robot.util.Constants;
-import frc.robot.util.Constants.DT_PIDF;
-import frc.robot.util.Constants.DT_Settings;
-import frc.robot.util.Constants.TechnicalConstants;
+import frc.robot.Constants;
+import frc.robot.Constants.DT_PIDF;
+import frc.robot.Constants.DT_Settings;
+import frc.robot.Constants.TechnicalConstants;
 
 /** Add your docs here. */
 public class SubDriveTrain {

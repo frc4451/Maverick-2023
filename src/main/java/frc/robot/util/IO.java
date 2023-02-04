@@ -2,10 +2,10 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc.robot.util;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.util.Constants;
+import frc.robot.Constants;
 
 /** Add your docs here. */
 public class IO {
@@ -18,8 +18,16 @@ public class IO {
             return Math.pow(joyDeadband(driver.getLeftY()), 2) * Math.signum(driver.getLeftY());
         }
 
+        public static double getRightY() {
+            return Math.pow(joyDeadband(driver.getRightY()), 2) * Math.signum(driver.getLeftY());
+        }
+
         public static double getRightX() {
             return Math.pow(joyDeadband(driver.getRightX()), 2) * Math.signum(driver.getRightX());
+        }
+
+        public static boolean getRightStickButton() {
+            return driver.getRightStickButton();
         }
 
         public static boolean getRightTrigger() {
@@ -52,6 +60,10 @@ public class IO {
 
         public static boolean getButtonY() {
             return driver.getYButton();
+        }
+
+        public static boolean getStartButton() {
+            return driver.getStartButton();
         }
     }
 

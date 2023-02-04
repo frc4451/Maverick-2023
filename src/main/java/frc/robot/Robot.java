@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoContainer;
+import frc.robot.trajectories.TrajectoryContainer;
+import frc.robot.util.IO;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -118,6 +121,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     RobotContainer.driveTrain.resetGyro();
+    RobotContainer.arm.resetArmEncoders();
   }
 
   /** This function is called periodically during operator control. */
@@ -127,6 +131,22 @@ public class Robot extends TimedRobot {
     if (IO.Driver.getButtonB()) {
       RobotContainer.driveTrain.balanceChargeStation();
     }
+
+    if ((IO.Driver.getRightY() > 0) || (IO.Driver.getRightY() <= 0)) {
+      RobotContainer.arm.runArmExtend(-IO.Driver.getRightY(), IO.Driver.getRightStickButton());
+    } else {
+      RobotContainer.arm.runArmExtend(0.0, false);
+    }
+    if (IO.Driver.getButtonA()) {
+      RobotContainer.arm.runExtendMotionMagic(100_000);
+    } else if (IO.Driver.getButtonY()) {
+      RobotContainer.arm.runExtendMotionMagic(Constants.ARM_Settings.EXTEND_MIN);
+    }
+    if (IO.Driver.getStartButton()) {
+      RobotContainer.arm.resetArmEncoders();
+    }
+    RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
+
   }
 
   /** This function is called once when the robot is disabled. */
@@ -137,6 +157,32 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
+    if (IO.Driver.getButtonY()) {
+      switch (autoSelected) {
+        case AUTO_ONE:
+          RobotContainer.field.getObject("Trajectory 1").setTrajectory(TrajectoryContainer.trajectory1_1);
+          RobotContainer.field.getObject("Trajectory 2").setTrajectory(TrajectoryContainer.trajectory1_2);
+          RobotContainer.driveTrain.resetNavigation(TrajectoryContainer.trajectory1_1.getInitialPose());
+          break;
+        case AUTO_TWO:
+          RobotContainer.field.getObject("Trajectory 1").setTrajectory(TrajectoryContainer.trajectory3);
+          RobotContainer.field.getObject("Trajectory 2").setTrajectory(new Trajectory());
+          RobotContainer.driveTrain.resetNavigation(TrajectoryContainer.trajectory3.getInitialPose());
+          break;
+        case AUTO_THREE:
+          RobotContainer.field.getObject("Trajectory 1").setTrajectory(TrajectoryContainer.charge);
+          RobotContainer.field.getObject("Trajectory 2").setTrajectory(new Trajectory());
+          RobotContainer.driveTrain.resetNavigation(TrajectoryContainer.charge.getInitialPose());
+          break;
+
+        case DEFAULT_AUTO:
+        default:
+          RobotContainer.field.getObject("Trajectory 1").setTrajectory(new Trajectory());
+          RobotContainer.field.getObject("Trajectory 2").setTrajectory(new Trajectory());
+          RobotContainer.driveTrain.resetNavigation();
+          break;
+      }
+    }
   }
 
   /** This function is called once when test mode is enabled. */
