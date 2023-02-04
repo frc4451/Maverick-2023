@@ -45,11 +45,11 @@ public class AutoContainer {
             ChassisSpeeds refChassisSpeeds = RobotContainer.driveTrain.ramseteCalculate(desiredPose);
 
             // Set the linear and angular speeds.
-            RobotContainer.driveTrain.kinematicDrive(
+            RobotContainer.driveTrain.drive(
                     refChassisSpeeds.vxMetersPerSecond,
                     refChassisSpeeds.omegaRadiansPerSecond);
         } else {
-            RobotContainer.driveTrain.kinematicDrive(0, 0);
+            RobotContainer.driveTrain.drive(0, 0);
             autoStep = nextAutoStep;
         }
     }

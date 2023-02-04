@@ -12,9 +12,9 @@ import frc.robot.subsystems.SubDriveTrain;
 /** Add your docs here. */
 public class RobotContainer {
 
-    public static final SubDriveTrain driveTrain = new SubDriveTrain(Constants.RioPortMaps.DT_LEFT_FRONT,
-            Constants.RioPortMaps.DT_LEFT_BACK, Constants.RioPortMaps.DT_RIGHT_FRONT,
-            Constants.RioPortMaps.DT_RIGHT_BACK, Constants.RioPortMaps.GYRO);
+    public static final SubDriveTrain driveTrain = new SubDriveTrain(Constants.RioPortMaps.LEFT_BACK_DRIVETRAIN,
+            Constants.RioPortMaps.RIGHT_BACK_DRIVETRAIN, Constants.RioPortMaps.RIGHT_FRONT_DRIVETRAIN,
+            Constants.RioPortMaps.RIGHT_BACK_DRIVETRAIN, Constants.RioPortMaps.GYRO);
     public static final SubArm arm = new SubArm(RioPortMaps.PIVOT,
             Constants.RioPortMaps.EXTEND);
 

@@ -11,10 +11,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants;
-import frc.robot.Constants.Intake_Settings;
+import frc.robot.Constants.IntakeSettings;
 import frc.robot.Constants.ARM_PIDF;
 import frc.robot.Constants.ARM_Settings;
-import frc.robot.util.IO;
 
 /** Add your docs here. */
 public class SubArm {
