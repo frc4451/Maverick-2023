@@ -1,5 +1,6 @@
 package frc.robot;
 
+// TODO: Update Constants for Maverick
 public class Constants {
     public static class Auto {
         // beta and zeta are largely robot independent
@@ -132,10 +133,9 @@ public class Constants {
         public static final double EXTEND_DG = 0.0; // derivative
         public static final double EXTEND_F = 1023.0 / 20300.0; // feedforward
 
-        public static final int ARM_PID_SLOT_INDEX = 0;
-        public static final int ARM_PID_LOOP_INDEX = 0;
-        public static final int ARM_TIMEOUT_MS = 30;
-
+        public static final int PID_SLOT_INDEX = 0;
+        public static final int PID_LOOP_INDEX = 0;
+        public static final int TIMEOUT_MS = 30;
     }
 
     public static class TechnicalConstants {
@@ -160,7 +160,8 @@ public class Constants {
          * This constant is used to translate Falcon speed readings into encoder counts
          * per 100ms to meters per second
          */
-        public static final double TICKS_PER_DECI_SECOND_TO_METERS_PER_SECOND = METERS_PER_MOTOR_ROTATION / FALCON_TICKS * 10;
+        public static final double TICKS_PER_DECI_SECOND_TO_METERS_PER_SECOND = METERS_PER_MOTOR_ROTATION / FALCON_TICKS
+                * 10;
     }
 
     public static class Misc {

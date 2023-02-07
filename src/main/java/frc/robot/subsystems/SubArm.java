@@ -43,45 +43,45 @@ public class SubArm {
         // MotionMagic PIDF
         this.PIVOT.configSelectedFeedbackSensor(
                 FeedbackDevice.IntegratedSensor,
-                ARM_PIDF.ARM_PID_LOOP_INDEX,
-                ARM_PIDF.ARM_TIMEOUT_MS);
+                ARM_PIDF.PID_LOOP_INDEX,
+                ARM_PIDF.TIMEOUT_MS);
         this.PIVOT.config_kP(
-                ARM_PIDF.ARM_PID_LOOP_INDEX,
+                ARM_PIDF.PID_LOOP_INDEX,
                 ARM_PIDF.PIVOT_PG,
-                ARM_PIDF.ARM_TIMEOUT_MS);
+                ARM_PIDF.TIMEOUT_MS);
         this.PIVOT.config_kI(
-                ARM_PIDF.ARM_PID_LOOP_INDEX,
+                ARM_PIDF.PID_LOOP_INDEX,
                 ARM_PIDF.PIVOT_IG,
-                ARM_PIDF.ARM_TIMEOUT_MS);
+                ARM_PIDF.TIMEOUT_MS);
         this.PIVOT.config_kD(
-                ARM_PIDF.ARM_PID_LOOP_INDEX,
+                ARM_PIDF.PID_LOOP_INDEX,
                 ARM_PIDF.PIVOT_DG,
-                ARM_PIDF.ARM_TIMEOUT_MS);
+                ARM_PIDF.TIMEOUT_MS);
         this.PIVOT.config_kF(
-                ARM_PIDF.ARM_PID_LOOP_INDEX,
+                ARM_PIDF.PID_LOOP_INDEX,
                 ARM_PIDF.PIVOT_F,
-                ARM_PIDF.ARM_TIMEOUT_MS);
+                ARM_PIDF.TIMEOUT_MS);
 
         this.EXTEND.configSelectedFeedbackSensor(
                 FeedbackDevice.IntegratedSensor,
-                ARM_PIDF.ARM_PID_LOOP_INDEX,
-                ARM_PIDF.ARM_TIMEOUT_MS);
+                ARM_PIDF.PID_LOOP_INDEX,
+                ARM_PIDF.TIMEOUT_MS);
         this.EXTEND.config_kP(
-                ARM_PIDF.ARM_PID_LOOP_INDEX,
+                ARM_PIDF.PID_LOOP_INDEX,
                 ARM_PIDF.EXTEND_PG,
-                ARM_PIDF.ARM_TIMEOUT_MS);
+                ARM_PIDF.TIMEOUT_MS);
         this.EXTEND.config_kI(
-                ARM_PIDF.ARM_PID_LOOP_INDEX,
+                ARM_PIDF.PID_LOOP_INDEX,
                 ARM_PIDF.EXTEND_IG,
-                ARM_PIDF.ARM_TIMEOUT_MS);
+                ARM_PIDF.TIMEOUT_MS);
         this.EXTEND.config_kD(
-                ARM_PIDF.ARM_PID_LOOP_INDEX,
+                ARM_PIDF.PID_LOOP_INDEX,
                 ARM_PIDF.EXTEND_DG,
-                ARM_PIDF.ARM_TIMEOUT_MS);
+                ARM_PIDF.TIMEOUT_MS);
         this.EXTEND.config_kF(
-                ARM_PIDF.ARM_PID_LOOP_INDEX,
+                ARM_PIDF.PID_LOOP_INDEX,
                 ARM_PIDF.EXTEND_F,
-                ARM_PIDF.ARM_TIMEOUT_MS);
+                ARM_PIDF.TIMEOUT_MS);
     }
 
     // run PercentOutput

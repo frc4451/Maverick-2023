@@ -11,95 +11,95 @@ import frc.robot.Constants;
 public class IO {
 
     public static class Driver {
-        private static final XboxController driver = new XboxController(0);
+        private static final XboxController controller = new XboxController(0);
 
         // Joysticks
         public static double getLeftY() {
-            return Math.pow(joyDeadband(driver.getLeftY()), 2) * Math.signum(driver.getLeftY());
+            return Math.pow(joyDeadband(controller.getLeftY()), 2) * Math.signum(controller.getLeftY());
         }
 
         public static double getRightY() {
-            return Math.pow(joyDeadband(driver.getRightY()), 2) * Math.signum(driver.getLeftY());
+            return Math.pow(joyDeadband(controller.getRightY()), 2) * Math.signum(controller.getLeftY());
         }
 
         public static double getRightX() {
-            return Math.pow(joyDeadband(driver.getRightX()), 2) * Math.signum(driver.getRightX());
+            return Math.pow(joyDeadband(controller.getRightX()), 2) * Math.signum(controller.getRightX());
         }
 
         public static boolean getRightStickButton() {
-            return driver.getRightStickButton();
+            return controller.getRightStickButton();
         }
 
         public static boolean getRightTrigger() {
-            return driver.getRightTriggerAxis() > 0.1;
+            return controller.getRightTriggerAxis() > 0.1;
         }
 
         public static boolean getLeftTrigger() {
-            return driver.getLeftTriggerAxis() > 0.1;
+            return controller.getLeftTriggerAxis() > 0.1;
         }
 
         public static boolean getLeftBumper() {
-            return driver.getLeftBumper();
+            return controller.getLeftBumper();
         }
 
         public static boolean getRightBumper() {
-            return driver.getRightBumper();
+            return controller.getRightBumper();
         }
 
         public static boolean getButtonA() {
-            return driver.getAButton();
+            return controller.getAButton();
         }
 
         public static boolean getButtonB() {
-            return driver.getBButton();
+            return controller.getBButton();
         }
 
         public static boolean getButtonX() {
-            return driver.getXButton();
+            return controller.getXButton();
         }
 
         public static boolean getButtonY() {
-            return driver.getYButton();
+            return controller.getYButton();
         }
 
         public static boolean getStartButton() {
-            return driver.getStartButton();
+            return controller.getStartButton();
         }
     }
 
     public static class Operator {
-        private static final XboxController operator = new XboxController(1);
+        private static final XboxController controller = new XboxController(1);
 
         public static boolean getRightTrigger() {
-            return operator.getRightTriggerAxis() > 0.1;
+            return controller.getRightTriggerAxis() > 0.1;
         }
 
         public static boolean getLeftTrigger() {
-            return operator.getLeftTriggerAxis() > 0.1;
+            return controller.getLeftTriggerAxis() > 0.1;
         }
 
         public static boolean getLeftBumper() {
-            return operator.getLeftBumper();
+            return controller.getLeftBumper();
         }
 
         public static boolean getRightBumper() {
-            return operator.getRightBumper();
+            return controller.getRightBumper();
         }
 
         public static boolean getButtonA() {
-            return operator.getAButton();
+            return controller.getAButton();
         }
 
         public static boolean getButtonB() {
-            return operator.getBButton();
+            return controller.getBButton();
         }
 
         public static boolean getButtonX() {
-            return operator.getXButton();
+            return controller.getXButton();
         }
 
         public static boolean getButtonY() {
-            return operator.getYButton();
+            return controller.getYButton();
         }
     }
 
