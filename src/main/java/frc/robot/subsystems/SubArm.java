@@ -11,9 +11,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants;
-import frc.robot.Constants.IntakeSettings;
+import frc.robot.Constants.Intake_Settings;
 import frc.robot.Constants.ARM_PIDF;
-import frc.robot.Constants.ARM_Settings;
+import frc.robot.Constants.Arm_Settings;
 
 /** Add your docs here. */
 public class SubArm {
@@ -25,7 +25,7 @@ public class SubArm {
     public SubArm(int pivot, int extend/* , int claw */) {
         this.PIVOT = new WPI_TalonFX(pivot);
         this.EXTEND = new WPI_TalonFX(extend);
-        // CLAW = new Solenoid(PneumaticsModuleType.CTREPCM claw);
+        // this.CLAW = new Solenoid(PneumaticsModuleType.CTREPCM claw);
 
         this.PIVOT.configFactoryDefault();
         this.EXTEND.configFactoryDefault();
@@ -35,10 +35,10 @@ public class SubArm {
 
         this.EXTEND.setInverted(true);
         // motion profile settings
-        this.PIVOT.configMotionCruiseVelocity(ARM_Settings.PIVOT_CRUISECONTROL);
-        this.PIVOT.configMotionAcceleration(ARM_Settings.PIVOT_ACCELERATION);
-        this.EXTEND.configMotionCruiseVelocity(ARM_Settings.EXTEND_CRUISECONTROL);
-        this.EXTEND.configMotionAcceleration(ARM_Settings.EXTEND_ACCELERATION);
+        this.PIVOT.configMotionCruiseVelocity(Arm_Settings.PIVOT_CRUISECONTROL);
+        this.PIVOT.configMotionAcceleration(Arm_Settings.PIVOT_ACCELERATION);
+        this.EXTEND.configMotionCruiseVelocity(Arm_Settings.EXTEND_CRUISECONTROL);
+        this.EXTEND.configMotionAcceleration(Arm_Settings.EXTEND_ACCELERATION);
 
         // MotionMagic PIDF
         this.PIVOT.configSelectedFeedbackSensor(
@@ -92,9 +92,9 @@ public class SubArm {
     public void runArmExtend(double percentValue, boolean override) {
         if (override) {
             EXTEND.set(ControlMode.PercentOutput, percentValue);
-        } else if ((Math.signum(percentValue) == 1) && (getExtendPosition() <= Constants.ARM_Settings.EXTEND_MAX)) {
+        } else if ((Math.signum(percentValue) == 1) && (getExtendPosition() <= Constants.Arm_Settings.EXTEND_MAX)) {
             EXTEND.set(ControlMode.PercentOutput, percentValue);
-        } else if (Math.signum(percentValue) == -1 && (getExtendPosition() >= Constants.ARM_Settings.EXTEND_MIN)) {
+        } else if (Math.signum(percentValue) == -1 && (getExtendPosition() >= Constants.Arm_Settings.EXTEND_MIN)) {
             EXTEND.set(ControlMode.PercentOutput, percentValue);
         } else {
             EXTEND.set(ControlMode.PercentOutput, 0.0);
@@ -102,7 +102,7 @@ public class SubArm {
     }
 
     public void runArmRetraction(double percentValue) {
-        if (Math.signum(percentValue) == -1 && (getExtendPosition() >= Constants.ARM_Settings.EXTEND_MIN)) {
+        if (Math.signum(percentValue) == -1 && (getExtendPosition() >= Constants.Arm_Settings.EXTEND_MIN)) {
             EXTEND.set(ControlMode.PercentOutput, percentValue);
         } else {
             EXTEND.set(ControlMode.PercentOutput, 0.0);

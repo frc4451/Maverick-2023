@@ -15,27 +15,22 @@ public class Constants {
         public static final int RIGHT_BACK_DRIVETRAIN = 1;
         public static final int LEFT_FRONT_DRIVETRAIN = 2;
         public static final int RIGHT_FRONT_DRIVETRAIN = 3;
-        // Gyro (CAN ID)
-        public static final int GYRO = 0;
-        // Intake
-        public static final int TOP_INTAKE = 6;
-        public static final int BOTTOM_INTAKE = 7;
         // Arm
         public static final int PIVOT = 4;
         public static final int EXTEND = 5;
         public static final int ARM_SOLENOID = 0;
-        // Intakes
-        // public static final int FRONT_INTAKE_MOTOR = 0;
-        // public static final int BACK_INTAKE_MOTOR = 1;
-        // public static final int FRONT_INTAKE_SOLENOID = 7;
-        // public static final int BACK_INTAKE_SOLENOID = 6;
+        // Intake
+        public static final int TOP_INTAKE = 6;
+        public static final int BOTTOM_INTAKE = 7;
+        // Gyro (CAN ID)
+        public static final int GYRO = 0;
     }
 
     // Settings for arcade velocity drive
     public static class DT_Settings {
         public static final double TURN_SENSITIVITY = 0.65; // Joystick turn scaling factor for Curve Drive
         public static final double QUICK_TURN = 0.6; // Joystick turn scaling factor for QuickTurn Drive
-        public static final double MAX_VELOCITY = 6000.0; // Drive train max velocity encoder per 100ms
+        public static final double MAX_VELOCITY = 18_000.0; // Drive train max velocity encoder per 100ms
         public static final double MIN_BALANCE_VELOCITY = 1000.0; // Drive train min velocity when balancing
         public static final double MAX_BALANCE_VELOCITY = 6000.0; // Drive train max velocity when balancing
         public static final double RAMP_RATE_SECS = 0.5; // Drive train ramp rate in velocity control
@@ -103,14 +98,20 @@ public class Constants {
     }
 
     // Intake Settings
-    public static class IntakeSettings {
-        public static final double CUBE_PERCENT = 0.35;
-        public static final double CONE_PERCENT = 0.50;
+    public static class Intake_Settings {
+        public static final double INTAKE_SPEED = 0.625;
         public static final double REVERSE = -0.75;
+        public static final double PLATTER_SPEED = 2_000; // 0.1 in percentOutput
+        public static final double PLATTER_FF = 1023 / 20_300.0;
+        public static final double PLATTER_RAMP_RATE_SECS = 0.5;
+
+        public static final int PLATTER_PID_LOOP_INDEX = 0;
+
+        public static final int TIMEOUT_MS = 30;
     }
 
     // Arm Settings
-    public static class ARM_Settings {
+    public static class Arm_Settings {
         public static final double PIVOT_ACCELERATION = 5000.0;
         public static final double PIVOT_CRUISECONTROL = 5000.0;
         public static final double EXTEND_ACCELERATION = 15_000.0;
@@ -119,6 +120,8 @@ public class Constants {
         public static final double EXTEND_MAX = 200_000;
         public static final double EXTEND_MIN = 15_500; // soft 0
         public static final double EXTEND_HARD_LIMIT = 0;
+
+        public static final int TIMEOUT_MS = 30;
     }
 
     // Arm PID

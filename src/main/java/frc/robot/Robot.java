@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.hal.PowerDistributionJNI;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -73,6 +75,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Delta Speed Right-Left",
         RobotContainer.driveTrain.getRightSpeed() - RobotContainer.driveTrain.getLeftSpeed());
     SmartDashboard.putData("Field/Field", RobotContainer.field);
+    SmartDashboard.putNumber("Amp 0", RobotContainer.pdp.getCurrent(0));
+    SmartDashboard.putNumber("Amp 1", RobotContainer.pdp.getCurrent(1));
+    SmartDashboard.putNumber("Amp 14", RobotContainer.pdp.getCurrent(14));
+    SmartDashboard.putNumber("Amp 15", RobotContainer.pdp.getCurrent(15));
   }
 
   /**
@@ -140,7 +146,7 @@ public class Robot extends TimedRobot {
     if (IO.Driver.getButtonA()) {
       RobotContainer.arm.runExtendMotionMagic(100_000);
     } else if (IO.Driver.getButtonY()) {
-      RobotContainer.arm.runExtendMotionMagic(Constants.ARM_Settings.EXTEND_MIN);
+      RobotContainer.arm.runExtendMotionMagic(Constants.Arm_Settings.EXTEND_MIN);
     }
     if (IO.Driver.getStartButton()) {
       RobotContainer.arm.resetArmEncoders();

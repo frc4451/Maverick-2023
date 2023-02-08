@@ -88,8 +88,6 @@ public class SubDriveTrain {
         this.RIGHT_REAR = new WPI_TalonFX(rightRear);
         this.GYROSCOPE = new WPI_PigeonIMU(gyro1);
         this.MOTOR5 = new WPI_TalonFX(5);
-        // AUTODRIVE = new DifferentialDrive(LEFT_MOTORS, RIGHT_MOTORS);
-        this.MOTOR5.setNeutralMode(NeutralMode.Brake);
         // Kinematics
         // Kinematics translates drivetrain linear and angular speed to left / right
         // wheel speeds
