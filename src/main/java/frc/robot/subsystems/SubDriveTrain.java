@@ -314,8 +314,7 @@ public class SubDriveTrain {
     }
 
     public double getGyroPitch() {
-        // Temporary change for now because the Gyro is in the robot wrong
-        return this.GYROSCOPE.getRoll();
+        return this.GYROSCOPE.getPitch();
     }
 
     public double getGyroYaw() {
