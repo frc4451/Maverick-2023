@@ -9,9 +9,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants;
-import frc.robot.Constants.Intake_Settings;
 import frc.robot.Constants.ARM_PIDF;
 import frc.robot.Constants.Arm_Settings;
 

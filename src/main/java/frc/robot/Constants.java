@@ -31,8 +31,8 @@ public class Constants {
         public static final double TURN_SENSITIVITY = 0.65; // Joystick turn scaling factor for Curve Drive
         public static final double QUICK_TURN = 0.6; // Joystick turn scaling factor for QuickTurn Drive
         public static final double MAX_VELOCITY = 18_000.0; // Drive train max velocity encoder per 100ms
-        public static final double MIN_BALANCE_VELOCITY = 1000.0; // Drive train min velocity when balancing
-        public static final double MAX_BALANCE_VELOCITY = 6000.0; // Drive train max velocity when balancing
+        public static final double MIN_BALANCE_VELOCITY = 2000.0; // Drive train min velocity when balancing
+        public static final double MAX_BALANCE_VELOCITY = 2000.0; // Drive train max velocity when balancing
         public static final double RAMP_RATE_SECS = 0.5; // Drive train ramp rate in velocity control
         /*
          * NOTE: Ramp rate - in seconds - is the time it takes for the output to go from
@@ -149,15 +149,15 @@ public class Constants {
         public static final double FALCON_TICKS = 2048;
 
         // DRIVE TRAIN INFO
-        public static final double DRIVE_TRAIN_GEAR_RATIO = 72.0 / 625.0;
-        public static final double DRIVE_TRAIN_WIDTH = 0.8;
+        public static final double DRIVE_TRAIN_GEAR_RATIO = 1 / 9.8;
+        public static final double DRIVE_TRAIN_WIDTH = 0.7;
         // neither using manual or calculated
-        // .62 meters, measured trackwidth manually is meter
-        // .69282 calculated
+        // .56 meters, measured trackwidth manually is meter
+        // INF calculated
 
         // ODOMETRY CONSTANTS
         // 2 * INCHES_TO_METER is wheel radius in meters
-        public static final double METERS_PER_MOTOR_ROTATION = DRIVE_TRAIN_GEAR_RATIO * (2 * INCHES_TO_METERS) * TAU;
+        public static final double METERS_PER_MOTOR_ROTATION = DRIVE_TRAIN_GEAR_RATIO * (3 * INCHES_TO_METERS) * TAU;
         public static final double METERS_PER_TICK = METERS_PER_MOTOR_ROTATION / FALCON_TICKS;
         /*
          * This constant is used to translate Falcon speed readings into encoder counts

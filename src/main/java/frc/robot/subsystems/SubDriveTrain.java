@@ -37,7 +37,6 @@ public class SubDriveTrain {
     private final WPI_TalonFX LEFT_REAR;
     private final WPI_TalonFX RIGHT_REAR;
     private final WPI_PigeonIMU GYROSCOPE;
-    private final WPI_TalonFX MOTOR5;
 
     private final DifferentialDriveKinematics KINEMATICS;
     private final DifferentialDrivePoseEstimator ODOMETRY;
@@ -87,7 +86,6 @@ public class SubDriveTrain {
         this.RIGHT_FRONT = new WPI_TalonFX(rightFront);
         this.RIGHT_REAR = new WPI_TalonFX(rightRear);
         this.GYROSCOPE = new WPI_PigeonIMU(gyro1);
-        this.MOTOR5 = new WPI_TalonFX(5);
         // Kinematics
         // Kinematics translates drivetrain linear and angular speed to left / right
         // wheel speeds
@@ -253,22 +251,6 @@ public class SubDriveTrain {
 
         LEFT_FRONT.set(ControlMode.PercentOutput, leftVolts / RobotController.getBatteryVoltage());
         RIGHT_FRONT.set(ControlMode.PercentOutput, rightVolts / RobotController.getBatteryVoltage());
-    }
-
-    double error;
-    double adjust;
-
-    // I believe error and adjust could be moved into this function but not sure
-    public void rotateInPlace(boolean rotateButton, double rotateTo) {
-        if (rotateButton) {
-            double error = rotateTo - this.getGyroAngle();
-            if (error > 1.0) {
-                adjust = DT_PIDF.ROTATE_PG * error + DT_PIDF.ROTATE_FRICTION;
-            } else if (error < 1.0) {
-                adjust = DT_PIDF.ROTATE_PG * error - DT_PIDF.ROTATE_FRICTION;
-            }
-            this.runDrive(0, adjust, true);
-        }
     }
 
     public void runMotionMagic(double targetDistanceL, double targetDistanceR) {
@@ -446,7 +428,7 @@ public class SubDriveTrain {
         double left;
         double right;
 
-        if (Math.abs(pitch) < 2) { // Between -2 and 2
+        if (Math.abs(pitch) < 5) { // Between -2 and 2
             left = 0;
             right = 0;
         } else {
@@ -472,4 +454,21 @@ public class SubDriveTrain {
         this.LEFT_FRONT.set(ControlMode.Velocity, left);
         this.RIGHT_FRONT.set(ControlMode.Velocity, right);
     }
+
+    public void setNeutralMode(String mode) {
+        if (mode == "Coast") {
+            this.LEFT_FRONT.setNeutralMode(NeutralMode.Coast);
+            this.LEFT_REAR.setNeutralMode(NeutralMode.Coast);
+            this.RIGHT_FRONT.setNeutralMode(NeutralMode.Coast);
+            this.RIGHT_REAR.setNeutralMode(NeutralMode.Coast);
+        } else if (mode == "Brake") {
+            this.LEFT_FRONT.setNeutralMode(NeutralMode.Brake);
+            this.LEFT_REAR.setNeutralMode(NeutralMode.Brake);
+            this.RIGHT_FRONT.setNeutralMode(NeutralMode.Brake);
+            this.RIGHT_REAR.setNeutralMode(NeutralMode.Brake);
+        } else {
+
+        }
+    }
+
 }

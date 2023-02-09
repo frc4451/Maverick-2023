@@ -4,9 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.hal.PowerDistributionJNI;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,6 +36,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    RobotContainer.driveTrain.resetNavigation();
     chooser.setDefaultOption("Default Auto", DEFAULT_AUTO);
     chooser.addOption("Auto 1", AUTO_ONE);
     chooser.addOption("Auto 2", AUTO_TWO);
@@ -75,10 +74,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Delta Speed Right-Left",
         RobotContainer.driveTrain.getRightSpeed() - RobotContainer.driveTrain.getLeftSpeed());
     SmartDashboard.putData("Field/Field", RobotContainer.field);
-    SmartDashboard.putNumber("Amp 0", RobotContainer.pdp.getCurrent(0));
-    SmartDashboard.putNumber("Amp 1", RobotContainer.pdp.getCurrent(1));
-    SmartDashboard.putNumber("Amp 14", RobotContainer.pdp.getCurrent(14));
-    SmartDashboard.putNumber("Amp 15", RobotContainer.pdp.getCurrent(15));
+    // SmartDashboard.putNumber("Amp 0", RobotContainer.pdp.getCurrent(0));
+    // SmartDashboard.putNumber("Amp 1", RobotContainer.pdp.getCurrent(1));
+    // SmartDashboard.putNumber("Amp 14", RobotContainer.pdp.getCurrent(14));
+    // SmartDashboard.putNumber("Amp 15", RobotContainer.pdp.getCurrent(15));
   }
 
   /**
@@ -116,6 +115,9 @@ public class Robot extends TimedRobot {
       case AUTO_TWO:
         AutoContainer.auto2();
         break;
+      case AUTO_THREE:
+        AutoContainer.auto3();
+        break;
 
       case DEFAULT_AUTO:
       default:
@@ -137,22 +139,12 @@ public class Robot extends TimedRobot {
     if (IO.Driver.getButtonB()) {
       RobotContainer.driveTrain.balanceChargeStation();
     }
-
-    if ((IO.Driver.getRightY() > 0) || (IO.Driver.getRightY() <= 0)) {
-      RobotContainer.arm.runArmExtend(-IO.Driver.getRightY(), IO.Driver.getRightStickButton());
-    } else {
-      RobotContainer.arm.runArmExtend(0.0, false);
+    if (IO.Driver.getButtonX()) {
+      RobotContainer.driveTrain.setNeutralMode("Brake");
     }
-    if (IO.Driver.getButtonA()) {
-      RobotContainer.arm.runExtendMotionMagic(100_000);
-    } else if (IO.Driver.getButtonY()) {
-      RobotContainer.arm.runExtendMotionMagic(Constants.Arm_Settings.EXTEND_MIN);
+    if (IO.Driver.getButtonY()) {
+      RobotContainer.driveTrain.setNeutralMode("Coast");
     }
-    if (IO.Driver.getStartButton()) {
-      RobotContainer.arm.resetArmEncoders();
-    }
-    RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
-
   }
 
   /** This function is called once when the robot is disabled. */
@@ -163,6 +155,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
+    autoSelected = chooser.getSelected();
+
     if (IO.Driver.getButtonY()) {
       switch (autoSelected) {
         case AUTO_ONE:
