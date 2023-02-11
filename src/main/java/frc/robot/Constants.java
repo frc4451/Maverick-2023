@@ -22,6 +22,7 @@ public class Constants {
         // Intake
         public static final int TOP_INTAKE = 6;
         public static final int BOTTOM_INTAKE = 7;
+        public static final int PLATTER = -1;
         // Gyro (CAN ID)
         public static final int GYRO = 0;
     }
