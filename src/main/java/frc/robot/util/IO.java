@@ -46,16 +46,16 @@ public class IO {
             return controller.getRightBumper();
         }
 
-        public static boolean getButtonA() {
-            return controller.getAButton();
+        public static boolean getButtonAPressed() {
+            return controller.getAButtonPressed();
         }
 
         public static boolean getButtonB() {
             return controller.getBButton();
         }
 
-        public static boolean getButtonX() {
-            return controller.getXButton();
+        public static boolean getButtonXPressed() {
+            return controller.getXButtonPressed();
         }
 
         public static boolean getButtonY() {

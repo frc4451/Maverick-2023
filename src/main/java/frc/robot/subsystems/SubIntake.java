@@ -12,7 +12,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import frc.robot.Constants;
 
-/** Add your docs here. */
 public class SubIntake {
 
     WPI_VictorSPX INTAKE_TOP;
@@ -47,16 +46,25 @@ public class SubIntake {
                 Constants.Intake_Settings.TIMEOUT_MS);
     }
 
+    /**
+     * 
+     * @param intakeMode
+     *                   "cube", "cone", "reverse"
+     */
     public void runIntake(String intakeMode) {
-        // if(button) {
-        INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
-        if (intakeMode == "Cone" || intakeMode == "Reverse")
-            INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
-        // }
-        // else {
-        // INTAKE_TOP.set(ControlMode.PercentOutput, 0.0);
-        // INTAKE_BOTTOM.set(ControlMode.PercentOutput, 0.0);
-        // }
+        switch (intakeMode) {
+            case "cone":
+                INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
+            case "cube":
+                INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
+                break;
+            case "reverse":
+                INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.REVERSE);
+                INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.REVERSE);
+                break;
+            default:
+                break;
+        }
     }
 
     public void stopIntake() {

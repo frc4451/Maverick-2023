@@ -135,16 +135,31 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    // Drive Train
     RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
+    // Balance
     if (IO.Driver.getButtonB()) {
       RobotContainer.driveTrain.balanceChargeStation();
     }
-    if (IO.Driver.getButtonX()) {
+    // Neutral Mode
+    if (IO.Driver.getButtonXPressed()) {
       RobotContainer.driveTrain.setNeutralMode("Brake");
-    }
-    if (IO.Driver.getButtonY()) {
+    } else if (IO.Driver.getButtonAPressed()) {
       RobotContainer.driveTrain.setNeutralMode("Coast");
     }
+
+    // Intake
+    if (IO.Driver.getRightBumper()) {
+      RobotContainer.intake.runIntake("Cube");
+    } else if (IO.Driver.getRightTrigger()) {
+      RobotContainer.intake.runIntake("Cone");
+    } else if (IO.Driver.getLeftTrigger()) {
+      RobotContainer.intake.runIntake("Reverse");
+    } else {
+      RobotContainer.intake.stopIntake();
+    }
+
+    //
   }
 
   /** This function is called once when the robot is disabled. */

@@ -455,19 +455,27 @@ public class SubDriveTrain {
         this.RIGHT_FRONT.set(ControlMode.Velocity, right);
     }
 
+    /**
+     * 
+     * @param mode
+     *             "Coast", "Brake"
+     */
     public void setNeutralMode(String mode) {
-        if (mode == "Coast") {
-            this.LEFT_FRONT.setNeutralMode(NeutralMode.Coast);
-            this.LEFT_REAR.setNeutralMode(NeutralMode.Coast);
-            this.RIGHT_FRONT.setNeutralMode(NeutralMode.Coast);
-            this.RIGHT_REAR.setNeutralMode(NeutralMode.Coast);
-        } else if (mode == "Brake") {
-            this.LEFT_FRONT.setNeutralMode(NeutralMode.Brake);
-            this.LEFT_REAR.setNeutralMode(NeutralMode.Brake);
-            this.RIGHT_FRONT.setNeutralMode(NeutralMode.Brake);
-            this.RIGHT_REAR.setNeutralMode(NeutralMode.Brake);
-        } else {
-
+        switch (mode) {
+            case "Coast":
+                this.LEFT_FRONT.setNeutralMode(NeutralMode.Coast);
+                this.LEFT_REAR.setNeutralMode(NeutralMode.Coast);
+                this.RIGHT_FRONT.setNeutralMode(NeutralMode.Coast);
+                this.RIGHT_REAR.setNeutralMode(NeutralMode.Coast);
+                break;
+            case "Brake":
+                this.LEFT_FRONT.setNeutralMode(NeutralMode.Brake);
+                this.LEFT_REAR.setNeutralMode(NeutralMode.Brake);
+                this.RIGHT_FRONT.setNeutralMode(NeutralMode.Brake);
+                this.RIGHT_REAR.setNeutralMode(NeutralMode.Brake);
+                break;
+            default:
+                break;
         }
     }
 

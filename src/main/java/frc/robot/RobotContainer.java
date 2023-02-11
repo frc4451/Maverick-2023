@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants.RioPortMaps;
 import frc.robot.subsystems.SubArm;
 import frc.robot.subsystems.SubDriveTrain;
+import frc.robot.subsystems.SubIntake;
 
 /** Add your docs here. */
 public class RobotContainer {
@@ -18,6 +19,8 @@ public class RobotContainer {
                         Constants.RioPortMaps.RIGHT_BACK_DRIVETRAIN, Constants.RioPortMaps.GYRO);
         public static final SubArm arm = new SubArm(RioPortMaps.PIVOT,
                         Constants.RioPortMaps.EXTEND);
+        public static final SubIntake intake = new SubIntake(RioPortMaps.TOP_INTAKE, RioPortMaps.BOTTOM_INTAKE,
+                        RioPortMaps.PLATTER);
 
         public static final Field2d field = new Field2d();
 
