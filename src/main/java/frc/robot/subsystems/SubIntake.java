@@ -40,11 +40,11 @@ public class SubIntake {
 
         this.INTAKE_TOP.setInverted(false);
         this.INTAKE_BOTTOM.setInverted(false);
-        // TODO: Why this no work?!
-        this.INTAKE_TOP.triggerThresholdCurrent(new SupplyCurrentLimitConfiguration(true,
+        // Ok this work now
+        this.INTAKE_TOP.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,
                 Constants.Intake_Settings.INTAKE_CURRENT_LIMIT, Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD,
                 Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD_TIME_SECONDS));
-        this.INTAKE_BOTTOM.triggerThresholdCurrent(new SupplyCurrentLimitConfiguration(true,
+        this.INTAKE_BOTTOM.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,
                 Constants.Intake_Settings.INTAKE_CURRENT_LIMIT, Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD,
                 Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD_TIME_SECONDS));
 
