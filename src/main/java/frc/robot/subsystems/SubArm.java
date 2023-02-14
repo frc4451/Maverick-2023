@@ -9,6 +9,8 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants;
 import frc.robot.Constants.ARM_PIDF;
 import frc.robot.Constants.Arm_Settings;
@@ -18,12 +20,14 @@ public class SubArm {
 
     private final WPI_TalonFX PIVOT;
     private final WPI_TalonFX EXTEND;
-    // private final Solenoid CLAW;
+    private final Solenoid EXTEND_BRAKE;
+    private final Solenoid CLAW;
 
-    public SubArm(int pivot, int extend/* , int claw */) {
+    public SubArm(int pivot, int extend, int extendBrake, int claw) {
         this.PIVOT = new WPI_TalonFX(pivot);
         this.EXTEND = new WPI_TalonFX(extend);
-        // this.CLAW = new Solenoid(PneumaticsModuleType.CTREPCM claw);
+        this.EXTEND_BRAKE = new Solenoid(PneumaticsModuleType.CTREPCM, extendBrake);
+        this.CLAW = new Solenoid(PneumaticsModuleType.CTREPCM, claw);
 
         this.PIVOT.configFactoryDefault();
         this.EXTEND.configFactoryDefault();
@@ -83,17 +87,23 @@ public class SubArm {
     }
 
     // run PercentOutput
-    public void runArmPivot(double percentValue) {
-        PIVOT.set(ControlMode.PercentOutput, percentValue);
+    public void runArmPivot(boolean run, double percentValue) {
+        if (run) {
+            PIVOT.set(ControlMode.PercentOutput, percentValue);
+        } else {
+            PIVOT.set(ControlMode.PercentOutput, 0);
+        }
     }
 
-    public void runArmExtend(double percentValue, boolean override) {
-        if (override) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
-        } else if ((Math.signum(percentValue) == 1) && (getExtendPosition() <= Constants.Arm_Settings.EXTEND_MAX)) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
-        } else if (Math.signum(percentValue) == -1 && (getExtendPosition() >= Constants.Arm_Settings.EXTEND_MIN)) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
+    public void runArmExtend(boolean run, double percentValue, boolean override) {
+        if (run) {
+            if (override) {
+                EXTEND.set(ControlMode.PercentOutput, percentValue);
+            } else if ((Math.signum(percentValue) == 1) && (getExtendPosition() <= Constants.Arm_Settings.EXTEND_MAX)) {
+                EXTEND.set(ControlMode.PercentOutput, percentValue);
+            } else if (Math.signum(percentValue) == -1 && (getExtendPosition() >= Constants.Arm_Settings.EXTEND_MIN)) {
+                EXTEND.set(ControlMode.PercentOutput, percentValue);
+            }
         } else {
             EXTEND.set(ControlMode.PercentOutput, 0.0);
         }

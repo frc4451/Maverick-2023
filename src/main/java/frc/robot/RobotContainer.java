@@ -14,13 +14,13 @@ import frc.robot.subsystems.SubIntake;
 /** Add your docs here. */
 public class RobotContainer {
 
-        public static final SubDriveTrain driveTrain = new SubDriveTrain(Constants.RioPortMaps.LEFT_FRONT_DRIVETRAIN,
-                        Constants.RioPortMaps.LEFT_BACK_DRIVETRAIN, Constants.RioPortMaps.RIGHT_FRONT_DRIVETRAIN,
-                        Constants.RioPortMaps.RIGHT_BACK_DRIVETRAIN, Constants.RioPortMaps.GYRO);
+        public static final SubDriveTrain driveTrain = new SubDriveTrain(RioPortMaps.LEFT_FRONT_DRIVETRAIN,
+                        RioPortMaps.LEFT_BACK_DRIVETRAIN, RioPortMaps.RIGHT_FRONT_DRIVETRAIN,
+                        RioPortMaps.RIGHT_BACK_DRIVETRAIN, RioPortMaps.GYRO);
         public static final SubArm arm = new SubArm(RioPortMaps.PIVOT,
-                        Constants.RioPortMaps.EXTEND);
+                        RioPortMaps.EXTEND, RioPortMaps.EXTENSION_BRAKE_SOLENOID, RioPortMaps.CLAW_SOLENOID);
         public static final SubIntake intake = new SubIntake(RioPortMaps.TOP_INTAKE, RioPortMaps.BOTTOM_INTAKE,
-                        RioPortMaps.PLATTER);
+                        RioPortMaps.INTAKE_SOLENOID_FORWARD, RioPortMaps.INTAKE_SOLENOID_REVERSE, RioPortMaps.PLATTER);
 
         public static final Field2d field = new Field2d();
 

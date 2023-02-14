@@ -15,14 +15,18 @@ public class Constants {
         public static final int RIGHT_BACK_DRIVETRAIN = 1;
         public static final int LEFT_FRONT_DRIVETRAIN = 2;
         public static final int RIGHT_FRONT_DRIVETRAIN = 3;
+        public static final int WHEEL_DROPDOWN_SOLENODD = 4;
         // Arm
         public static final int PIVOT = 4;
         public static final int EXTEND = 5;
-        public static final int ARM_SOLENOID = 0;
+        public static final int EXTENSION_BRAKE_SOLENOID = 2;
+        public static final int CLAW_SOLENOID = 3;
         // Intake
         public static final int TOP_INTAKE = 6;
         public static final int BOTTOM_INTAKE = 7;
         public static final int PLATTER = -1;
+        public static final int INTAKE_SOLENOID_FORWARD = 0;
+        public static final int INTAKE_SOLENOID_REVERSE = 1;
         // Gyro (CAN ID)
         public static final int GYRO = 0;
     }
@@ -100,9 +104,26 @@ public class Constants {
 
     // Intake Settings
     public static class Intake_Settings {
+        // Rollers
         public static final double INTAKE_SPEED = 0.625;
         public static final double REVERSE = -0.75;
-        public static final double PLATTER_SPEED = 2_000; // 0.1 in percentOutput
+        // Ripped docs from SupplyCurrentLimitConfiguration CTRE class
+        /**
+         * The "holding" current (amperes) to limit to when feature is activated.
+         */
+        public static final double INTAKE_CURRENT_LIMIT = 30.0;
+        /**
+         * Current must exceed this threshold (amperes) before limiting occurs.
+         * If this value is less than currentLimit, then currentLimit is used as the
+         * threshold.
+         */
+        public static final double INTAKE_CURRENT_THRESHOLD = 35.0;
+        /**
+         * How long current must exceed threshold (seconds) before limiting occurs.
+         */
+        public static final double INTAKE_CURRENT_THRESHOLD_TIME_SECONDS = 0.5;
+        // Platter
+        public static final double PLATTER_SPEED = 2_000; // equivalent to 0.1 in percentOutput
         public static final double PLATTER_FF = 1023 / 20_300.0;
         public static final double PLATTER_RAMP_RATE_SECS = 0.5;
 

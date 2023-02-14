@@ -142,11 +142,12 @@ public class Robot extends TimedRobot {
       RobotContainer.driveTrain.balanceChargeStation();
     }
     // Neutral Mode
-    if (IO.Driver.getButtonXPressed()) {
-      RobotContainer.driveTrain.setNeutralMode("Brake");
-    } else if (IO.Driver.getButtonAPressed()) {
-      RobotContainer.driveTrain.setNeutralMode("Coast");
-    }
+    // TODO: Give these proper buttons or something :shrug:
+    // if (IO.Driver.getButtonXPressed()) {
+    // RobotContainer.driveTrain.setNeutralMode("Brake");
+    // } else if (IO.Driver.getButtonAPressed()) {
+    // RobotContainer.driveTrain.setNeutralMode("Coast");
+    // }
 
     // Intake
     if (IO.Driver.getRightBumper()) {
@@ -158,8 +159,9 @@ public class Robot extends TimedRobot {
     } else {
       RobotContainer.intake.stopIntake();
     }
-
-    //
+    if (IO.Driver.getButtonAPressed()) {
+      RobotContainer.intake.toggleIntakeSolenoid();
+    }
   }
 
   /** This function is called once when the robot is disabled. */
