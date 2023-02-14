@@ -46,6 +46,10 @@ public class IO {
             return controller.getRightBumper();
         }
 
+        public static boolean getButtonA() {
+            return controller.getAButton();
+        }
+
         public static boolean getButtonAPressed() {
             return controller.getAButtonPressed();
         }
@@ -70,6 +74,23 @@ public class IO {
     public static class Operator {
         private static final XboxController controller = new XboxController(1);
 
+        // Joysticks
+        public static double getLeftY() {
+            return Math.pow(joyDeadband(controller.getLeftY()), 2) * Math.signum(controller.getLeftY());
+        }
+
+        public static double getRightY() {
+            return Math.pow(joyDeadband(controller.getRightY()), 2) * Math.signum(controller.getLeftY());
+        }
+
+        public static double getRightX() {
+            return Math.pow(joyDeadband(controller.getRightX()), 2) * Math.signum(controller.getRightX());
+        }
+
+        public static boolean getRightStickButton() {
+            return controller.getRightStickButton();
+        }
+
         public static boolean getRightTrigger() {
             return controller.getRightTriggerAxis() > 0.1;
         }
@@ -90,16 +111,24 @@ public class IO {
             return controller.getAButton();
         }
 
+        public static boolean getButtonAPressed() {
+            return controller.getAButtonPressed();
+        }
+
         public static boolean getButtonB() {
             return controller.getBButton();
         }
 
-        public static boolean getButtonX() {
-            return controller.getXButton();
+        public static boolean getButtonXPressed() {
+            return controller.getXButtonPressed();
         }
 
         public static boolean getButtonY() {
             return controller.getYButton();
+        }
+
+        public static boolean getStartButton() {
+            return controller.getStartButton();
         }
     }
 

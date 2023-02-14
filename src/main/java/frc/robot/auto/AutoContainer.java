@@ -96,14 +96,16 @@ public class AutoContainer {
                 setNavigationToTrajectoryStart(TrajectoryContainer.charge);
                 resetTimer();
                 autoStep = 1;
-                break;
+                break; // have a break have a kitkat
             case 1:
                 doTrajectory(TrajectoryContainer.charge, 2);
                 break;
             case 2:
-                // Cool balancing stuff here
+                RobotContainer.driveTrain.setBrakeMode();
+                autoStep = 3;
+                break;
+            case 3:
                 RobotContainer.driveTrain.balanceChargeStation();
-                // doTrajectory(TrajectoryContainer.charge, -1);
                 break;
         }
     }

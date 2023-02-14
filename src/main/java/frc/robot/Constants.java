@@ -6,6 +6,12 @@ public class Constants {
         // beta and zeta are largely robot independent
         public static final double BETA = 2.0;
         public static final double ZETA = 0.7;
+
+        public static final double MAX_BALANCE_VELOCITY = 1625.0;
+
+        public static final double BALANCE_PG = (1.0 / 15.0);
+        public static final double BALANCE_IG = 0.0;
+        public static final double BALANCE_DG = 0.0225;
     }
 
     // Addresses of all input / output devices

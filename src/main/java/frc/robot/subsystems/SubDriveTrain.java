@@ -43,6 +43,11 @@ public class SubDriveTrain {
 
     private final RamseteController RAMSETE = new RamseteController(Constants.Auto.BETA, Constants.Auto.ZETA);
 
+    private final PIDController BALANCE_CONTROLLER = new PIDController(
+            Constants.Auto.BALANCE_PG,
+            Constants.Auto.BALANCE_IG,
+            Constants.Auto.BALANCE_DG);
+
     // speed controllers
     private final PIDController LEFT_PID_CONTROLLER = new PIDController(
             Constants.DT_PIDF.LEFT_PG,
@@ -421,62 +426,39 @@ public class SubDriveTrain {
         return this.RAMSETE.calculate(this.getPose2d(), desiredPose);
     }
 
+    public void resetBalanceController() {
+        this.BALANCE_CONTROLLER.setSetpoint(0); // We want our pitch at 0 degrees
+        this.BALANCE_CONTROLLER.setTolerance(4); // We'll accept a pitch within degrees
+        this.BALANCE_CONTROLLER.reset();
+    }
+
+    public double getBalanceControllerOutput() {
+        return -RobotMath.clamp(BALANCE_CONTROLLER.calculate(this.getGyroPitch()), -1, 1);
+    }
+
     public void balanceChargeStation() {
-        final double pitch = this.getGyroPitch();
-        final double sign = Math.signum(pitch);
-
-        double left;
-        double right;
-
-        if (Math.abs(pitch) < 5) { // Between -2 and 2
-            left = 0;
-            right = 0;
-        } else {
-            left = DT_Settings.MAX_BALANCE_VELOCITY * (Math.abs(pitch) / 15);
-            right = DT_Settings.MAX_BALANCE_VELOCITY * (Math.abs(pitch) / 15);
-
-            // We technically don't need a MIN here due to the Math never actually reaching
-            // it (1000) unless we get pitch = 2, at which point it'll go to 0.
-
-            // Clamp between MAX and MIN with some math to support both positive and
-            // negative
-            left = sign * RobotMath.clamp(
-                    Math.abs(left),
-                    DT_Settings.MIN_BALANCE_VELOCITY,
-                    DT_Settings.MAX_BALANCE_VELOCITY);
-
-            right = sign * RobotMath.clamp(
-                    Math.abs(right),
-                    DT_Settings.MIN_BALANCE_VELOCITY,
-                    DT_Settings.MAX_BALANCE_VELOCITY);
+        if (BALANCE_CONTROLLER.atSetpoint()) {
+            this.drive(0, 0);
+            return;
         }
 
-        this.LEFT_FRONT.set(ControlMode.Velocity, left);
-        this.RIGHT_FRONT.set(ControlMode.Velocity, right);
+        final double speed = this.getBalanceControllerOutput() * Constants.Auto.MAX_BALANCE_VELOCITY;
+
+        this.LEFT_FRONT.set(ControlMode.Velocity, speed);
+        this.RIGHT_FRONT.set(ControlMode.Velocity, speed);
     }
 
-    /**
-     * 
-     * @param mode
-     *             "Coast", "Brake"
-     */
-    public void setNeutralMode(String mode) {
-        switch (mode) {
-            case "Coast":
-                this.LEFT_FRONT.setNeutralMode(NeutralMode.Coast);
-                this.LEFT_REAR.setNeutralMode(NeutralMode.Coast);
-                this.RIGHT_FRONT.setNeutralMode(NeutralMode.Coast);
-                this.RIGHT_REAR.setNeutralMode(NeutralMode.Coast);
-                break;
-            case "Brake":
-                this.LEFT_FRONT.setNeutralMode(NeutralMode.Brake);
-                this.LEFT_REAR.setNeutralMode(NeutralMode.Brake);
-                this.RIGHT_FRONT.setNeutralMode(NeutralMode.Brake);
-                this.RIGHT_REAR.setNeutralMode(NeutralMode.Brake);
-                break;
-            default:
-                break;
-        }
+    public void setCoastMode() {
+        this.LEFT_FRONT.setNeutralMode(NeutralMode.Coast);
+        this.LEFT_REAR.setNeutralMode(NeutralMode.Coast);
+        this.RIGHT_FRONT.setNeutralMode(NeutralMode.Coast);
+        this.RIGHT_REAR.setNeutralMode(NeutralMode.Coast);
     }
 
+    public void setBrakeMode() {
+        this.LEFT_FRONT.setNeutralMode(NeutralMode.Brake);
+        this.LEFT_REAR.setNeutralMode(NeutralMode.Brake);
+        this.RIGHT_FRONT.setNeutralMode(NeutralMode.Brake);
+        this.RIGHT_REAR.setNeutralMode(NeutralMode.Brake);
+    }
 }

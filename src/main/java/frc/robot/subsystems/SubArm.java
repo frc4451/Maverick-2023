@@ -140,8 +140,11 @@ public class SubArm {
         return EXTEND.getSelectedSensorPosition();
     }
 
-    public void resetArmEncoders() {
+    public void resetPivotDistance() {
         PIVOT.setSelectedSensorPosition(0);
+    }
+
+    public void resetExtendDistance() {
         EXTEND.setSelectedSensorPosition(0);
     }
 }
