@@ -145,13 +145,6 @@ public class Robot extends TimedRobot {
         if (IO.Driver.getButtonB()) {
             RobotContainer.driveTrain.balanceChargeStation();
         }
-        // Neutral Mode
-        // TODO: Give these proper buttons or something :shrug:
-        // if (IO.Driver.getButtonXPressed()) {
-        // RobotContainer.driveTrain.setBrakeMode();
-        // } else if (IO.Driver.getButtonAPressed()) {
-        // RobotContainer.driveTrain.setCoastMode();
-        // }
 
         // Intake
         if (IO.Driver.getRightBumper()) {
