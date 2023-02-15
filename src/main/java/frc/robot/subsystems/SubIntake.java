@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.Constants;
 
 public class SubIntake {
@@ -41,17 +40,25 @@ public class SubIntake {
         this.INTAKE_TOP.setInverted(false);
         this.INTAKE_BOTTOM.setInverted(false);
         // Ok this work now
-        this.INTAKE_TOP.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,
-                Constants.Intake_Settings.INTAKE_CURRENT_LIMIT, Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD,
-                Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD_TIME_SECONDS));
-        this.INTAKE_BOTTOM.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,
-                Constants.Intake_Settings.INTAKE_CURRENT_LIMIT, Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD,
-                Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD_TIME_SECONDS));
+        this.INTAKE_TOP.configSupplyCurrentLimit(
+                new SupplyCurrentLimitConfiguration(
+                        true,
+                        Constants.Intake_Settings.INTAKE_CURRENT_LIMIT,
+                        Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD,
+                        Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD_TIME_SECONDS));
+        this.INTAKE_BOTTOM.configSupplyCurrentLimit(
+                new SupplyCurrentLimitConfiguration(
+                        true,
+                        Constants.Intake_Settings.INTAKE_CURRENT_LIMIT,
+                        Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD,
+                        Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD_TIME_SECONDS));
 
         // Pneumatics
-        this.INTAKE_SOLENOID = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, intakeSolenoidForward,
+        this.INTAKE_SOLENOID = new DoubleSolenoid(
+                PneumaticsModuleType.CTREPCM,
+                intakeSolenoidForward,
                 intakeSolenoidReverse);
-        this.INTAKE_SOLENOID.set(Value.kReverse);
+        this.INTAKE_SOLENOID.set(DoubleSolenoid.Value.kReverse);
         // Platter
         this.INTAKE_PLATTER = new WPI_TalonFX(intakePlatter);
 
@@ -71,9 +78,9 @@ public class SubIntake {
     }
 
     /**
+     * Runs intake at certain speed depending on `intakeMode`
      * 
-     * @param intakeMode
-     *                   "cube", "cone", "reverse"
+     * @param intakeMode "cube", "cone", "reverse"
      */
     public void runIntake(String intakeMode) {
         switch (intakeMode) {
@@ -108,25 +115,19 @@ public class SubIntake {
         }
     }
 
-    boolean solenoidDeployed = false;
-
-    public void toggleIntakeSolenoid() {
-        if (solenoidDeployed) {
-            setIntakeSolenoid(false);
-            solenoidDeployed = false;
-        } else {
-            setIntakeSolenoid(true);
-            solenoidDeployed = true;
-        }
+    public boolean getSolenoidDeployed() {
+        return INTAKE_SOLENOID.get() == DoubleSolenoid.Value.kForward;
     }
 
-    public void setIntakeSolenoid(boolean isDeployed) {
-        if (isDeployed) {
-            this.INTAKE_SOLENOID.set(Value.kForward);
-            solenoidDeployed = true;
-        } else if (!isDeployed) {
-            this.INTAKE_SOLENOID.set(Value.kReverse);
-            solenoidDeployed = false;
+    public void toggleIntakeSolenoid() {
+        setIntakeSolenoid(!this.getSolenoidDeployed());
+    }
+
+    public void setIntakeSolenoid(boolean deployIntake) {
+        if (deployIntake) {
+            this.INTAKE_SOLENOID.set(DoubleSolenoid.Value.kForward);
+        } else if (!deployIntake) {
+            this.INTAKE_SOLENOID.set(DoubleSolenoid.Value.kReverse);
         }
     }
 }
