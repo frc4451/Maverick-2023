@@ -149,6 +149,10 @@ public class Constants {
         public static final double EXTEND_MIN = 15_500; // soft 0
         public static final double EXTEND_HARD_LIMIT = 0;
 
+        public static final double EXTEND_PG = 0;
+        public static final double EXTEND_IG = 0;
+        public static final double EXTEND_DG = 0;
+
         public static final int TIMEOUT_MS = 30;
     }
 

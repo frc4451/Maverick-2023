@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants;
@@ -22,6 +23,12 @@ public class SubArm {
     private final WPI_TalonFX EXTEND;
     private final Solenoid EXTEND_BRAKE;
     private final Solenoid CLAW;
+
+    // PID CONTROLLER
+    private final PIDController ARM_EXTEND_CONTROLLER = new PIDController(
+            Constants.Arm_Settings.EXTEND_PG,
+            Constants.Arm_Settings.EXTEND_IG,
+            Constants.Arm_Settings.EXTEND_DG);
 
     public SubArm(int pivot, int extend, int extendBrake, int claw) {
         this.PIVOT = new WPI_TalonFX(pivot);
