@@ -7,7 +7,7 @@ public class Constants {
         public static final double BETA = 2.0;
         public static final double ZETA = 0.7;
 
-        public static final double MAX_BALANCE_VELOCITY = 1625.0;
+        public static final double BALANCE_MAX_VELOCITY = 1625.0;
 
         public static final double BALANCE_PG = (1.0 / 15.0);
         public static final double BALANCE_IG = 0.0;
@@ -30,7 +30,7 @@ public class Constants {
         // Intake
         public static final int TOP_INTAKE = 6;
         public static final int BOTTOM_INTAKE = 7;
-        public static final int PLATTER = -1;
+        public static final int PLATTER = 8;
         public static final int INTAKE_SOLENOID_FORWARD = 0;
         public static final int INTAKE_SOLENOID_REVERSE = 1;
         // Gyro (CAN ID)
@@ -43,7 +43,7 @@ public class Constants {
         public static final double QUICK_TURN = 0.6; // Joystick turn scaling factor for QuickTurn Drive
         public static final double MAX_VELOCITY = 18_000.0; // Drive train max velocity encoder per 100ms
         public static final double MIN_BALANCE_VELOCITY = 2000.0; // Drive train min velocity when balancing
-        public static final double MAX_BALANCE_VELOCITY = 2000.0; // Drive train max velocity when balancing
+        public static final double BALANCE_MAX_VELOCITY = 2000.0; // Drive train max velocity when balancing
         public static final double RAMP_RATE_SECS = 0.5; // Drive train ramp rate in velocity control
         /*
          * NOTE: Ramp rate - in seconds - is the time it takes for the output to go from
@@ -142,6 +142,14 @@ public class Constants {
     public static class Arm_Settings {
         public static final double PIVOT_ACCELERATION = 5000.0;
         public static final double PIVOT_CRUISECONTROL = 5000.0;
+
+        public static final double PIVOT_MIN = 0; // TODO: Configure max and min distances
+        public static final double PIVOT_MAX = 0;
+
+        public static final double PIVOT_RAMP_RATE_SECS = 0.5;
+        public static final double PIVOT_MAX_VELOCITY = 0; // TODO: max and min velocity
+        public static final double PIVOT_MIN_VELOCITY = 0; //
+
         public static final double EXTEND_ACCELERATION = 15_000.0;
         public static final double EXTEND_CRUISECONTROL = 15_000.0;
 

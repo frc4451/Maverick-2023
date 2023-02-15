@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants;
 import frc.robot.Constants.ARM_PIDF;
 import frc.robot.Constants.Arm_Settings;
+import frc.robot.util.RobotMath;
 
 /** Add your docs here. */
 public class SubArm {
@@ -25,7 +26,7 @@ public class SubArm {
     private final Solenoid CLAW;
 
     // PID CONTROLLER
-    private final PIDController ARM_EXTEND_CONTROLLER = new PIDController(
+    private final PIDController PIVOT_CONTROLLER = new PIDController(
             Constants.Arm_Settings.EXTEND_PG,
             Constants.Arm_Settings.EXTEND_IG,
             Constants.Arm_Settings.EXTEND_DG);
@@ -49,7 +50,10 @@ public class SubArm {
         this.EXTEND.configMotionCruiseVelocity(Arm_Settings.EXTEND_CRUISECONTROL);
         this.EXTEND.configMotionAcceleration(Arm_Settings.EXTEND_ACCELERATION);
 
-        // MotionMagic PIDF
+        // used for velocity control
+        this.PIVOT.configClosedloopRamp(Constants.Arm_Settings.PIVOT_RAMP_RATE_SECS);
+
+        // Pivot PIDF
         this.PIVOT.configSelectedFeedbackSensor(
                 FeedbackDevice.IntegratedSensor,
                 ARM_PIDF.PID_LOOP_INDEX,
@@ -93,10 +97,42 @@ public class SubArm {
                 ARM_PIDF.TIMEOUT_MS);
     }
 
+    public void resetPivotController() {
+        this.PIVOT_CONTROLLER.setSetpoint(0);
+        this.PIVOT_CONTROLLER.setTolerance(0);
+        this.PIVOT_CONTROLLER.reset();
+    }
+
+    /**
+     * @param setpoint
+     */
+    public void setPivotController(double setpoint) {
+        this.PIVOT_CONTROLLER.setSetpoint(setpoint);
+        this.PIVOT_CONTROLLER.reset();
+    }
+
+    public double getPivotControllerOutput() {
+        return RobotMath.clamp(
+                this.PIVOT_CONTROLLER.calculate(this.getPivotAngle()),
+                Constants.Arm_Settings.PIVOT_MAX_VELOCITY, Constants.Arm_Settings.PIVOT_MIN_VELOCITY);
+    }
+
+    // TODO: Configure this to go to a distance
+    public void pivotTo() {
+        if (PIVOT_CONTROLLER.atSetpoint()) {
+            runArmPivot(false, 0);
+            return;
+        }
+
+        final double speed = this.getPivotControllerOutput() * Constants.Arm_Settings.PIVOT_MAX_VELOCITY;
+
+        this.PIVOT.set(ControlMode.Velocity, speed);
+    }
+
     // run PercentOutput
-    public void runArmPivot(boolean run, double percentValue) {
+    public void runArmPivot(boolean run, double velocity) {
         if (run) {
-            PIVOT.set(ControlMode.PercentOutput, percentValue);
+            PIVOT.set(ControlMode.PercentOutput, velocity);
         } else {
             PIVOT.set(ControlMode.PercentOutput, 0);
         }
@@ -141,6 +177,10 @@ public class SubArm {
     // getters
     public double getPivotPosition() {
         return PIVOT.getSelectedSensorPosition();
+    }
+
+    private double getPivotAngle() {
+        return 0;
     }
 
     public double getExtendPosition() {
