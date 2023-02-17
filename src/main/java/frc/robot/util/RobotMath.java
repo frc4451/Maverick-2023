@@ -24,4 +24,12 @@ public class RobotMath {
     public static int clamp(int value, int min, int max) {
         return Math.max(min, Math.min(max, value));
     }
+
+    public static double deg2rad(final double deg) {
+        return deg * (Math.PI / 180.0);
+    }
+
+    public static double rad2deg(final double rad) {
+        return rad * (180.0 / Math.PI);
+    }
 }
