@@ -9,11 +9,15 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Constants.ARM_PIDF;
 import frc.robot.Constants.Arm_Settings;
+import frc.robot.util.RobotMath;
 
 /** Add your docs here. */
 public class SubArm {
@@ -22,6 +26,17 @@ public class SubArm {
     private final WPI_TalonFX EXTEND;
     private final Solenoid EXTEND_BRAKE;
     private final Solenoid CLAW;
+
+    // PID CONTROLLER
+    private final ArmFeedforward PIVOT_FEEDFORWARD = new ArmFeedforward(
+            Constants.ARM_PIDF.PIVOT_SG,
+            Constants.ARM_PIDF.PIVOT_GG,
+            Constants.ARM_PIDF.PIVOT_VG,
+            Constants.ARM_PIDF.PIVOT_AG);
+    private final PIDController PIVOT_FEEDBACK = new PIDController(
+            Constants.ARM_PIDF.PIVOT_PG,
+            Constants.ARM_PIDF.PIVOT_IG,
+            Constants.ARM_PIDF.PIVOT_DG);
 
     public SubArm(int pivot, int extend, int extendBrake, int claw) {
         this.PIVOT = new WPI_TalonFX(pivot);
@@ -37,12 +52,15 @@ public class SubArm {
 
         this.EXTEND.setInverted(true);
         // motion profile settings
-        this.PIVOT.configMotionCruiseVelocity(Arm_Settings.PIVOT_CRUISECONTROL);
-        this.PIVOT.configMotionAcceleration(Arm_Settings.PIVOT_ACCELERATION);
+        // this.PIVOT.configMotionCruiseVelocity(Arm_Settings.PIVOT_CRUISECONTROL);
+        // this.PIVOT.configMotionAcceleration(Arm_Settings.PIVOT_ACCELERATION);
         this.EXTEND.configMotionCruiseVelocity(Arm_Settings.EXTEND_CRUISECONTROL);
         this.EXTEND.configMotionAcceleration(Arm_Settings.EXTEND_ACCELERATION);
 
-        // MotionMagic PIDF
+        // used for velocity control
+        this.PIVOT.configClosedloopRamp(Constants.Arm_Settings.PIVOT_RAMP_RATE_SECS);
+
+        // Pivot PIDF
         this.PIVOT.configSelectedFeedbackSensor(
                 FeedbackDevice.IntegratedSensor,
                 ARM_PIDF.PID_LOOP_INDEX,
@@ -86,26 +104,59 @@ public class SubArm {
                 ARM_PIDF.TIMEOUT_MS);
     }
 
-    // run PercentOutput
-    public void runArmPivot(boolean run, double percentValue) {
-        if (run) {
-            PIVOT.set(ControlMode.PercentOutput, percentValue);
-        } else {
-            PIVOT.set(ControlMode.PercentOutput, 0);
-        }
+    public void resetPivotController() {
+        // this.PIVOT_CONTROLLER.setSetpoint(0);
+        // this.PIVOT_CONTROLLER.setTolerance(0);
+        // this.PIVOT_CONTROLLER.reset();
     }
 
-    public void runArmExtend(boolean run, double percentValue, boolean override) {
-        if (run) {
-            if (override) {
-                EXTEND.set(ControlMode.PercentOutput, percentValue);
-            } else if ((Math.signum(percentValue) == 1) && (getExtendPosition() <= Constants.Arm_Settings.EXTEND_MAX)) {
-                EXTEND.set(ControlMode.PercentOutput, percentValue);
-            } else if (Math.signum(percentValue) == -1 && (getExtendPosition() >= Constants.Arm_Settings.EXTEND_MIN)) {
-                EXTEND.set(ControlMode.PercentOutput, percentValue);
-            }
-        } else {
-            EXTEND.set(ControlMode.PercentOutput, 0.0);
+    /**
+     * @param setpoint
+     */
+    public void setPivotController(double setpoint) {
+        // this.PIVOT_CONTROLLER.setSetpoint(setpoint);
+        // this.PIVOT_CONTROLLER.reset();
+    }
+
+    // public double getPivotControllerOutput() {
+    // return RobotMath.clamp(
+    // this.PIVOT_CONTROLLER.calculate(this.getPivotAngle()),
+    // Constants.Arm_Settings.PIVOT_MAX_VELOCITY,
+    // Constants.Arm_Settings.PIVOT_MIN_VELOCITY);
+    // }
+
+    public void pivotTo(final double setpoint) {
+        this.PIVOT_FEEDBACK.setSetpoint(setpoint);
+
+        if (this.PIVOT_FEEDBACK.atSetpoint()) {
+            runArmPivot(0);
+            return;
+        }
+
+        // https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/combining-feedforward-feedback.html#using-feedforward-components-with-pid
+        double velocity = this.PIVOT_FEEDFORWARD.calculate(
+                RobotMath.deg2rad(setpoint),
+                Constants.Arm_Settings.PIVOT_ACCELERATION) + this.PIVOT_FEEDBACK.calculate(this.getPivotAngle());
+
+        velocity = RobotMath.clamp(velocity, 0, Constants.Arm_Settings.PIVOT_MAX_VELOCITY);
+        runArmPivot(velocity);
+    }
+
+    public void runArmPivot(double velocity) {
+        this.PIVOT.set(ControlMode.PercentOutput, velocity);
+    }
+
+    public void runArmExtend(double percentValue) {
+        this.runArmExtend(percentValue, false);
+    }
+
+    public void runArmExtend(double percentValue, boolean override) {
+        if (override) {
+            EXTEND.set(ControlMode.PercentOutput, percentValue);
+        } else if ((Math.signum(percentValue) == 1) && (getExtendPosition() <= Constants.Arm_Settings.EXTEND_MAX)) {
+            EXTEND.set(ControlMode.PercentOutput, percentValue);
+        } else if (Math.signum(percentValue) == -1 && (getExtendPosition() >= Constants.Arm_Settings.EXTEND_MIN)) {
+            EXTEND.set(ControlMode.PercentOutput, percentValue);
         }
     }
 
@@ -117,23 +168,26 @@ public class SubArm {
         }
     }
 
-    // run MotionMagic
-    public void runPivotMotionMagic(double targetDistancePivot) {
-        PIVOT.set(ControlMode.MotionMagic, targetDistancePivot);
-    }
+    // public void runPivotMotionMagic(double targetDistancePivot) {
+    // PIVOT.set(ControlMode.MotionMagic, targetDistancePivot);
+    // }
 
     public void runExtendMotionMagic(double targetDistanceExtend) {
         EXTEND.set(ControlMode.MotionMagic, targetDistanceExtend);
     }
 
     public void stopArm() {
-        PIVOT.set(ControlMode.PercentOutput, 0);
-        EXTEND.set(ControlMode.PercentOutput, 0);
+        this.runArmPivot(0);
+        this.runArmExtend(0);
     }
 
     // getters
     public double getPivotPosition() {
         return PIVOT.getSelectedSensorPosition();
+    }
+
+    private double getPivotAngle() {
+        return PIVOT.getSelectedSensorPosition() / Constants.TechnicalConstants.ENCODER_COUNTS_PER_DEGREE;
     }
 
     public double getExtendPosition() {

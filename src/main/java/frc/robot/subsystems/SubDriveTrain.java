@@ -443,7 +443,7 @@ public class SubDriveTrain {
             return;
         }
 
-        final double speed = this.getBalanceControllerOutput() * Constants.Auto.MAX_BALANCE_VELOCITY;
+        final double speed = this.getBalanceControllerOutput() * Constants.Auto.BALANCE_MAX_VELOCITY;
 
         this.LEFT_FRONT.set(ControlMode.Velocity, speed);
         this.RIGHT_FRONT.set(ControlMode.Velocity, speed);
