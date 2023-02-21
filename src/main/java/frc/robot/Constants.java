@@ -1,6 +1,5 @@
 package frc.robot;
 
-// TODO: Update Constants for Maverick
 public class Constants {
     public static class Auto {
         // beta and zeta are largely robot independent

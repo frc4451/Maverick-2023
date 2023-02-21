@@ -15,7 +15,6 @@ import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-// import edu.wpi.first.apriltag.AprilTagDetector.Config;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,9 +25,6 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 import frc.robot.util.RobotMath;
-import frc.robot.Constants.DT_PIDF;
-import frc.robot.Constants.DT_Settings;
-import frc.robot.Constants.TechnicalConstants;
 
 public class SubDriveTrain {
     // Class variable definitions. Define the variable names for the WPI_TalonFX.
@@ -74,7 +70,7 @@ public class SubDriveTrain {
      * Receives CAN address of 4 drive train Falcon motors and Pigeon IMU
      * Note: Do not create the Pigeon IMU in the first test
      */
-    public SubDriveTrain(int leftFront, int leftRear, int rightFront, int rightRear, int gyro1) {
+    public SubDriveTrain(int leftFront, int leftRear, int rightFront, int rightRear, int gyro) {
         /*
          * 1. Make instances of all 4 WPI_TalonFX motor classes
          * 2. Factory reset each
@@ -90,15 +86,14 @@ public class SubDriveTrain {
         this.LEFT_REAR = new WPI_TalonFX(leftRear);
         this.RIGHT_FRONT = new WPI_TalonFX(rightFront);
         this.RIGHT_REAR = new WPI_TalonFX(rightRear);
-        this.GYROSCOPE = new WPI_PigeonIMU(gyro1);
-        // Kinematics
-        // Kinematics translates drivetrain linear and angular speed to left / right
+        this.GYROSCOPE = new WPI_PigeonIMU(gyro);
+
+        // Kinematics translates drivetrain linear and angular speeds to left / right
         // wheel speeds
         // To do this translation it needs to know the drive train "width"
         this.KINEMATICS = new DifferentialDriveKinematics(
-                TechnicalConstants.DRIVE_TRAIN_WIDTH);
+                Constants.TechnicalConstants.DRIVE_TRAIN_WIDTH);
 
-        // Odometry
         // Odometry gives an estimate of the robot "pose" - which is the x,z coords plus
         // heading based on the gyroscope and left/right encoders
         this.ODOMETRY = new DifferentialDrivePoseEstimator(
@@ -130,76 +125,76 @@ public class SubDriveTrain {
         this.RIGHT_FRONT.setNeutralMode(NeutralMode.Coast);
         this.RIGHT_REAR.setNeutralMode(NeutralMode.Coast);
 
-        this.LEFT_FRONT.configClosedloopRamp(DT_Settings.RAMP_RATE_SECS);
-        this.RIGHT_FRONT.configClosedloopRamp(DT_Settings.RAMP_RATE_SECS);
+        this.LEFT_FRONT.configClosedloopRamp(Constants.DT_Settings.RAMP_RATE_SECS);
+        this.RIGHT_FRONT.configClosedloopRamp(Constants.DT_Settings.RAMP_RATE_SECS);
 
         /* Config sensor used for Primary PID [Velocity] */
         this.LEFT_FRONT.configSelectedFeedbackSensor(
                 FeedbackDevice.IntegratedSensor,
-                DT_PIDF.PID_LOOP_INDEX,
-                DT_PIDF.TIMEOUT_MS);
+                Constants.DT_PIDF.PID_LOOP_INDEX,
+                Constants.DT_PIDF.TIMEOUT_MS);
 
         this.RIGHT_FRONT.configSelectedFeedbackSensor(
                 FeedbackDevice.IntegratedSensor,
-                DT_PIDF.PID_LOOP_INDEX,
-                DT_PIDF.TIMEOUT_MS);
+                Constants.DT_PIDF.PID_LOOP_INDEX,
+                Constants.DT_PIDF.TIMEOUT_MS);
 
         /* Config the peak and nominal outputs */
-        this.LEFT_FRONT.configNominalOutputForward(0, DT_PIDF.TIMEOUT_MS);
-        this.LEFT_FRONT.configNominalOutputReverse(0, DT_PIDF.TIMEOUT_MS);
-        this.LEFT_FRONT.configPeakOutputForward(1, DT_PIDF.TIMEOUT_MS);
-        this.LEFT_FRONT.configPeakOutputReverse(-1, DT_PIDF.TIMEOUT_MS);
+        this.LEFT_FRONT.configNominalOutputForward(0, Constants.DT_PIDF.TIMEOUT_MS);
+        this.LEFT_FRONT.configNominalOutputReverse(0, Constants.DT_PIDF.TIMEOUT_MS);
+        this.LEFT_FRONT.configPeakOutputForward(1, Constants.DT_PIDF.TIMEOUT_MS);
+        this.LEFT_FRONT.configPeakOutputReverse(-1, Constants.DT_PIDF.TIMEOUT_MS);
 
-        this.RIGHT_FRONT.configNominalOutputForward(0, DT_PIDF.TIMEOUT_MS);
-        this.RIGHT_FRONT.configNominalOutputReverse(0, DT_PIDF.TIMEOUT_MS);
-        this.RIGHT_FRONT.configPeakOutputForward(1, DT_PIDF.TIMEOUT_MS);
-        this.RIGHT_FRONT.configPeakOutputReverse(-1, DT_PIDF.TIMEOUT_MS);
+        this.RIGHT_FRONT.configNominalOutputForward(0, Constants.DT_PIDF.TIMEOUT_MS);
+        this.RIGHT_FRONT.configNominalOutputReverse(0, Constants.DT_PIDF.TIMEOUT_MS);
+        this.RIGHT_FRONT.configPeakOutputForward(1, Constants.DT_PIDF.TIMEOUT_MS);
+        this.RIGHT_FRONT.configPeakOutputReverse(-1, Constants.DT_PIDF.TIMEOUT_MS);
 
-        this.LEFT_FRONT.configMotionAcceleration(DT_Settings.MAX_VELOCITY);
-        this.LEFT_FRONT.configMotionCruiseVelocity(DT_Settings.MM_CRUISECONTROL);
+        this.LEFT_FRONT.configMotionAcceleration(Constants.DT_Settings.MAX_VELOCITY);
+        this.LEFT_FRONT.configMotionCruiseVelocity(Constants.DT_Settings.MM_CRUISECONTROL);
 
-        this.RIGHT_FRONT.configMotionAcceleration(DT_Settings.MAX_VELOCITY);
-        // this.RIGHT_FRONT.configMotionCruiseVelocity(DT_Set.DT_CRUISE_VEL_ENC);
+        this.RIGHT_FRONT.configMotionAcceleration(Constants.DT_Settings.MAX_VELOCITY);
+        this.RIGHT_FRONT.configMotionCruiseVelocity(Constants.DT_Settings.MM_CRUISECONTROL);
 
         this.LEFT_FRONT.config_kP(
-                DT_PIDF.PID_LOOP_INDEX,
-                DT_PIDF.LEFT_PG,
-                DT_PIDF.TIMEOUT_MS);
+                Constants.DT_PIDF.PID_LOOP_INDEX,
+                Constants.DT_PIDF.LEFT_PG,
+                Constants.DT_PIDF.TIMEOUT_MS);
         this.LEFT_FRONT.config_kI(
-                DT_PIDF.PID_LOOP_INDEX,
-                DT_PIDF.LEFT_IG,
-                DT_PIDF.TIMEOUT_MS);
+                Constants.DT_PIDF.PID_LOOP_INDEX,
+                Constants.DT_PIDF.LEFT_IG,
+                Constants.DT_PIDF.TIMEOUT_MS);
         this.LEFT_FRONT.config_kD(
-                DT_PIDF.PID_LOOP_INDEX,
-                DT_PIDF.LEFT_DG,
-                DT_PIDF.TIMEOUT_MS);
+                Constants.DT_PIDF.PID_LOOP_INDEX,
+                Constants.DT_PIDF.LEFT_DG,
+                Constants.DT_PIDF.TIMEOUT_MS);
         this.LEFT_FRONT.config_kF(
-                DT_PIDF.PID_LOOP_INDEX,
-                DT_PIDF.LEFT_FF,
-                DT_PIDF.TIMEOUT_MS);
+                Constants.DT_PIDF.PID_LOOP_INDEX,
+                Constants.DT_PIDF.LEFT_FF,
+                Constants.DT_PIDF.TIMEOUT_MS);
 
         this.RIGHT_FRONT.config_kP(
-                DT_PIDF.PID_LOOP_INDEX,
-                DT_PIDF.RIGHT_PG,
-                DT_PIDF.TIMEOUT_MS);
+                Constants.DT_PIDF.PID_LOOP_INDEX,
+                Constants.DT_PIDF.RIGHT_PG,
+                Constants.DT_PIDF.TIMEOUT_MS);
         this.RIGHT_FRONT.config_kI(
-                DT_PIDF.PID_LOOP_INDEX,
-                DT_PIDF.RIGHT_IG,
-                DT_PIDF.TIMEOUT_MS);
+                Constants.DT_PIDF.PID_LOOP_INDEX,
+                Constants.DT_PIDF.RIGHT_IG,
+                Constants.DT_PIDF.TIMEOUT_MS);
         this.RIGHT_FRONT.config_kD(
-                DT_PIDF.PID_LOOP_INDEX,
-                DT_PIDF.RIGHT_DG,
-                DT_PIDF.TIMEOUT_MS);
+                Constants.DT_PIDF.PID_LOOP_INDEX,
+                Constants.DT_PIDF.RIGHT_DG,
+                Constants.DT_PIDF.TIMEOUT_MS);
         this.RIGHT_FRONT.config_kF(
-                DT_PIDF.PID_LOOP_INDEX,
-                DT_PIDF.RIGHT_FF,
-                DT_PIDF.TIMEOUT_MS);
+                Constants.DT_PIDF.PID_LOOP_INDEX,
+                Constants.DT_PIDF.RIGHT_FF,
+                Constants.DT_PIDF.TIMEOUT_MS);
 
         // MOTION MAGIC
-        this.LEFT_FRONT.configMotionAcceleration(DT_Settings.MM_ACCELERATION);
-        this.RIGHT_FRONT.configMotionAcceleration(DT_Settings.MM_ACCELERATION);
-        this.LEFT_FRONT.configMotionCruiseVelocity(DT_Settings.MM_CRUISECONTROL);
-        this.RIGHT_FRONT.configMotionCruiseVelocity(DT_Settings.MM_CRUISECONTROL);
+        this.LEFT_FRONT.configMotionAcceleration(Constants.DT_Settings.MM_ACCELERATION);
+        this.RIGHT_FRONT.configMotionAcceleration(Constants.DT_Settings.MM_ACCELERATION);
+        this.LEFT_FRONT.configMotionCruiseVelocity(Constants.DT_Settings.MM_CRUISECONTROL);
+        this.RIGHT_FRONT.configMotionCruiseVelocity(Constants.DT_Settings.MM_CRUISECONTROL);
     }
 
     /*
@@ -210,11 +205,14 @@ public class SubDriveTrain {
      * This is the default drive method in tele-op periodic
      */
     public void runDrive(double forward, double rotate, boolean quickTurningEnabled) {
-        double fward = Math.abs(forward);
-        double sens = DT_Settings.TURN_SENSITIVITY;
+        final double fward;
+        final double sens;
         if (quickTurningEnabled) {
             fward = 1;
-            sens = DT_Settings.QUICK_TURN;
+            sens = Constants.DT_Settings.QUICK_TURN;
+        } else {
+            fward = Math.abs(forward);
+            sens = Constants.DT_Settings.TURN_SENSITIVITY;
         }
         double left = -forward + rotate * fward * sens;
         double right = -forward - rotate * fward * sens;
@@ -223,8 +221,18 @@ public class SubDriveTrain {
             left /= maxMagnitude;
             right /= maxMagnitude;
         }
-        this.LEFT_FRONT.set(ControlMode.Velocity, left * DT_Settings.MAX_VELOCITY);
-        this.RIGHT_FRONT.set(ControlMode.Velocity, right * DT_Settings.MAX_VELOCITY);
+        this.LEFT_FRONT.set(ControlMode.Velocity, left * Constants.DT_Settings.MAX_VELOCITY);
+        this.RIGHT_FRONT.set(ControlMode.Velocity, right * Constants.DT_Settings.MAX_VELOCITY);
+    }
+
+    /**
+     * Drives the robot with linear and angular velocities derived from a
+     * ChassisSpeeds object
+     * 
+     * @param refChassisSpeeds
+     */
+    public void drive(ChassisSpeeds refChassisSpeeds) {
+        this.setWheelSpeeds(this.KINEMATICS.toWheelSpeeds(refChassisSpeeds));
     }
 
     /**
@@ -234,10 +242,8 @@ public class SubDriveTrain {
      * @param angularVel Angular velocity in rad/s.
      */
     public void drive(double linearVel, double angularVel) {
-        // yVel is always 0 because we can only move one direction at a time (I think)
-        DifferentialDriveWheelSpeeds wheelSpeeds = KINEMATICS.toWheelSpeeds(new ChassisSpeeds(
-                linearVel, 0.0, angularVel));
-        setWheelSpeeds(wheelSpeeds);
+        ChassisSpeeds refChassisSpeeds = new ChassisSpeeds(linearVel, 0.0, angularVel);
+        this.drive(refChassisSpeeds);
     }
 
     private void setWheelSpeeds(DifferentialDriveWheelSpeeds speeds) {
@@ -350,17 +356,12 @@ public class SubDriveTrain {
     }
 
     public void resetOdometry(Pose2d pose) {
-        resetEncoders();
-        // System.out.println("Pose Target: (" + pose.getX() + ", " + pose.getY() + ")"
-        // +
-        // "\n New Rotation: " + pose.getRotation().getDegrees());
-        // Rotation2d currentRotation = getGyroRotation2d();
-        this.ODOMETRY.resetPosition(pose.getRotation(), this.getLeftEncoderMeters(),
-                this.getRightEncoderMeters(), pose);
-        // Pose2d newCurrentPose = this.getPose2d();
-        // System.out.println("Pose Result: (" + newCurrentPose.getX() + ", " +
-        // newCurrentPose.getY() + ")"
-        // + "\n New Rotation: " + newCurrentPose.getRotation().getDegrees());
+        this.resetEncoders();
+        this.ODOMETRY.resetPosition(
+                pose.getRotation(),
+                this.getLeftEncoderMeters(),
+                this.getRightEncoderMeters(),
+                pose);
     }
 
     public double getLeftEncoderPos() {
@@ -372,11 +373,11 @@ public class SubDriveTrain {
     }
 
     public double getLeftEncoderMeters() {
-        return this.getLeftEncoderPos() * TechnicalConstants.METERS_PER_TICK;
+        return this.getLeftEncoderPos() * Constants.TechnicalConstants.METERS_PER_TICK;
     }
 
     public double getRightEncoderMeters() {
-        return this.getRightEncoderPos() * TechnicalConstants.METERS_PER_TICK;
+        return this.getRightEncoderPos() * Constants.TechnicalConstants.METERS_PER_TICK;
     }
 
     public double getLeftEncoderVel() {
@@ -388,11 +389,11 @@ public class SubDriveTrain {
     }
 
     public double getLeftEncoderMeterRate() {
-        return this.getLeftEncoderVel() * TechnicalConstants.TICKS_PER_DECI_SECOND_TO_METERS_PER_SECOND;
+        return this.getLeftEncoderVel() * Constants.TechnicalConstants.TICKS_PER_DECI_SECOND_TO_METERS_PER_SECOND;
     }
 
     public double getRightEncoderMeterRate() {
-        return this.getRightEncoderVel() * TechnicalConstants.TICKS_PER_DECI_SECOND_TO_METERS_PER_SECOND;
+        return this.getRightEncoderVel() * Constants.TechnicalConstants.TICKS_PER_DECI_SECOND_TO_METERS_PER_SECOND;
     }
 
     public DifferentialDriveWheelSpeeds getDirectWheelSpeeds() {

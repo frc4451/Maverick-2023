@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants.RioPortMaps;
 import frc.robot.subsystems.SubArm;
@@ -14,15 +13,23 @@ import frc.robot.subsystems.SubIntake;
 /** Add your docs here. */
 public class RobotContainer {
 
-        public static final SubDriveTrain driveTrain = new SubDriveTrain(RioPortMaps.LEFT_FRONT_DRIVETRAIN,
-                        RioPortMaps.LEFT_BACK_DRIVETRAIN, RioPortMaps.RIGHT_FRONT_DRIVETRAIN,
-                        RioPortMaps.RIGHT_BACK_DRIVETRAIN, RioPortMaps.GYRO);
-        public static final SubArm arm = new SubArm(RioPortMaps.PIVOT,
-                        RioPortMaps.EXTEND, RioPortMaps.EXTENSION_BRAKE_SOLENOID, RioPortMaps.CLAW_SOLENOID);
-        public static final SubIntake intake = new SubIntake(RioPortMaps.TOP_INTAKE, RioPortMaps.BOTTOM_INTAKE,
-                        RioPortMaps.INTAKE_SOLENOID_FORWARD, RioPortMaps.INTAKE_SOLENOID_REVERSE, RioPortMaps.PLATTER);
+        public static final SubDriveTrain driveTrain = new SubDriveTrain(
+                        RioPortMaps.LEFT_FRONT_DRIVETRAIN,
+                        RioPortMaps.LEFT_BACK_DRIVETRAIN,
+                        RioPortMaps.RIGHT_FRONT_DRIVETRAIN,
+                        RioPortMaps.RIGHT_BACK_DRIVETRAIN,
+                        RioPortMaps.GYRO);
+        public static final SubArm arm = new SubArm(
+                        RioPortMaps.PIVOT,
+                        RioPortMaps.EXTEND,
+                        RioPortMaps.EXTENSION_BRAKE_SOLENOID,
+                        RioPortMaps.CLAW_SOLENOID);
+        public static final SubIntake intake = new SubIntake(
+                        RioPortMaps.TOP_INTAKE,
+                        RioPortMaps.BOTTOM_INTAKE,
+                        RioPortMaps.INTAKE_SOLENOID_FORWARD,
+                        RioPortMaps.INTAKE_SOLENOID_REVERSE,
+                        RioPortMaps.PLATTER);
 
         public static final Field2d field = new Field2d();
-
-        public static final PowerDistribution pdp = new PowerDistribution();
 }

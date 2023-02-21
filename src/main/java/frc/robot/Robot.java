@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoContainer;
-import frc.robot.trajectories.TrajectoryContainer;
+import frc.robot.auto.AutoStates;
 import frc.robot.util.IO;
 
 /**
@@ -22,12 +22,9 @@ import frc.robot.util.IO;
  * project.
  */
 public class Robot extends TimedRobot {
-    private static final String DEFAULT_AUTO = "Default";
-    private static final String AUTO_ONE = "auto1";
-    private static final String AUTO_TWO = "auto2";
-    private static final String AUTO_THREE = "auto3";
-    private String autoSelected;
-    private final SendableChooser<String> chooser = new SendableChooser<>();
+
+    private AutoStates autoSelected;
+    private final SendableChooser<AutoStates> chooser = new SendableChooser<>();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -38,11 +35,14 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         RobotContainer.driveTrain.resetNavigation();
         RobotContainer.driveTrain.resetBalanceController();
-        chooser.setDefaultOption("Default Auto", DEFAULT_AUTO);
-        chooser.addOption("Auto 1", AUTO_ONE);
-        chooser.addOption("Auto 2", AUTO_TWO);
-        chooser.addOption("Auto 3", AUTO_THREE);
-        SmartDashboard.putData("Auto choices", chooser);
+        RobotContainer.driveTrain.setCoastMode();
+
+        chooser.setDefaultOption("Default", AutoStates.DEFAULT);
+        for (AutoStates state : AutoStates.values()) {
+            chooser.addOption(state.label, state);
+        }
+
+        SmartDashboard.putData("Auto Choices", chooser);
     }
 
     /**
@@ -75,10 +75,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Delta Speed Right-Left",
                 RobotContainer.driveTrain.getRightSpeed() - RobotContainer.driveTrain.getLeftSpeed());
         SmartDashboard.putData("Field/Field", RobotContainer.field);
-        // SmartDashboard.putNumber("Amp 0", RobotContainer.pdp.getCurrent(0));
-        // SmartDashboard.putNumber("Amp 1", RobotContainer.pdp.getCurrent(1));
-        // SmartDashboard.putNumber("Amp 14", RobotContainer.pdp.getCurrent(14));
-        // SmartDashboard.putNumber("Amp 15", RobotContainer.pdp.getCurrent(15));
+        SmartDashboard.putNumber("Balance Output", RobotContainer.driveTrain.getBalanceControllerOutput());
     }
 
     /**
@@ -104,46 +101,32 @@ public class Robot extends TimedRobot {
         RobotContainer.driveTrain.resetNavigation();
         RobotContainer.driveTrain.resetBalanceController();
         autoSelected = chooser.getSelected();
-        System.out.println("Auto selected: " + autoSelected);
+        // System.out.println("Auto Selected: " + autoSelected);
     }
 
     /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
-        switch (autoSelected) {
-            case AUTO_ONE:
-                AutoContainer.auto1();
-                break;
-            case AUTO_TWO:
-                AutoContainer.auto2();
-                break;
-            case AUTO_THREE:
-                AutoContainer.auto3();
-                break;
-
-            case DEFAULT_AUTO:
-            default:
-                break;
-        }
+        autoSelected.routine.callback();
     }
 
     /** This function is called once when teleop is enabled. */
     @Override
     public void teleopInit() {
-        RobotContainer.driveTrain.resetGyro();
         RobotContainer.driveTrain.setBrakeMode();
+        RobotContainer.driveTrain.resetGyro();
         RobotContainer.driveTrain.resetBalanceController();
-        // RobotContainer.arm.resetArmEncoders();
     }
 
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
         // Drive Train
-        RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
         // Balance
         if (IO.Driver.getButtonB()) {
             RobotContainer.driveTrain.balanceChargeStation();
+        } else {
+            RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
         }
 
         // Intake
@@ -164,11 +147,13 @@ public class Robot extends TimedRobot {
     /** This function is called once when the robot is disabled. */
     @Override
     public void disabledInit() {
+        AutoContainer.resetAutoStep();
     }
 
     /** This function is called periodically when disabled. */
     @Override
     public void disabledPeriodic() {
+        // Update the autoSelected string even when disabled so we can use it
         autoSelected = chooser.getSelected();
 
         if (IO.Driver.getButtonB()) {
@@ -177,30 +162,18 @@ public class Robot extends TimedRobot {
             RobotContainer.driveTrain.setCoastMode();
         }
 
+        // If Y is pressed this'll set the field trajectories and reset the robot's
+        // position to the trajectory's start
         if (IO.Driver.getButtonY()) {
-            switch (autoSelected) {
-                case AUTO_ONE:
-                    RobotContainer.field.getObject("Trajectory 1").setTrajectory(TrajectoryContainer.trajectory1_1);
-                    RobotContainer.field.getObject("Trajectory 2").setTrajectory(TrajectoryContainer.trajectory1_2);
-                    RobotContainer.driveTrain.resetNavigation(TrajectoryContainer.trajectory1_1.getInitialPose());
-                    break;
-                case AUTO_TWO:
-                    RobotContainer.field.getObject("Trajectory 1").setTrajectory(TrajectoryContainer.trajectory3);
-                    RobotContainer.field.getObject("Trajectory 2").setTrajectory(new Trajectory());
-                    RobotContainer.driveTrain.resetNavigation(TrajectoryContainer.trajectory3.getInitialPose());
-                    break;
-                case AUTO_THREE:
-                    RobotContainer.field.getObject("Trajectory 1").setTrajectory(TrajectoryContainer.charge);
-                    RobotContainer.field.getObject("Trajectory 2").setTrajectory(new Trajectory());
-                    RobotContainer.driveTrain.resetNavigation(TrajectoryContainer.charge.getInitialPose());
-                    break;
-
-                case DEFAULT_AUTO:
-                default:
-                    RobotContainer.field.getObject("Trajectory 1").setTrajectory(new Trajectory());
-                    RobotContainer.field.getObject("Trajectory 2").setTrajectory(new Trajectory());
-                    RobotContainer.driveTrain.resetNavigation();
-                    break;
+            RobotContainer.driveTrain.resetNavigation(autoSelected.paths.get(0).getInitialPose());
+            for (int i = 0; i < AutoStates.longestPathGroup; i++) {
+                final Trajectory path;
+                if (autoSelected.paths.get(i) != null) {
+                    path = autoSelected.paths.get(i);
+                } else {
+                    path = new Trajectory();
+                }
+                RobotContainer.field.getObject("Trajectory " + i).setTrajectory(path);
             }
         }
     }
