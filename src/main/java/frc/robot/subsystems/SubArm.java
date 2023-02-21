@@ -14,7 +14,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.Constants.ARM_PIDF;
 import frc.robot.Constants.Arm_Settings;
 import frc.robot.util.RobotMath;
@@ -139,66 +138,105 @@ public class SubArm {
                 Constants.Arm_Settings.PIVOT_ACCELERATION) + this.PIVOT_FEEDBACK.calculate(this.getPivotAngle());
 
         velocity = RobotMath.clamp(velocity, 0, Constants.Arm_Settings.PIVOT_MAX_VELOCITY);
-        runArmPivot(velocity);
+        runArmPivot(velocity, true);
     }
 
     public void runArmPivot(double velocity) {
-        this.PIVOT.set(ControlMode.PercentOutput, velocity);
+        this.runArmExtend(velocity);
+    }
+
+    public void runArmPivot(double velocity, boolean override) {
+        if (override) {
+            PIVOT.set(ControlMode.Velocity, velocity);
+        } else if (PIVOT.getSelectedSensorPosition() <= Constants.Arm_Settings.PIVOT_MAX
+                || PIVOT.getSelectedSensorPosition() >= Constants.Arm_Settings.PIVOT_MIN) {
+            PIVOT.set(ControlMode.Velocity, velocity);
+
+        } else {
+            PIVOT.set(ControlMode.Velocity, velocity);
+        }
     }
 
     public void runArmExtend(double percentValue) {
         this.runArmExtend(percentValue, false);
     }
 
-    public void runArmExtend(double percentValue, boolean override) {
-        if (override) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
-        } else if ((Math.signum(percentValue) == 1) && (getExtendPosition() <= Constants.Arm_Settings.EXTEND_MAX)) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
-        } else if (Math.signum(percentValue) == -1 && (getExtendPosition() >= Constants.Arm_Settings.EXTEND_MIN)) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
-        }
-    }
-
-    public void runArmRetraction(double percentValue) {
-        if (Math.signum(percentValue) == -1 && (getExtendPosition() >= Constants.Arm_Settings.EXTEND_MIN)) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
-        } else {
-            EXTEND.set(ControlMode.PercentOutput, 0.0);
-        }
-    }
-
     // public void runPivotMotionMagic(double targetDistancePivot) {
     // PIVOT.set(ControlMode.MotionMagic, targetDistancePivot);
     // }
 
-    public void runExtendMotionMagic(double targetDistanceExtend) {
-        EXTEND.set(ControlMode.MotionMagic, targetDistanceExtend);
+    public void runArmExtend(double percentValue, boolean override) {
+        if (override) {
+            EXTEND.set(ControlMode.PercentOutput, percentValue);
+        } else if (getExtendIsOkay()) {
+            EXTEND.set(ControlMode.PercentOutput, percentValue);
+        } else { // If getExtendIsOkay is not okay meaning false
+            EXTEND.set(ControlMode.PercentOutput, 0);
+        }
     }
 
-    public void stopArm() {
+    public void runExtendMotionMagic(double targetDistanceExtend) {
+        // This is verbose enough. Don't be lazy
+        double mmacc = Constants.Arm_Settings.EXTEND_ACCELERATION * Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
+        double mmcc = Constants.Arm_Settings.EXTEND_CRUISECONTROL * Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
+
+        if (getExtendIsCloseToOkay()) {
+            this.EXTEND.configMotionCruiseVelocity(mmcc);
+            this.EXTEND.configMotionAcceleration(mmacc);
+        }
+        EXTEND.set(ControlMode.MotionMagic, targetDistanceExtend);
+
+    }
+
+    // public void stopArm() {
+    // this.runArmPivot(0);
+    // this.runArmExtend(0);
+    // }
+
+    public void stopPivot() {
         this.runArmPivot(0);
+    }
+
+    public void stopExtend() {
         this.runArmExtend(0);
+    }
+
+    public void resetArmEncoders() {
+        resetPivotDistance();
+        resetExtendDistance();
+    }
+
+    public void resetPivotDistance() {
+        this.PIVOT.setSelectedSensorPosition(0);
+    }
+
+    public void resetExtendDistance() {
+        this.EXTEND.setSelectedSensorPosition(0);
     }
 
     // getters
     public double getPivotPosition() {
-        return PIVOT.getSelectedSensorPosition();
+        return this.PIVOT.getSelectedSensorPosition();
     }
 
     private double getPivotAngle() {
-        return PIVOT.getSelectedSensorPosition() / Constants.TechnicalConstants.ENCODER_COUNTS_PER_DEGREE;
+        return this.PIVOT.getSelectedSensorPosition() / Constants.TechnicalConstants.ENCODER_COUNTS_PER_DEGREE;
     }
 
     public double getExtendPosition() {
-        return EXTEND.getSelectedSensorPosition();
+        return this.EXTEND.getSelectedSensorPosition();
     }
 
-    public void resetPivotDistance() {
-        PIVOT.setSelectedSensorPosition(0);
+    public boolean getExtendIsOkay() {
+        return this.getPivotAngle() > Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS
+                && this.getPivotAngle() < Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS;
     }
 
-    public void resetExtendDistance() {
-        EXTEND.setSelectedSensorPosition(0);
+    public boolean getExtendIsCloseToOkay() {
+        return Math.abs(this.getPivotAngle() - Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS) < 10
+                || Math.abs(this.getPivotAngle() - Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS) < 10;
     }
+
+    // TODO: current limit motor or monitor amps
+
 }

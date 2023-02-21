@@ -140,23 +140,36 @@ public class Constants {
 
     // Arm Settings
     public static class Arm_Settings {
+
+        // PIVOT RUNS IN VELOCITY CONTROL
         public static final double PIVOT_ACCELERATION = 5000.0;
         public static final double PIVOT_CRUISECONTROL = 5000.0; // the speed (velocity)
 
         public static final double PIVOT_MIN = 0.0; // TODO: Configure max and min distances
-        public static final double PIVOT_MAX = 0.0;
+        public static final double PIVOT_MAX = 0.0; // Software limits
 
         public static final double PIVOT_RAMP_RATE_SECS = 0.5;
         public static final double PIVOT_MAX_VELOCITY = 0; // TODO: max and min velocity
 
-        public static final double EXTEND_ACCELERATION = 15_000.0;
-        public static final double EXTEND_CRUISECONTROL = 15_000.0;
+        public static final double PIVOT_DEGREES_OF_DTH_FORWARDS = 175.0; // degrees arm has to be retracted to minimum
+        // extension
+        public static final double PIVOT_DEGREES_OF_DTH_BACKWARDS = 5.0;
 
-        public static final double EXTEND_MAX = 200_000;
-        public static final double EXTEND_MIN = 15_500; // soft 0
+        public static final double PIVOT_OPERATOR_SPEED = 2000.0;
+
+        // EXTEND RUNS IN PERCENT OUTPUT
+        public static final double EXTEND_ACCELERATION = 0.2;
+        public static final double EXTEND_CRUISECONTROL = 0.2;
+        public static final double EXTEND_MM_DTH_SLOWTO_PERCENT = 0.5;
+
+        public static final double EXTEND_MAX = 200_000; // Software limits
+        public static final double EXTEND_MIN = 100; // soft 0
         public static final double EXTEND_HARD_LIMIT = 0;
 
         public static final int TIMEOUT_MS = 30;
+
+        public static final double EXTEND_OPERATOR_SPEED = 0.1;
+
     }
 
     // Arm PID
@@ -187,6 +200,8 @@ public class Constants {
         public static final double INCHES_TO_METERS = 0.0254;
         public static final double MAX_FALCON_SPEED_ENC = 20_300.0;
         public static final double FALCON_TICKS = 2048.0;
+
+        public static final double ARM_LENGTH_CONSTRAINT = 0.83; // arm at the maximum length
 
         // DRIVE TRAIN INFO
         public static final double DRIVE_TRAIN_GEAR_RATIO = 1 / 9.8;

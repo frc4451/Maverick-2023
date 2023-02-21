@@ -100,6 +100,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        RobotContainer.arm.resetArmEncoders();
         RobotContainer.driveTrain.setCoastMode();
         RobotContainer.driveTrain.resetNavigation();
         RobotContainer.driveTrain.resetBalanceController();
@@ -133,7 +134,7 @@ public class Robot extends TimedRobot {
         RobotContainer.driveTrain.resetGyro();
         RobotContainer.driveTrain.setBrakeMode();
         RobotContainer.driveTrain.resetBalanceController();
-        // RobotContainer.arm.resetArmEncoders();
+        RobotContainer.arm.resetArmEncoders();
     }
 
     /** This function is called periodically during operator control. */
@@ -159,6 +160,23 @@ public class Robot extends TimedRobot {
         if (IO.Driver.getButtonAPressed()) {
             RobotContainer.intake.toggleIntakeSolenoid();
         }
+
+        // Arm
+        if (IO.Operator.getRightBumper()) {
+            RobotContainer.arm.runArmPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+        } else if (IO.Operator.getRightTrigger()) {
+            RobotContainer.arm.runArmPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+        } else {
+            RobotContainer.arm.stopPivot();
+        }
+        if (IO.Operator.getLeftBumper()) {
+            RobotContainer.arm.runArmExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
+        } else if (IO.Operator.getLeftTrigger()) {
+            RobotContainer.arm.runArmExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
+        } else {
+            RobotContainer.arm.stopExtend();
+        }
+
     }
 
     /** This function is called once when the robot is disabled. */
