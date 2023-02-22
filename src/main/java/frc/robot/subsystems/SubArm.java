@@ -18,7 +18,6 @@ import frc.robot.Constants.ARM_PIDF;
 import frc.robot.Constants.Arm_Settings;
 import frc.robot.util.RobotMath;
 
-// TODO: Make it so if(getExtendIsCloseToDth) {no pivot; suk arm in} else {pivot}
 /** Add your docs here. */
 public class SubArm {
 
@@ -27,7 +26,7 @@ public class SubArm {
     private final Solenoid EXTEND_BRAKE;
     private final Solenoid CLAW;
 
-    // PID CONTROLLER
+    // PID CONTROLLERS
     private final ArmFeedforward PIVOT_FEEDFORWARD = new ArmFeedforward(
             Constants.ARM_PIDF.PIVOT_SG,
             Constants.ARM_PIDF.PIVOT_GG,
@@ -61,6 +60,7 @@ public class SubArm {
         this.PIVOT.configClosedloopRamp(Constants.Arm_Settings.PIVOT_RAMP_RATE_SECS);
 
         // Pivot PIDF
+        // TODO: Figure out if we actually need this probably do
         this.PIVOT.configSelectedFeedbackSensor(
                 FeedbackDevice.IntegratedSensor,
                 ARM_PIDF.PID_LOOP_INDEX,
@@ -104,19 +104,19 @@ public class SubArm {
                 ARM_PIDF.TIMEOUT_MS);
     }
 
-    public void resetPivotController() {
-        // this.PIVOT_CONTROLLER.setSetpoint(0);
-        // this.PIVOT_CONTROLLER.setTolerance(0);
-        // this.PIVOT_CONTROLLER.reset();
-    }
+    // public void resetPivotController() {
+    // // this.PIVOT_CONTROLLER.setSetpoint(0);
+    // // this.PIVOT_CONTROLLER.setTolerance(0);
+    // // this.PIVOT_CONTROLLER.reset();
+    // }
 
-    /**
-     * @param setpoint
-     */
-    public void setPivotController(double setpoint) {
-        // this.PIVOT_CONTROLLER.setSetpoint(setpoint);
-        // this.PIVOT_CONTROLLER.reset();
-    }
+    // /**
+    // * @param setpoint
+    // */
+    // public void setPivotController(double setpoint) {
+    // // this.PIVOT_CONTROLLER.setSetpoint(setpoint);
+    // // this.PIVOT_CONTROLLER.reset();
+    // }
 
     // public double getPivotControllerOutput() {
     // return RobotMath.clamp(
@@ -125,11 +125,64 @@ public class SubArm {
     // Constants.Arm_Settings.PIVOT_MIN_VELOCITY);
     // }
 
+    /**
+     * @param pivotDegrees
+     * @param extendEncoderCounts
+     */
+    public void armTo(double pivotDegrees, double extendEncoderCounts) {
+        // if goes throguh degrees of death AND arm is not tucked
+        if (getPathPassedThroughDegreesOfDeath(pivotDegrees)) {
+            if (getArmTucked()) {
+                pivotTo(pivotDegrees);
+            } else if (getExtendIsCloseToDth()) {
+                tuckArm();
+                stopPivot();
+            } else {
+                pivotTo(pivotDegrees);
+                tuckArm();
+            }
+        } else {
+            pivotTo(pivotDegrees);
+            extendTo(extendEncoderCounts);
+        }
+    }
+
+    // setpoints
+    public void startPosition() {
+        armTo(Constants.Arm_Settings.PIVOT_START, Constants.Arm_Settings.EXTEND_START);
+    }
+
+    public void travelPosition() {
+        armTo(Constants.Arm_Settings.PIVOT_TRAVEL, Constants.Arm_Settings.EXTEND_TRAVEL);
+    }
+
+    public void scoreHigh() {
+        armTo(Constants.Arm_Settings.PIVOT_HIGH, Constants.Arm_Settings.EXTEND_HIGH);
+    }
+
+    public void scoreMid() {
+        armTo(Constants.Arm_Settings.PIVOT_MID, Constants.Arm_Settings.EXTEND_MID);
+    }
+
+    // TODO: Possibly we don't need this
+    public void scoreLow() {
+        armTo(Constants.Arm_Settings.PIVOT_LOW, Constants.Arm_Settings.EXTEND_LOW);
+    }
+
+    public void grabCone() {
+        armTo(Constants.Arm_Settings.PIVOT_PICK_CONE, Constants.Arm_Settings.EXTEND_PICK_CONE);
+    }
+
+    public void grabCube() {
+        armTo(Constants.Arm_Settings.PIVOT_PICK_CUBE, Constants.Arm_Settings.EXTEND_PICK_CUBE);
+    }
+
+    // Pivot uses feedforward and feedback controller
     public void pivotTo(final double setpoint) {
         this.PIVOT_FEEDBACK.setSetpoint(setpoint);
 
         if (this.PIVOT_FEEDBACK.atSetpoint()) {
-            runArmPivot(0);
+            runPivot(0);
             return;
         }
 
@@ -139,20 +192,19 @@ public class SubArm {
                 Constants.Arm_Settings.PIVOT_ACCELERATION) + this.PIVOT_FEEDBACK.calculate(this.getPivotAngle());
 
         velocity = RobotMath.clamp(velocity, 0, Constants.Arm_Settings.PIVOT_MAX_VELOCITY);
-        runArmPivot(velocity, true);
+        runPivot(velocity, true);
     }
 
-    public void runArmPivot(double velocity) {
-        this.runArmPivot(velocity);
+    public void runPivot(double velocity) {
+        this.runPivot(velocity, false);
     }
 
-    public void runArmPivot(double velocity, boolean override) {
+    public void runPivot(double velocity, boolean override) {
         if (override) {
             PIVOT.set(ControlMode.Velocity, velocity);
         } else if (PIVOT.getSelectedSensorPosition() <= Constants.Arm_Settings.PIVOT_MAX
                 || PIVOT.getSelectedSensorPosition() >= Constants.Arm_Settings.PIVOT_MIN) {
             PIVOT.set(ControlMode.Velocity, velocity);
-
         } else {
             stopPivot();
         }
@@ -162,26 +214,8 @@ public class SubArm {
         PIVOT.set(ControlMode.Velocity, 0);
     }
 
-    public void runArmExtend(double percentValue) {
-        this.runArmExtend(percentValue, false);
-    }
-
-    // public void runPivotMotionMagic(double targetDistancePivot) {
-    // PIVOT.set(ControlMode.MotionMagic, targetDistancePivot);
-    // }
-    // TODO: Make detect if setpoint wants to go through degrees of death
-    public void runArmExtend(double percentValue, boolean override) {
-        if (override) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
-        } else if (getExtendIsOkay()) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
-        } else { // If getExtendIsOkay is not okay meaning false
-            EXTEND.set(ControlMode.PercentOutput, 0);
-        }
-    }
-
-    public void runExtendMotionMagic(double targetDistanceExtend) {
-        // This is verbose enough. Don't be lazy
+    // Extension uses motionmagic.
+    public void extendTo(double targetDistanceExtend) {
 
         double mmacc = Constants.Arm_Settings.EXTEND_ACCELERATION * Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
         double mmcc = Constants.Arm_Settings.EXTEND_CRUISECONTROL * Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
@@ -194,20 +228,33 @@ public class SubArm {
             this.EXTEND.configMotionCruiseVelocity(Constants.Arm_Settings.EXTEND_CRUISECONTROL);
         }
         EXTEND.set(ControlMode.MotionMagic, targetDistanceExtend);
-
     }
 
-    public void retract() {
+    public void runExtend(double percentValue) {
+        this.runExtend(percentValue, false);
+    }
+
+    public void runExtend(double percentValue, boolean override) {
+        if (override) {
+            EXTEND.set(ControlMode.PercentOutput, percentValue);
+        } else if (getExtendIsOkay()) {
+            EXTEND.set(ControlMode.PercentOutput, percentValue);
+        } else { // If getExtendIsOkay is not okay meaning false
+            stopExtend();
+        }
+    }
+
+    public void stopExtend() {
+        this.EXTEND.set(ControlMode.PercentOutput, 0);
+    }
+
+    public void tuckArm() {
         EXTEND.set(ControlMode.MotionMagic, Constants.Arm_Settings.EXTEND_MIN);
     }
 
-    // public void stopArm() {
-    // this.runArmPivot(0);
-    // this.runArmExtend(0);
-    // }
-
-    public void stopExtend() {
-        this.runArmExtend(0);
+    public void stopArm() {
+        this.stopPivot();
+        this.stopExtend();
     }
 
     public void resetArmEncoders() {
@@ -221,43 +268,6 @@ public class SubArm {
 
     public void resetExtendDistance() {
         this.EXTEND.setSelectedSensorPosition(0);
-    }
-
-    public void armTo(double pivotDegrees, double extendEncoderCounts) {
-        pivotTo(pivotDegrees);
-        if (getPathPassedThroughDegreesOfDeath(pivotDegrees)) {
-            retract();
-        } else {
-            runExtendMotionMagic(extendEncoderCounts);
-        }
-    }
-
-    // setpoints
-    public void travelPosition() {
-    }
-
-    public void startPosition() {
-
-    }
-
-    public void scoreHigh() {
-
-    }
-
-    public void scoreMid() {
-
-    }
-
-    public void scoreLow() {
-
-    }
-
-    public void grabCone() {
-
-    }
-
-    public void grabCube() {
-
     }
 
     // getters
@@ -281,16 +291,19 @@ public class SubArm {
         return (e < lr && lr < s) || (e < hr && hr < s) || (e > lr && lr > s) || (e > hr && hr > s);
     }
 
-    public boolean getExtendIsOkay() {
-        return this.getPivotAngle() > Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS
-                && this.getPivotAngle() < Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS;
-    }
-
     public boolean getExtendIsCloseToDth() {
         return Math.abs(this.getPivotAngle() - Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS) < 10
                 || Math.abs(this.getPivotAngle() - Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS) < 10;
     }
 
+    public boolean getExtendIsOkay() {
+        return this.getPivotAngle() > Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS
+                && this.getPivotAngle() < Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS;
+    }
+
+    public boolean getArmTucked() {
+        return this.getExtendPosition() <= Constants.Arm_Settings.EXTEND_MIN;
+    }
     // TODO: current limit motor or monitor amps
 
 }

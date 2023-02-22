@@ -138,6 +138,7 @@ public class Constants {
         public static final int TIMEOUT_MS = 30;
     }
 
+    // TODO: Don't forget about arm constants
     // Arm Settings
     public static class Arm_Settings {
 
@@ -145,11 +146,11 @@ public class Constants {
         public static final double PIVOT_ACCELERATION = 5000.0;
         public static final double PIVOT_CRUISECONTROL = 5000.0; // the speed (velocity)
 
-        public static final double PIVOT_MIN = 0.0; // TODO: Configure max and min distances
+        public static final double PIVOT_MIN = 0.0;
         public static final double PIVOT_MAX = 0.0; // Software limits
 
         public static final double PIVOT_RAMP_RATE_SECS = 0.5;
-        public static final double PIVOT_MAX_VELOCITY = 0; // TODO: max and min velocity
+        public static final double PIVOT_MAX_VELOCITY = 0;
 
         public static final double PIVOT_DEGREES_OF_DTH_FORWARDS = 175.0; // degrees arm has to be retracted to minimum
         // extension
@@ -171,23 +172,26 @@ public class Constants {
         public static final double EXTEND_OPERATOR_SPEED = 0.1;
 
         // Arm setpoints
-        public static final double EXTEND_HIGH = 0;
         public static final double PIVOT_HIGH = 0;
+        public static final double EXTEND_HIGH = 0;
 
-        public static final double EXTEND_MID = 0;
         public static final double PIVOT_MID = 0;
+        public static final double EXTEND_MID = 0;
 
-        public static final double EXTEND_LOW = 0;
         public static final double PIVOT_LOW = 0;
+        public static final double EXTEND_LOW = 0;
 
-        public static final double EXTEND_TRAVEL = 0;
         public static final double PIVOT_TRAVEL = 0;
+        public static final double EXTEND_TRAVEL = 0;
 
-        public static final double EXTEND_PICK_CONE = 0;
         public static final double PIVOT_PICK_CONE = 0;
+        public static final double EXTEND_PICK_CONE = 0;
 
-        public static final double EXTEND_PICK_CUBE = 0;
         public static final double PIVOT_PICK_CUBE = 0;
+        public static final double EXTEND_PICK_CUBE = 0;
+
+        public static final double PIVOT_START = 0;
+        public static final double EXTEND_START = 0;
     }
 
     // Arm PID
