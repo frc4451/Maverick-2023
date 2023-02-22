@@ -170,6 +170,24 @@ public class Constants {
 
         public static final double EXTEND_OPERATOR_SPEED = 0.1;
 
+        // Arm setpoints
+        public static final double EXTEND_HIGH = 0;
+        public static final double PIVOT_HIGH = 0;
+
+        public static final double EXTEND_MID = 0;
+        public static final double PIVOT_MID = 0;
+
+        public static final double EXTEND_LOW = 0;
+        public static final double PIVOT_LOW = 0;
+
+        public static final double EXTEND_TRAVEL = 0;
+        public static final double PIVOT_TRAVEL = 0;
+
+        public static final double EXTEND_PICK_CONE = 0;
+        public static final double PIVOT_PICK_CONE = 0;
+
+        public static final double EXTEND_PICK_CUBE = 0;
+        public static final double PIVOT_PICK_CUBE = 0;
     }
 
     // Arm PID

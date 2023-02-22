@@ -18,6 +18,7 @@ import frc.robot.Constants.ARM_PIDF;
 import frc.robot.Constants.Arm_Settings;
 import frc.robot.util.RobotMath;
 
+// TODO: Make it so if(getExtendIsCloseToDth) {no pivot; suk arm in} else {pivot}
 /** Add your docs here. */
 public class SubArm {
 
@@ -142,7 +143,7 @@ public class SubArm {
     }
 
     public void runArmPivot(double velocity) {
-        this.runArmExtend(velocity);
+        this.runArmPivot(velocity);
     }
 
     public void runArmPivot(double velocity, boolean override) {
@@ -153,8 +154,12 @@ public class SubArm {
             PIVOT.set(ControlMode.Velocity, velocity);
 
         } else {
-            PIVOT.set(ControlMode.Velocity, velocity);
+            stopPivot();
         }
+    }
+
+    public void stopPivot() {
+        PIVOT.set(ControlMode.Velocity, 0);
     }
 
     public void runArmExtend(double percentValue) {
@@ -164,7 +169,7 @@ public class SubArm {
     // public void runPivotMotionMagic(double targetDistancePivot) {
     // PIVOT.set(ControlMode.MotionMagic, targetDistancePivot);
     // }
-
+    // TODO: Make detect if setpoint wants to go through degrees of death
     public void runArmExtend(double percentValue, boolean override) {
         if (override) {
             EXTEND.set(ControlMode.PercentOutput, percentValue);
@@ -177,25 +182,29 @@ public class SubArm {
 
     public void runExtendMotionMagic(double targetDistanceExtend) {
         // This is verbose enough. Don't be lazy
+
         double mmacc = Constants.Arm_Settings.EXTEND_ACCELERATION * Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
         double mmcc = Constants.Arm_Settings.EXTEND_CRUISECONTROL * Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
 
-        if (getExtendIsCloseToOkay()) {
-            this.EXTEND.configMotionCruiseVelocity(mmcc);
+        if (getExtendIsCloseToDth()) {
             this.EXTEND.configMotionAcceleration(mmacc);
+            this.EXTEND.configMotionCruiseVelocity(mmcc);
+        } else {
+            this.EXTEND.configMotionAcceleration(Constants.Arm_Settings.EXTEND_ACCELERATION);
+            this.EXTEND.configMotionCruiseVelocity(Constants.Arm_Settings.EXTEND_CRUISECONTROL);
         }
         EXTEND.set(ControlMode.MotionMagic, targetDistanceExtend);
 
+    }
+
+    public void retract() {
+        EXTEND.set(ControlMode.MotionMagic, Constants.Arm_Settings.EXTEND_MIN);
     }
 
     // public void stopArm() {
     // this.runArmPivot(0);
     // this.runArmExtend(0);
     // }
-
-    public void stopPivot() {
-        this.runArmPivot(0);
-    }
 
     public void stopExtend() {
         this.runArmExtend(0);
@@ -214,6 +223,43 @@ public class SubArm {
         this.EXTEND.setSelectedSensorPosition(0);
     }
 
+    public void armTo(double pivotDegrees, double extendEncoderCounts) {
+        pivotTo(pivotDegrees);
+        if (getPathPassedThroughDegreesOfDeath(pivotDegrees)) {
+            retract();
+        } else {
+            runExtendMotionMagic(extendEncoderCounts);
+        }
+    }
+
+    // setpoints
+    public void travelPosition() {
+    }
+
+    public void startPosition() {
+
+    }
+
+    public void scoreHigh() {
+
+    }
+
+    public void scoreMid() {
+
+    }
+
+    public void scoreLow() {
+
+    }
+
+    public void grabCone() {
+
+    }
+
+    public void grabCube() {
+
+    }
+
     // getters
     public double getPivotPosition() {
         return this.PIVOT.getSelectedSensorPosition();
@@ -227,12 +273,20 @@ public class SubArm {
         return this.EXTEND.getSelectedSensorPosition();
     }
 
+    public boolean getPathPassedThroughDegreesOfDeath(double setpoint) {
+        double s = getPivotAngle();
+        double e = setpoint;
+        double hr = Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS;
+        double lr = Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS;
+        return (e < lr && lr < s) || (e < hr && hr < s) || (e > lr && lr > s) || (e > hr && hr > s);
+    }
+
     public boolean getExtendIsOkay() {
         return this.getPivotAngle() > Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS
                 && this.getPivotAngle() < Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS;
     }
 
-    public boolean getExtendIsCloseToOkay() {
+    public boolean getExtendIsCloseToDth() {
         return Math.abs(this.getPivotAngle() - Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS) < 10
                 || Math.abs(this.getPivotAngle() - Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS) < 10;
     }
