@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoContainer;
+import frc.robot.subsystems.SubIntakeModes;
 import frc.robot.trajectories.TrajectoryContainer;
 import frc.robot.util.IO;
 
@@ -75,6 +76,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Delta Speed Right-Left",
                 RobotContainer.driveTrain.getRightSpeed() - RobotContainer.driveTrain.getLeftSpeed());
         SmartDashboard.putData("Field/Field", RobotContainer.field);
+        SmartDashboard.putBoolean("Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
         // SmartDashboard.putNumber("Amp 0", RobotContainer.pdp.getCurrent(0));
         // SmartDashboard.putNumber("Amp 1", RobotContainer.pdp.getCurrent(1));
         // SmartDashboard.putNumber("Amp 14", RobotContainer.pdp.getCurrent(14));
@@ -141,7 +143,8 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         // Drive Train
-        RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
+        RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(),
+                IO.Driver.getRightX()/* , IO.Driver.getLeftBumper() */);
         // Balance
         if (IO.Driver.getButtonB()) {
             RobotContainer.driveTrain.balanceChargeStation();
@@ -149,32 +152,54 @@ public class Robot extends TimedRobot {
 
         // Intake
         if (IO.Driver.getRightBumper()) {
-            RobotContainer.intake.runIntake("Cube");
+            RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
         } else if (IO.Driver.getRightTrigger()) {
-            RobotContainer.intake.runIntake("Cone");
+            RobotContainer.intake.runIntake(SubIntakeModes.CONE);
         } else if (IO.Driver.getLeftTrigger()) {
-            RobotContainer.intake.runIntake("Reverse");
+            RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
         } else {
             RobotContainer.intake.stopIntake();
         }
+
+        if (IO.Driver.getButtonA()) {
+            RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+        } else if (IO.Driver.getButtonX()) {
+            RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
+        } else {
+            // This also stops the platter for intake so don't remove it
+            RobotContainer.intake.stopPlatter();
+        }
+
         if (IO.Driver.getButtonAPressed()) {
             RobotContainer.intake.toggleIntakeSolenoid();
         }
 
         // Arm
-        if (IO.Operator.getRightBumper()) {
-            RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
-        } else if (IO.Operator.getRightTrigger()) {
-            RobotContainer.arm.runPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
-        } else {
-            RobotContainer.arm.stopPivot();
-        }
         if (IO.Operator.getLeftBumper()) {
             RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
         } else if (IO.Operator.getLeftTrigger()) {
             RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
         } else {
             RobotContainer.arm.stopExtend();
+        }
+
+        // PivotTo takes priority over manual pivot
+        if (IO.Operator.getButtonA() || IO.Operator.getButtonY()) {
+            if (IO.Operator.getButtonY()) {
+                RobotContainer.arm.pivotTo(90);
+            } else if (IO.Operator.getButtonA()) {
+                RobotContainer.arm.pivotTo(0);
+            } else {
+                RobotContainer.arm.stopPivot();
+            }
+        } else {
+            if (IO.Operator.getRightBumper()) {
+                RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED, true);
+            } else if (IO.Operator.getRightTrigger()) {
+                RobotContainer.arm.runPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED, true);
+            } else {
+                RobotContainer.arm.stopPivot();
+            }
         }
 
     }

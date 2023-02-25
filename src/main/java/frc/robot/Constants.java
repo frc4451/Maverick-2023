@@ -25,11 +25,12 @@ public class Constants {
         // Arm
         public static final int PIVOT = 4;
         public static final int EXTEND = 5;
+        public static final int EXTEND_LIMIT_SWITCH = 0;
         public static final int EXTENSION_BRAKE_SOLENOID = 2;
         public static final int CLAW_SOLENOID = 3;
         // Intake
-        public static final int TOP_INTAKE = 6;
-        public static final int BOTTOM_INTAKE = 7;
+        public static final int BOTTOM_INTAKE = 6;
+        public static final int TOP_INTAKE = 7;
         public static final int PLATTER = 8;
         public static final int INTAKE_SOLENOID_FORWARD = 0;
         public static final int INTAKE_SOLENOID_REVERSE = 1;
@@ -40,7 +41,7 @@ public class Constants {
     // Settings for arcade velocity drive
     public static class DT_Settings {
         public static final double TURN_SENSITIVITY = 0.65; // Joystick turn scaling factor for Curve Drive
-        public static final double QUICK_TURN = 0.6; // Joystick turn scaling factor for QuickTurn Drive
+        public static final double QUICK_TURN = 0.3; // Joystick turn scaling factor for QuickTurn Drive
         public static final double MAX_VELOCITY = 18_000.0; // Drive train max velocity encoder per 100ms
         public static final double MIN_BALANCE_VELOCITY = 2000.0; // Drive train min velocity when balancing
         public static final double BALANCE_MAX_VELOCITY = 2000.0; // Drive train max velocity when balancing
@@ -111,8 +112,8 @@ public class Constants {
     // Intake Settings
     public static class Intake_Settings {
         // Rollers
-        public static final double INTAKE_SPEED = 0.625;
-        public static final double REVERSE = -0.75;
+        public static final double INTAKE_SPEED = 0.4;
+        public static final double REVERSE = -0.5;
         // Ripped docs from SupplyCurrentLimitConfiguration CTRE class
         /**
          * The "holding" current (amperes) to limit to when feature is activated.
@@ -129,7 +130,7 @@ public class Constants {
          */
         public static final double INTAKE_CURRENT_THRESHOLD_TIME_SECONDS = 0.5;
         // Platter
-        public static final double PLATTER_SPEED = 2_000; // equivalent to 0.1 in percentOutput
+        public static final double PLATTER_SPEED = 1_500; // equivalent to 0.1 in percentOutput
         public static final double PLATTER_FF = 1023 / 20_300.0;
         public static final double PLATTER_RAMP_RATE_SECS = 0.5;
 
@@ -142,9 +143,9 @@ public class Constants {
     // Arm Settings
     public static class Arm_Settings {
 
-        // PIVOT RUNS IN VELOCITY CONTROL
-        public static final double PIVOT_ACCELERATION = 5000.0;
-        public static final double PIVOT_CRUISECONTROL = 5000.0; // the speed (velocity)
+        // PIVOT RUNS IN PercentOutput
+        public static final double PIVOT_ACCELERATION = 15.0; // degrees per second
+        public static final double PIVOT_CRUISECONTROL = 15.0;
 
         public static final double PIVOT_MIN = 0.0;
         public static final double PIVOT_MAX = 0.0; // Software limits
@@ -156,8 +157,7 @@ public class Constants {
         // extension
         public static final double PIVOT_DEGREES_OF_DTH_BACKWARDS = 5.0;
 
-        public static final double PIVOT_OPERATOR_SPEED = 2000.0;
-
+        public static final double PIVOT_OPERATOR_SPEED = 500;
         // EXTEND RUNS IN PERCENT OUTPUT
         public static final double EXTEND_ACCELERATION = 0.2;
         public static final double EXTEND_CRUISECONTROL = 0.2;
@@ -165,6 +165,8 @@ public class Constants {
 
         public static final double EXTEND_MAX = 200_000; // Software limits
         public static final double EXTEND_MIN = 100; // soft 0
+        public static final double EXTEND_TUCKED = 1000; // we use this in SubArm to check if the arm is retracted or
+                                                         // not
         public static final double EXTEND_HARD_LIMIT = 0;
 
         public static final int TIMEOUT_MS = 30;
@@ -246,7 +248,8 @@ public class Constants {
         // ARM INFO
         public static final double PIVOT_GEARBOX_REDUCTION_RATIO = 64.0 / 1.0; // 64 to 1 reduction
         public static final double PIVOT_SPROCKET_REDUCTION_RATIO = 64.0 / 22.0; // 64 to 22 reduction
-        public static final double PIVOT_GEAR_RATIO = PIVOT_GEARBOX_REDUCTION_RATIO * PIVOT_SPROCKET_REDUCTION_RATIO;
+        public static final double PIVOT_GEAR_RATIO = PIVOT_GEARBOX_REDUCTION_RATIO *
+                PIVOT_SPROCKET_REDUCTION_RATIO;
 
         public static final double ENCODER_COUNTS_PER_ROTATION = FALCON_TICKS * PIVOT_GEAR_RATIO;
         public static final double ENCODER_COUNTS_PER_DEGREE = ENCODER_COUNTS_PER_ROTATION / 360.0;

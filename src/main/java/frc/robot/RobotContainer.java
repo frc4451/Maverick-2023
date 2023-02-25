@@ -18,8 +18,9 @@ public class RobotContainer {
                         RioPortMaps.LEFT_BACK_DRIVETRAIN, RioPortMaps.RIGHT_FRONT_DRIVETRAIN,
                         RioPortMaps.RIGHT_BACK_DRIVETRAIN, RioPortMaps.GYRO);
         public static final SubArm arm = new SubArm(RioPortMaps.PIVOT,
-                        RioPortMaps.EXTEND, RioPortMaps.EXTENSION_BRAKE_SOLENOID, RioPortMaps.CLAW_SOLENOID);
-        public static final SubIntake intake = new SubIntake(RioPortMaps.TOP_INTAKE, RioPortMaps.BOTTOM_INTAKE,
+                        RioPortMaps.EXTEND, RioPortMaps.EXTENSION_BRAKE_SOLENOID, RioPortMaps.CLAW_SOLENOID,
+                        RioPortMaps.EXTEND_LIMIT_SWITCH);
+        public static final SubIntake intake = new SubIntake(RioPortMaps.BOTTOM_INTAKE, RioPortMaps.TOP_INTAKE,
                         RioPortMaps.INTAKE_SOLENOID_FORWARD, RioPortMaps.INTAKE_SOLENOID_REVERSE, RioPortMaps.PLATTER);
 
         public static final Field2d field = new Field2d();

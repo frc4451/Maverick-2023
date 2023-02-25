@@ -30,6 +30,7 @@ import frc.robot.Constants.DT_PIDF;
 import frc.robot.Constants.DT_Settings;
 import frc.robot.Constants.TechnicalConstants;
 
+// TODO: Have it where you can turn whenever without having another button
 public class SubDriveTrain {
     // Class variable definitions. Define the variable names for the WPI_TalonFX.
     private final WPI_TalonFX LEFT_FRONT;
@@ -209,15 +210,41 @@ public class SubDriveTrain {
      * ... therefore when forward is zero, turn is zero
      * This is the default drive method in tele-op periodic
      */
-    public void runDrive(double forward, double rotate, boolean quickTurningEnabled) {
-        double fward = Math.abs(forward);
+    public void runDrive(double forward, double rotate) {
+        double _forward = Math.abs(forward);
         double sens = DT_Settings.TURN_SENSITIVITY;
-        if (quickTurningEnabled) {
-            fward = 1;
+        if (forward == 0) {
+            _forward = 1;
             sens = DT_Settings.QUICK_TURN;
         }
-        double left = -forward + rotate * fward * sens;
-        double right = -forward - rotate * fward * sens;
+        double left = -forward + rotate * _forward * sens;
+        double right = -forward - rotate * _forward * sens;
+        double maxMagnitude = Math.max(Math.abs(left), Math.abs(right));
+        if (maxMagnitude > 1) {
+            left /= maxMagnitude;
+            right /= maxMagnitude;
+        }
+        this.LEFT_FRONT.set(ControlMode.Velocity, left * DT_Settings.MAX_VELOCITY);
+        this.RIGHT_FRONT.set(ControlMode.Velocity, right * DT_Settings.MAX_VELOCITY);
+    }
+
+    /**
+     * The Following is experimental, please proceed with caution.
+     * 
+     * @param forward
+     * @param rotate
+     * @param quickTurningEnabled
+     */
+    public void runDrive(double forward, double rotate, boolean quickTurningEnabled) {
+        double _forward = Math.abs(forward);
+        double sens = DT_Settings.TURN_SENSITIVITY;
+        // This is experimental, proceed with caution.
+        if (quickTurningEnabled) {
+            _forward = 1;
+            sens = DT_Settings.QUICK_TURN;
+        }
+        double left = -forward + rotate * _forward * sens;
+        double right = -forward - rotate * _forward * sens;
         double maxMagnitude = Math.max(Math.abs(left), Math.abs(right));
         if (maxMagnitude > 1) {
             left /= maxMagnitude;

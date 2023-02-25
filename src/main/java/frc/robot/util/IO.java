@@ -58,8 +58,8 @@ public class IO {
             return controller.getBButton();
         }
 
-        public static boolean getButtonXPressed() {
-            return controller.getXButtonPressed();
+        public static boolean getButtonX() {
+            return controller.getXButton();
         }
 
         public static boolean getButtonY() {
@@ -144,10 +144,10 @@ public class IO {
         }
     }
 
-    /*
-     * Joystick square method to provide a better driver control
-     */
-    public static double joySquareValue(double rawValue) {
-        return Math.signum(rawValue) * rawValue * rawValue;
-    }
+    // /*
+    // * Joystick square method to provide a better driver control
+    // */
+    // public static double joySquareValue(double rawValue) {
+    // return Math.signum(rawValue) * rawValue * rawValue;
+    // }
 }

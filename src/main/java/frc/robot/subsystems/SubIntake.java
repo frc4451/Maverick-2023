@@ -27,26 +27,29 @@ public class SubIntake {
      * @param intakeSolenoidReverse
      * @param intakePlatter
      */
-    public SubIntake(int intakeTop, int intakeBottom, int intakeSolenoidForward, int intakeSolenoidReverse,
+    public SubIntake(int intakeBottom, int intakeTop, int intakeSolenoidForward, int intakeSolenoidReverse,
             int intakePlatter) {
 
         // Rollers
-        this.INTAKE_TOP = new WPI_TalonFX(intakeTop);
         this.INTAKE_BOTTOM = new WPI_TalonFX(intakeBottom);
+        this.INTAKE_TOP = new WPI_TalonFX(intakeTop);
 
-        this.INTAKE_TOP.configFactoryDefault();
         this.INTAKE_BOTTOM.configFactoryDefault();
+        this.INTAKE_TOP.configFactoryDefault();
 
-        this.INTAKE_TOP.setInverted(false);
-        this.INTAKE_BOTTOM.setInverted(false);
+        this.INTAKE_BOTTOM.setInverted(true);
+        this.INTAKE_TOP.setInverted(true);
+
+        this.INTAKE_BOTTOM.setNeutralMode(NeutralMode.Coast);
+        this.INTAKE_TOP.setNeutralMode(NeutralMode.Coast);
         // Ok this work now
-        this.INTAKE_TOP.configSupplyCurrentLimit(
+        this.INTAKE_BOTTOM.configSupplyCurrentLimit(
                 new SupplyCurrentLimitConfiguration(
                         true,
                         Constants.Intake_Settings.INTAKE_CURRENT_LIMIT,
                         Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD,
                         Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD_TIME_SECONDS));
-        this.INTAKE_BOTTOM.configSupplyCurrentLimit(
+        this.INTAKE_TOP.configSupplyCurrentLimit(
                 new SupplyCurrentLimitConfiguration(
                         true,
                         Constants.Intake_Settings.INTAKE_CURRENT_LIMIT,
@@ -82,15 +85,15 @@ public class SubIntake {
      * 
      * @param intakeMode "cube", "cone", "reverse"
      */
-    public void runIntake(String intakeMode) {
+    public void runIntake(SubIntakeModes intakeMode) {
         switch (intakeMode) {
-            case "cone":
+            case CONE:
                 this.INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
-                runPlatter(true, Constants.Intake_Settings.PLATTER_SPEED);
-            case "cube":
+                runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+            case CUBE:
                 this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
                 break;
-            case "reverse":
+            case REVERSE:
                 INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.REVERSE);
                 INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.REVERSE);
                 break;
@@ -103,16 +106,16 @@ public class SubIntake {
     }
 
     public void stopIntake() {
-        INTAKE_TOP.set(ControlMode.PercentOutput, 0.0);
         INTAKE_BOTTOM.set(ControlMode.PercentOutput, 0.0);
+        INTAKE_TOP.set(ControlMode.PercentOutput, 0.0);
     }
 
-    public void runPlatter(boolean run, double velocity) {
-        if (run) {
-            INTAKE_PLATTER.set(ControlMode.Velocity, velocity);
-        } else {
-            INTAKE_PLATTER.set(ControlMode.Velocity, 0);
-        }
+    public void runPlatter(double velocity) {
+        INTAKE_PLATTER.set(ControlMode.Velocity, velocity);
+    }
+
+    public void stopPlatter() {
+        INTAKE_PLATTER.set(ControlMode.Velocity, 0);
     }
 
     public boolean getSolenoidDeployed() {
