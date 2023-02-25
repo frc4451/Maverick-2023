@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants.RioPortMaps;
 import frc.robot.subsystems.SubArm;
@@ -24,6 +23,4 @@ public class RobotContainer {
                         RioPortMaps.INTAKE_SOLENOID_FORWARD, RioPortMaps.INTAKE_SOLENOID_REVERSE, RioPortMaps.PLATTER);
 
         public static final Field2d field = new Field2d();
-
-        public static final PowerDistribution pdp = new PowerDistribution();
 }
