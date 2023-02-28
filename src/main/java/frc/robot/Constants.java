@@ -30,6 +30,7 @@ public class Constants {
         // Intake
         public static final int BOTTOM_INTAKE = 6;
         public static final int TOP_INTAKE = 7;
+        public static final int INTAKE_LIMIT_SWITCH = -1;
         public static final int PLATTER = 8;
         public static final int INTAKE_SOLENOID_FORWARD = 0;
         public static final int INTAKE_SOLENOID_REVERSE = 1;

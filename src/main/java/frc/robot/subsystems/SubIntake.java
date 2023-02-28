@@ -9,6 +9,8 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.Constants;
@@ -19,6 +21,7 @@ public class SubIntake {
     WPI_TalonFX INTAKE_BOTTOM;
     WPI_TalonFX INTAKE_PLATTER;
     DoubleSolenoid INTAKE_SOLENOID;
+    DigitalInput INTAKE_LIMIT_SWITCH;
 
     /**
      * @param intakeTop
@@ -27,7 +30,8 @@ public class SubIntake {
      * @param intakeSolenoidReverse
      * @param intakePlatter
      */
-    public SubIntake(int intakeBottom, int intakeTop, int intakeSolenoidForward, int intakeSolenoidReverse,
+    public SubIntake(int intakeBottom, int intakeTop, int intakeSolenoidForward, int intakeLimitSwitch,
+            int intakeSolenoidReverse,
             int intakePlatter) {
 
         // Rollers
@@ -56,12 +60,16 @@ public class SubIntake {
                         Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD,
                         Constants.Intake_Settings.INTAKE_CURRENT_THRESHOLD_TIME_SECONDS));
 
+        // Limit Switches
+        this.INTAKE_LIMIT_SWITCH = new DigitalInput(intakeLimitSwitch);
+
         // Pneumatics
         this.INTAKE_SOLENOID = new DoubleSolenoid(
                 PneumaticsModuleType.CTREPCM,
                 intakeSolenoidForward,
                 intakeSolenoidReverse);
         this.INTAKE_SOLENOID.set(DoubleSolenoid.Value.kReverse);
+
         // Platter
         this.INTAKE_PLATTER = new WPI_TalonFX(intakePlatter);
 
@@ -110,6 +118,7 @@ public class SubIntake {
         INTAKE_TOP.set(ControlMode.PercentOutput, 0.0);
     }
 
+    // #spin
     public void runPlatter(double velocity) {
         INTAKE_PLATTER.set(ControlMode.Velocity, velocity);
     }
@@ -118,12 +127,16 @@ public class SubIntake {
         INTAKE_PLATTER.set(ControlMode.Velocity, 0);
     }
 
-    public boolean getSolenoidDeployed() {
-        return INTAKE_SOLENOID.get() == DoubleSolenoid.Value.kForward;
-    }
-
     public void toggleIntakeSolenoid() {
         setIntakeSolenoid(!this.getSolenoidDeployed());
+    }
+
+    public boolean getLimitSwitch() {
+        return this.INTAKE_LIMIT_SWITCH.get();
+    }
+
+    public boolean getSolenoidDeployed() {
+        return INTAKE_SOLENOID.get() == DoubleSolenoid.Value.kForward;
     }
 
     public void setIntakeSolenoid(boolean deployIntake) {

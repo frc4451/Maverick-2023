@@ -118,8 +118,8 @@ public class IO {
             return controller.getBButton();
         }
 
-        public static boolean getButtonXPressed() {
-            return controller.getXButtonPressed();
+        public static boolean getButtonX() {
+            return controller.getXButton();
         }
 
         public static boolean getButtonY() {

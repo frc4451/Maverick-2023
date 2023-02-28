@@ -140,24 +140,32 @@ public class Robot extends TimedRobot {
             RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
         }
 
-        // Intake
-        if (IO.Driver.getRightBumper()) {
-            RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
-        } else if (IO.Driver.getRightTrigger()) {
-            RobotContainer.intake.runIntake(SubIntakeModes.CONE);
-        } else if (IO.Driver.getLeftTrigger()) {
-            RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
-        } else {
-            RobotContainer.intake.stopIntake();
-        }
-
-        if (IO.Driver.getButtonA()) {
-            RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
-        } else if (IO.Driver.getButtonX()) {
-            RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
-        } else {
-            // This also stops the platter for intake so don't remove it
+        // INTAKE
+        // If not the platter buttons
+        if (!(IO.Driver.getRightBumper() || IO.Operator.getButtonA() || IO.Operator.getButtonX())) {
             RobotContainer.intake.stopPlatter();
+        } else {
+            // Run Intake
+            // if (!RobotContainer.intake.getLimitSwitch()) {
+            if (IO.Driver.getRightBumper()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
+            } else if (IO.Driver.getRightTrigger()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.CONE);
+            } else if (IO.Driver.getLeftTrigger()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
+            } else {
+                RobotContainer.intake.stopIntake();
+            }
+            // } else {
+            // RobotContainer.intake.stopIntake();
+            // }
+
+            // Run Platter
+            if (IO.Operator.getButtonA()) {
+                RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+            } else if (IO.Operator.getButtonX()) {
+                RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
+            }
         }
 
         if (IO.Driver.getButtonAPressed()) {

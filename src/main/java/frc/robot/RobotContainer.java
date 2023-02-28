@@ -20,7 +20,8 @@ public class RobotContainer {
                         RioPortMaps.EXTEND, RioPortMaps.EXTENSION_BRAKE_SOLENOID, RioPortMaps.CLAW_SOLENOID,
                         RioPortMaps.EXTEND_LIMIT_SWITCH);
         public static final SubIntake intake = new SubIntake(RioPortMaps.BOTTOM_INTAKE, RioPortMaps.TOP_INTAKE,
-                        RioPortMaps.INTAKE_SOLENOID_FORWARD, RioPortMaps.INTAKE_SOLENOID_REVERSE, RioPortMaps.PLATTER);
+                        RioPortMaps.INTAKE_LIMIT_SWITCH, RioPortMaps.INTAKE_SOLENOID_FORWARD,
+                        RioPortMaps.INTAKE_SOLENOID_REVERSE, RioPortMaps.PLATTER);
 
         public static final Field2d field = new Field2d();
 }

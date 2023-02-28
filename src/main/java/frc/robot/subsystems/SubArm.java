@@ -220,7 +220,6 @@ public class SubArm {
     }
 
     private void setPivotSpeed(double voltage) {
-        System.out.println("Voltage :: " + voltage);
         this.PIVOT.set(ControlMode.PercentOutput, voltage / RobotController.getBatteryVoltage());
         // SmartDashboard.putNumber("PIVOT SPEED%", voltage /
         // RobotController.getBatteryVoltage());
