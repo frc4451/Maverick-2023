@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ARM_PIDF;
 import frc.robot.Constants.Arm_Settings;
 import frc.robot.util.RobotMath;
@@ -162,24 +163,23 @@ public class SubArm {
         armTo(Constants.Arm_Settings.PIVOT_TRAVEL, Constants.Arm_Settings.EXTEND_TRAVEL);
     }
 
-    public void scoreHigh() {
+    public void gotoHigh() {
         armTo(Constants.Arm_Settings.PIVOT_HIGH, Constants.Arm_Settings.EXTEND_HIGH);
     }
 
-    public void scoreMid() {
+    public void gotoMid() {
         armTo(Constants.Arm_Settings.PIVOT_MID, Constants.Arm_Settings.EXTEND_MID);
     }
 
-    // TODO: Possibly we don't need this
     // public void scoreLow() {
     // armTo(Constants.Arm_Settings.PIVOT_LOW, Constants.Arm_Settings.EXTEND_LOW);
     // }
 
-    public void grabCone() {
+    public void armPickCone() {
         armTo(Constants.Arm_Settings.PIVOT_PICK_CONE, Constants.Arm_Settings.EXTEND_PICK_CONE);
     }
 
-    public void grabCube() {
+    public void armPickCube() {
         armTo(Constants.Arm_Settings.PIVOT_PICK_CUBE, Constants.Arm_Settings.EXTEND_PICK_CUBE);
     }
 
@@ -352,6 +352,8 @@ public class SubArm {
     public boolean getArmTucked() {
         return this.getExtendPosition() <= Constants.Arm_Settings.EXTEND_TUCKED;
     }
-    // TODO: current limit motor or monitor amps
 
+    public double getPivotAmps() {
+        return RobotContainer.pdp.getCurrent(Constants.PdpPortMaps.PIVOT);
+    }
 }

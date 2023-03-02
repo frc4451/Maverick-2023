@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 import frc.robot.util.RobotMath;
 
-// TODO: Have it where you can turn whenever without having another button
 public class SubDriveTrain {
     // Class variable definitions. Define the variable names for the WPI_TalonFX.
     private final WPI_TalonFX LEFT_FRONT;
@@ -289,8 +288,9 @@ public class SubDriveTrain {
     }
 
     public void toggleDropdownWheels() {
-        // TODO: Dropdown solenoid
+        // TODO: toggleDropdownWheels()
     }
+
     // public void runMotionMagic(double targetDistanceL, double targetDistanceR) {
     // this.LEFT_FRONT.set(ControlMode.MotionMagic, targetDistanceL);
     // this.RIGHT_FRONT.set(ControlMode.MotionMagic, targetDistanceR);

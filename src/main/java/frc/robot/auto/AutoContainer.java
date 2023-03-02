@@ -11,6 +11,7 @@ import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SubIntakeModes;
 
@@ -94,22 +95,28 @@ public class AutoContainer {
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
                 resetTimer();
+                RobotContainer.arm.openClaw();
                 autoStep++;
                 break;
             case 1:
                 doOnTimer(5, autoStep + 1, () -> {
                     System.out.println("Ahoy!");
+                    RobotContainer.arm.gotoHigh();
                     // score the cone
                 });
                 break;
             case 2:
-                doTrajectory(first, autoStep + 1);
+                RobotContainer.arm.closeClaw();
+                autoStep++;
                 break;
             case 3:
+                doTrajectory(first, autoStep + 1);
+                break;
+            case 4:
                 RobotContainer.driveTrain.setBrakeMode();
                 autoStep++;
                 break;
-            case 4:
+            case 5:
                 RobotContainer.driveTrain.balanceChargeStation();
                 break;
         }
@@ -137,6 +144,7 @@ public class AutoContainer {
             case 3:
                 doOnTimer(5, autoStep + 1, () -> {
                     // pick up cube
+                    RobotContainer.arm.armPickCube();
                     RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
                 });
                 break;

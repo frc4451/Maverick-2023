@@ -38,6 +38,10 @@ public class Constants {
         public static final int GYRO = 0;
     }
 
+    public static class PdpPortMaps {
+        public static final int PIVOT = 2;
+    }
+
     // Settings for arcade velocity drive
     public static class DT_Settings {
         public static final double TURN_SENSITIVITY = 0.65; // Joystick turn scaling factor for Curve Drive
