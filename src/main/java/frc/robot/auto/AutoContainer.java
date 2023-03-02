@@ -90,26 +90,27 @@ public class AutoContainer {
 
     public static void centerBalance() {
         final PathPlannerTrajectory first = AutoStates.CENTER_BALANCE.paths.get(0);
+
         switch (autoStep) {
             case 0:
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
                 resetTimer();
-                RobotContainer.arm.openClaw();
                 autoStep++;
                 break;
             case 1:
-                doOnTimer(5, autoStep + 1, () -> {
-                    System.out.println("Ahoy!");
+                doOnTimer(3, autoStep + 1, () -> {
+                    // Rest in Peace: "Ahoy!"
                     RobotContainer.arm.gotoHigh();
                     // score the cone
                 });
                 break;
             case 2:
-                RobotContainer.arm.closeClaw();
+                RobotContainer.arm.openClaw();
                 autoStep++;
                 break;
             case 3:
+                RobotContainer.arm.travelPosition();
                 doTrajectory(first, autoStep + 1);
                 break;
             case 4:
