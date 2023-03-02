@@ -171,9 +171,9 @@ public class SubArm {
     }
 
     // TODO: Possibly we don't need this
-    public void scoreLow() {
-        armTo(Constants.Arm_Settings.PIVOT_LOW, Constants.Arm_Settings.EXTEND_LOW);
-    }
+    // public void scoreLow() {
+    // armTo(Constants.Arm_Settings.PIVOT_LOW, Constants.Arm_Settings.EXTEND_LOW);
+    // }
 
     public void grabCone() {
         armTo(Constants.Arm_Settings.PIVOT_PICK_CONE, Constants.Arm_Settings.EXTEND_PICK_CONE);
@@ -232,6 +232,16 @@ public class SubArm {
         this.setPivotSpeed(0);
     }
 
+    private boolean pivotBreakMode = false;
+
+    public void pivotToggleBreakMode() {
+        if (pivotBreakMode) {
+            this.PIVOT.setNeutralMode(NeutralMode.Coast);
+        } else {
+            this.PIVOT.setNeutralMode(NeutralMode.Brake);
+        }
+    }
+
     // Extension uses motionmagic.
     public void extendTo(double targetDistanceExtend) {
 
@@ -275,6 +285,18 @@ public class SubArm {
         this.stopExtend();
     }
 
+    public void toggleClaw() {
+        this.CLAW.set(!this.getClawOpen());
+    }
+
+    public void openClaw() {
+        this.CLAW.set(false);
+    }
+
+    public void closeClaw() {
+        this.CLAW.set(true);
+    }
+
     public void resetArmEncoders() {
         resetPivotDistance();
         resetExtendDistance();
@@ -289,6 +311,10 @@ public class SubArm {
     }
 
     // getters
+    public boolean getClawOpen() {
+        return this.CLAW.get();
+    }
+
     public boolean getPivotAtSetpoint() {
         return this.PIVOT_FEEDBACK.atSetpoint();
     }

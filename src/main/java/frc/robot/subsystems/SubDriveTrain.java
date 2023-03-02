@@ -288,17 +288,16 @@ public class SubDriveTrain {
         RIGHT_FRONT.set(ControlMode.PercentOutput, rightVolts / RobotController.getBatteryVoltage());
     }
 
-    public void runMotionMagic(double targetDistanceL, double targetDistanceR) {
-        this.LEFT_FRONT.set(ControlMode.MotionMagic, targetDistanceL);
-        this.RIGHT_FRONT.set(ControlMode.MotionMagic, targetDistanceR);
-        // at 6 seconds go back
+    public void toggleDropdownWheels() {
+        // TODO: Dropdown solenoid
     }
+    // public void runMotionMagic(double targetDistanceL, double targetDistanceR) {
+    // this.LEFT_FRONT.set(ControlMode.MotionMagic, targetDistanceL);
+    // this.RIGHT_FRONT.set(ControlMode.MotionMagic, targetDistanceR);
+    // // at 6 seconds go back
+    // }
 
-    /*
-     * getter methods to display values on the dashboard
-     * 1. Get left front speed
-     * 2. Get right front speed
-     */
+    // getters
     public double getLeftSpeed() {
         return this.LEFT_FRONT.getSelectedSensorVelocity(); // replace 0 with get sensor velocity
     }

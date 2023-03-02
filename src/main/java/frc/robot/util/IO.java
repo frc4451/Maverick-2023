@@ -49,10 +49,6 @@ public class IO {
             return controller.getAButton();
         }
 
-        public static boolean getButtonAPressed() {
-            return controller.getAButtonPressed();
-        }
-
         public static boolean getButtonB() {
             return controller.getBButton();
         }
@@ -63,6 +59,26 @@ public class IO {
 
         public static boolean getButtonY() {
             return controller.getYButton();
+        }
+
+        public static boolean getPOVUp() {
+            return controller.getPOV() < 0 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 0 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVRight() {
+            return controller.getPOV() < 90 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 90 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVDown() {
+            return controller.getPOV() < 180 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 180 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVLeft() {
+            return controller.getPOV() < 270 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 270 - Constants.Misc.CONTROLLER_POV_MARGIN;
         }
 
         public static boolean getStartButton() {
@@ -110,10 +126,6 @@ public class IO {
             return controller.getAButton();
         }
 
-        public static boolean getButtonAPressed() {
-            return controller.getAButtonPressed();
-        }
-
         public static boolean getButtonB() {
             return controller.getBButton();
         }
@@ -124,6 +136,26 @@ public class IO {
 
         public static boolean getButtonY() {
             return controller.getYButton();
+        }
+
+        public static boolean getPOVUp() {
+            return controller.getPOV() < 0 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 0 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVRight() {
+            return controller.getPOV() < 90 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 90 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVDown() {
+            return controller.getPOV() < 180 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 180 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVLeft() {
+            return controller.getPOV() < 270 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 270 - Constants.Misc.CONTROLLER_POV_MARGIN;
         }
 
         public static boolean getStartButton() {

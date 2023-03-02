@@ -130,73 +130,81 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        // Drive Train
-        RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(),
-                IO.Driver.getRightX()/* , IO.Driver.getLeftBumper() */);
-        // Balance
+        // Misc
+
+        // drive robot with sticks
+        RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
+        // DRIVER
+        if (RobotContainer.intake.getIntakeDeployed()) {
+
+            if (IO.Driver.getLeftTrigger()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
+            } else if (IO.Driver.getRightTrigger()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.CONE);
+            } else if (IO.Driver.getRightBumper()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
+            } else {
+                RobotContainer.intake.stopIntake();
+            }
+
+        } else {
+            RobotContainer.intake.stopIntake();
+        }
+
+        if (IO.Driver.getButtonX()) {
+            RobotContainer.intake.toggleIntakeSolenoid();
+        }
+
+        if (IO.Driver.getButtonA()) {
+            RobotContainer.driveTrain.toggleDropdownWheels();
+        }
+
         if (IO.Driver.getButtonB()) {
             RobotContainer.driveTrain.balanceChargeStation();
         } else {
             RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
         }
 
-        // INTAKE
-        // If not the platter buttons
-        if (!(IO.Driver.getRightBumper() || IO.Operator.getButtonA() || IO.Operator.getButtonX())) {
+        // OPERATOR
+
+        if (IO.Operator.getStartButton()) {
+            RobotContainer.arm.pivotToggleBreakMode();
+        }
+
+        if (!(IO.Driver.getRightBumper() || IO.Operator.getButtonX() || IO.Operator.getButtonY())) {
             RobotContainer.intake.stopPlatter();
         } else {
-            // Run Intake
-            // if (!RobotContainer.intake.getLimitSwitch()) {
-            if (IO.Driver.getRightBumper()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
-            } else if (IO.Driver.getRightTrigger()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.CONE);
-            } else if (IO.Driver.getLeftTrigger()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
-            } else {
-                RobotContainer.intake.stopIntake();
-            }
-            // } else {
-            // RobotContainer.intake.stopIntake();
-            // }
-
-            // Run Platter
-            if (IO.Operator.getButtonA()) {
+            if (IO.Operator.getButtonX()) {
                 RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
-            } else if (IO.Operator.getButtonX()) {
+            } else if (IO.Operator.getButtonY()) {
                 RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
             }
         }
 
-        if (IO.Driver.getButtonAPressed()) {
-            RobotContainer.intake.toggleIntakeSolenoid();
+        if (IO.Operator.getButtonA()) {
+            RobotContainer.arm.toggleClaw();
         }
 
-        // Arm
-        if (IO.Operator.getLeftBumper()) {
-            RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
-        } else if (IO.Operator.getLeftTrigger()) {
-            RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
+        if (IO.Operator.getPOVUp()) {
+            RobotContainer.arm.scoreHigh();
+        } else if (IO.Operator.getPOVRight()) {
+            RobotContainer.arm.scoreMid();
+        } else if (IO.Operator.getPOVDown()) {
+            RobotContainer.arm.grabCone();
+        } else if (IO.Operator.getPOVLeft()) {
+            RobotContainer.arm.grabCube();
         } else {
-            RobotContainer.arm.stopExtend();
-        }
-
-        // PivotTo takes priority over manual pivot
-        if (IO.Operator.getButtonA() || IO.Operator.getButtonY()) {
-            if (IO.Operator.getButtonY()) {
-                RobotContainer.arm.pivotTo(90);
-            } else if (IO.Operator.getButtonA()) {
-                RobotContainer.arm.pivotTo(0);
-            } else {
-                RobotContainer.arm.stopPivot();
-            }
-        } else {
-            if (IO.Operator.getRightBumper()) {
-                RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED, true);
+            // Manual arm control
+            if (IO.Operator.getLeftTrigger()) {
+                RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
             } else if (IO.Operator.getRightTrigger()) {
-                RobotContainer.arm.runPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED, true);
-            } else {
-                RobotContainer.arm.stopPivot();
+                RobotContainer.arm.runPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+            }
+
+            if (IO.Operator.getLeftBumper()) {
+                RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
+            } else if (IO.Operator.getRightBumper()) {
+                RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
             }
         }
 

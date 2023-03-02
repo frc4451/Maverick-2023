@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 public enum SubIntakeModes {
+    CUBE_LIMITED("limited_cube"),
     CUBE("cube"),
     CONE("cone"),
     REVERSE("reverse");

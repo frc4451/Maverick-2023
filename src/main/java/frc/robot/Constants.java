@@ -20,17 +20,17 @@ public class Constants {
         public static final int RIGHT_BACK_DRIVETRAIN = 1;
         public static final int LEFT_FRONT_DRIVETRAIN = 2;
         public static final int RIGHT_FRONT_DRIVETRAIN = 3;
-        public static final int WHEEL_DROPDOWN_SOLENODD = 4;
+        public static final int WHEEL_DROPDOWN_SOLENOID = 2;
         // Arm
         public static final int PIVOT = 4;
         public static final int EXTEND = 5;
-        public static final int EXTEND_LIMIT_SWITCH = 0;
-        public static final int EXTENSION_BRAKE_SOLENOID = 2;
+        public static final int EXTEND_LIMIT_SWITCH = -1;
+        public static final int EXTENSION_BRAKE_SOLENOID = -1;
         public static final int CLAW_SOLENOID = 3;
         // Intake
         public static final int BOTTOM_INTAKE = 6;
         public static final int TOP_INTAKE = 7;
-        public static final int INTAKE_LIMIT_SWITCH = -1;
+        public static final int INTAKE_LIMIT_SWITCH = 0;
         public static final int PLATTER = 8;
         public static final int INTAKE_SOLENOID_FORWARD = 0;
         public static final int INTAKE_SOLENOID_REVERSE = 1;
@@ -257,5 +257,6 @@ public class Constants {
 
     public static class Misc {
         public static final double CONTROLLER_DEADBAND = 0.1;
+        public static final double CONTROLLER_POV_MARGIN = 20; // Margin left and right of POV bottons
     }
 }

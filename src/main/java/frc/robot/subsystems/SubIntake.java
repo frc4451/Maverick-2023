@@ -91,7 +91,7 @@ public class SubIntake {
     /**
      * Runs intake at certain speed depending on `intakeMode`
      * 
-     * @param intakeMode "cube", "cone", "reverse"
+     * @param intakeMode CONE, CUBE, CUBE_LIMITED, REVERSE
      */
     public void runIntake(SubIntakeModes intakeMode) {
         switch (intakeMode) {
@@ -101,6 +101,13 @@ public class SubIntake {
             case CUBE:
                 this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
                 break;
+            case CUBE_LIMITED:
+                if (this.getLimitSwitch()) {
+                    stopIntake();
+                } else {
+                    this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
+                }
+                break;
             case REVERSE:
                 INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.REVERSE);
                 INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.REVERSE);
@@ -108,14 +115,9 @@ public class SubIntake {
             default:
                 INTAKE_BOTTOM.set(ControlMode.PercentOutput, 0);
                 INTAKE_TOP.set(ControlMode.PercentOutput, 0);
-                System.out.println("invalid intakeMode");
+                System.out.println("ERROR:: invalid intakeMode");
                 break;
         }
-    }
-
-    public void stopIntake() {
-        INTAKE_BOTTOM.set(ControlMode.PercentOutput, 0.0);
-        INTAKE_TOP.set(ControlMode.PercentOutput, 0.0);
     }
 
     // #spin
@@ -123,20 +125,17 @@ public class SubIntake {
         INTAKE_PLATTER.set(ControlMode.Velocity, velocity);
     }
 
+    public void stopIntake() {
+        INTAKE_BOTTOM.set(ControlMode.PercentOutput, 0.0);
+        INTAKE_TOP.set(ControlMode.PercentOutput, 0.0);
+    }
+
     public void stopPlatter() {
         INTAKE_PLATTER.set(ControlMode.Velocity, 0);
     }
 
     public void toggleIntakeSolenoid() {
-        setIntakeSolenoid(!this.getSolenoidDeployed());
-    }
-
-    public boolean getLimitSwitch() {
-        return this.INTAKE_LIMIT_SWITCH.get();
-    }
-
-    public boolean getSolenoidDeployed() {
-        return INTAKE_SOLENOID.get() == DoubleSolenoid.Value.kForward;
+        setIntakeSolenoid(!this.getIntakeDeployed());
     }
 
     public void setIntakeSolenoid(boolean deployIntake) {
@@ -146,4 +145,14 @@ public class SubIntake {
             this.INTAKE_SOLENOID.set(DoubleSolenoid.Value.kReverse);
         }
     }
+
+    // getters
+    public boolean getLimitSwitch() {
+        return this.INTAKE_LIMIT_SWITCH.get();
+    }
+
+    public boolean getIntakeDeployed() {
+        return INTAKE_SOLENOID.get() == DoubleSolenoid.Value.kForward;
+    }
+
 }

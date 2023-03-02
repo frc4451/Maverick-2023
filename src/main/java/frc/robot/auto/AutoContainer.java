@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.SubIntakeModes;
 
 public class AutoContainer {
     private static final Timer autoTimer = new Timer();
@@ -136,12 +137,18 @@ public class AutoContainer {
             case 3:
                 doOnTimer(5, autoStep + 1, () -> {
                     // pick up cube
+                    RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
                 });
                 break;
             case 4:
-                doTrajectory(second, autoStep + 1);
+                doOnTimer(2, autoStep + 1, () -> {
+                    RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
+                });
                 break;
             case 5:
+                doTrajectory(second, autoStep + 1);
+                break;
+            case 6:
                 doOnTimer(5, -1, () -> {
                     // score the cube
                 });
