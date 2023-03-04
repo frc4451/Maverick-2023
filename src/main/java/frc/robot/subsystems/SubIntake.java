@@ -96,16 +96,18 @@ public class SubIntake {
     public void runIntake(SubIntakeModes intakeMode) {
         switch (intakeMode) {
             case CONE:
-                this.INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
+                this.INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.CONE_INTAKE_SPEED);
+                this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.CONE_INTAKE_SPEED);
                 runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+                break;
             case CUBE:
-                this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
+                this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.CUBE_INTAKE_SPEED);
                 break;
             case CUBE_LIMITED:
                 if (this.getLimitSwitch()) {
                     stopIntake();
                 } else {
-                    this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.INTAKE_SPEED);
+                    this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.CUBE_INTAKE_SPEED);
                 }
                 break;
             case REVERSE:
@@ -148,7 +150,7 @@ public class SubIntake {
 
     // getters
     public boolean getLimitSwitch() {
-        return this.INTAKE_LIMIT_SWITCH.get();
+        return !this.INTAKE_LIMIT_SWITCH.get();
     }
 
     public boolean getIntakeDeployed() {

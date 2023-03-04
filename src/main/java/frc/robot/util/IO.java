@@ -53,8 +53,8 @@ public class IO {
             return controller.getBButton();
         }
 
-        public static boolean getButtonX() {
-            return controller.getXButton();
+        public static boolean getButtonXPressed() {
+            return controller.getXButtonPressed();
         }
 
         public static boolean getButtonY() {
@@ -81,8 +81,8 @@ public class IO {
                     && controller.getPOV() > 270 - Constants.Misc.CONTROLLER_POV_MARGIN;
         }
 
-        public static boolean getStartButton() {
-            return controller.getStartButton();
+        public static boolean getStartButtonPressed() {
+            return controller.getStartButtonPressed();
         }
     }
 
@@ -158,8 +158,8 @@ public class IO {
                     && controller.getPOV() > 270 - Constants.Misc.CONTROLLER_POV_MARGIN;
         }
 
-        public static boolean getStartButton() {
-            return controller.getStartButton();
+        public static boolean getStartButtonPressed() {
+            return controller.getStartButtonPressed();
         }
     }
 

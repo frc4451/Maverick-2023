@@ -1,10 +1,16 @@
 {
+  "canivore names": [
+    "=",
+    "="
+  ],
   "counts per rotation": 2048.0,
+  "encoder canivore name": "rio",
   "encoder type": "Built-in",
   "encoding": false,
   "gearing denominator": 1.0,
   "gearing numerator": 9.8,
   "gyro": "Pigeon",
+  "gyro canivore name": "rio",
   "gyro ctor": "0",
   "is drivetrain": true,
   "motor controllers": [
@@ -18,8 +24,8 @@
     1
   ],
   "primary motor ports": [
-    2,
-    0
+    0,
+    2
   ],
   "primary motors inverted": [
     false,
@@ -31,12 +37,12 @@
     3
   ],
   "secondary motor ports": [
-    3,
-    1
+    1,
+    3
   ],
   "secondary motors inverted": [
     true,
     true
   ],
-  "velocity measurement period": 100
+  "velocity measurement period": 5
 }

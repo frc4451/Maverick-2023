@@ -457,7 +457,7 @@ public class SubDriveTrain {
     }
 
     public double getBalanceControllerOutput() {
-        return -RobotMath.clamp(BALANCE_CONTROLLER.calculate(this.getGyroPitch()), -1, 1);
+        return RobotMath.clamp(BALANCE_CONTROLLER.calculate(this.getGyroPitch()), -1, 1);
     }
 
     public void balanceChargeStation() {

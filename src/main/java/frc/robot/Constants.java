@@ -20,12 +20,12 @@ public class Constants {
         public static final int RIGHT_BACK_DRIVETRAIN = 1;
         public static final int LEFT_FRONT_DRIVETRAIN = 2;
         public static final int RIGHT_FRONT_DRIVETRAIN = 3;
+
         public static final int WHEEL_DROPDOWN_SOLENOID = 2;
         // Arm
         public static final int PIVOT = 4;
         public static final int EXTEND = 5;
-        public static final int EXTEND_LIMIT_SWITCH = -1;
-        public static final int EXTENSION_BRAKE_SOLENOID = -1;
+        public static final int EXTENSION_BRAKE_SOLENOID = 4;
         public static final int CLAW_SOLENOID = 3;
         // Intake
         public static final int BOTTOM_INTAKE = 6;
@@ -88,10 +88,15 @@ public class Constants {
         public static final double ROTATE_PG = 0.009; // 0.015
         public static final double ROTATE_FRICTION = 0.05;
 
-        // For Ramsette/pathing
-        public static final double STATIC_GAIN = 0.66877; // kS
-        public static final double VELOCITY_GAIN = 2.8809; // kV
-        public static final double ACCELERATION_GAIN = 0.23306; // kA
+        // For Ramsette/pathing (Old Maverick)
+        // public static final double STATIC_GAIN = 0.66877; // kS
+        // public static final double VELOCITY_GAIN = 2.8809; // kV
+        // public static final double ACCELERATION_GAIN = 0.23306; // kA
+
+        // Maverick
+        public static final double STATIC_GAIN = 0.21462; // kS
+        public static final double VELOCITY_GAIN = 2.1823; // kV
+        public static final double ACCELERATION_GAIN = 0.38106; // kA
 
         /**
          * Which PID slot to pull gains from. Starting from 2018, you can choose from
@@ -116,7 +121,8 @@ public class Constants {
     // Intake Settings
     public static class Intake_Settings {
         // Rollers
-        public static final double INTAKE_SPEED = 0.4;
+        public static final double CUBE_INTAKE_SPEED = 0.4;
+        public static final double CONE_INTAKE_SPEED = 0.525;
         public static final double REVERSE = -0.5;
         // Ripped docs from SupplyCurrentLimitConfiguration CTRE class
         /**
@@ -177,26 +183,26 @@ public class Constants {
 
         public static final double EXTEND_OPERATOR_SPEED = 0.1;
 
-        // Arm setpoints
-        public static final double PIVOT_HIGH = 0;
+        // Arm setpoints (degrees)
+        public static final double PIVOT_HIGH = 160;
         public static final double EXTEND_HIGH = 0;
 
-        public static final double PIVOT_MID = 0;
+        public static final double PIVOT_MID = 180;
         public static final double EXTEND_MID = 0;
 
-        public static final double PIVOT_LOW = 0;
-        public static final double EXTEND_LOW = 0;
+        // public static final double PIVOT_LOW = 0;
+        // public static final double EXTEND_LOW = 0;
 
         public static final double PIVOT_TRAVEL = 0;
         public static final double EXTEND_TRAVEL = 0;
 
-        public static final double PIVOT_PICK_CONE = 0;
+        public static final double PIVOT_PICK_CONE = -54;
         public static final double EXTEND_PICK_CONE = 0;
 
-        public static final double PIVOT_PICK_CUBE = 0;
+        public static final double PIVOT_PICK_CUBE = -37;
         public static final double EXTEND_PICK_CUBE = 0;
 
-        public static final double PIVOT_START = 0;
+        public static final double PIVOT_START = -40.0;
         public static final double EXTEND_START = 0;
     }
 

@@ -27,8 +27,7 @@ public class SubArm {
     private final Solenoid CLAW;
     private final WPI_TalonFX PIVOT;
     private final WPI_TalonFX EXTEND;
-    private final Solenoid EXTEND_BRAKE;
-    private final DigitalInput EXTEND_LIMIT_SWITCH;
+    private final Solenoid EXTEND_BRAKE_SOLENOID;
 
     // PID CONTROLLERS
     private final ArmFeedforward PIVOT_FEEDFORWARD = new ArmFeedforward(
@@ -41,13 +40,12 @@ public class SubArm {
             Constants.ARM_PIDF.PIVOT_IG,
             Constants.ARM_PIDF.PIVOT_DG);
 
-    public SubArm(int pivot, int extend, int extendBrake, int claw, int extendLimitSwitch) {
-        this.PIVOT_FEEDBACK.setTolerance(RobotMath.deg2rad(5)); // decrease this later
+    public SubArm(int pivot, int extend, int extendBrake, int claw) {
+        this.PIVOT_FEEDBACK.setTolerance(RobotMath.deg2rad(5)); // mess with this later
 
         this.PIVOT = new WPI_TalonFX(pivot);
         this.EXTEND = new WPI_TalonFX(extend);
-        this.EXTEND_LIMIT_SWITCH = new DigitalInput(extendLimitSwitch);
-        this.EXTEND_BRAKE = new Solenoid(PneumaticsModuleType.CTREPCM, extendBrake);
+        this.EXTEND_BRAKE_SOLENOID = new Solenoid(PneumaticsModuleType.CTREPCM, extendBrake);
         this.CLAW = new Solenoid(PneumaticsModuleType.CTREPCM, claw);
 
         this.PIVOT.configFactoryDefault();
@@ -175,6 +173,10 @@ public class SubArm {
     // armTo(Constants.Arm_Settings.PIVOT_LOW, Constants.Arm_Settings.EXTEND_LOW);
     // }
 
+    public double deg2encoder(double degrees) {
+        return Constants.TechnicalConstants.ENCODER_COUNTS_PER_DEGREE * degrees;
+    }
+
     public void armPickCone() {
         armTo(Constants.Arm_Settings.PIVOT_PICK_CONE, Constants.Arm_Settings.EXTEND_PICK_CONE);
     }
@@ -221,25 +223,21 @@ public class SubArm {
 
     private void setPivotSpeed(double voltage) {
         this.PIVOT.set(ControlMode.PercentOutput, voltage / RobotController.getBatteryVoltage());
-        // SmartDashboard.putNumber("PIVOT SPEED%", voltage /
-        // RobotController.getBatteryVoltage());
-        // SmartDashboard.putNumber("THE UNITS", voltage);
-        // SmartDashboard.putBoolean("At Setpoint", this.PIVOT_FEEDBACK.atSetpoint());
-        // SmartDashboard.putNumber("Angle", this.getPivotAngle());
     }
 
     public void stopPivot() {
         this.setPivotSpeed(0);
     }
 
-    private boolean pivotBreakMode = false;
+    private boolean pivotBreakMode = true;
 
-    public void pivotToggleBreakMode() {
+    public void pivotToggleBrakeMode() {
         if (pivotBreakMode) {
             this.PIVOT.setNeutralMode(NeutralMode.Coast);
         } else {
             this.PIVOT.setNeutralMode(NeutralMode.Brake);
         }
+        pivotBreakMode = !pivotBreakMode;
     }
 
     // Extension uses motionmagic.
@@ -303,14 +301,27 @@ public class SubArm {
     }
 
     public void resetPivotDistance() {
-        this.PIVOT.setSelectedSensorPosition(0);
+        this.PIVOT.setSelectedSensorPosition(deg2encoder(Constants.Arm_Settings.PIVOT_START));
     }
 
     public void resetExtendDistance() {
-        this.EXTEND.setSelectedSensorPosition(0);
+        this.EXTEND.setSelectedSensorPosition(Constants.Arm_Settings.EXTEND_START);
+    }
+
+    public void setExtendBrakeSolenoid(boolean isEnabled) {
+        this.EXTEND_BRAKE_SOLENOID.set(isEnabled);
+    }
+
+    public void toggleExtendBrakeSolenoid() {
+        this.EXTEND_BRAKE_SOLENOID.set(!getExtendBrakeSolenoid());
     }
 
     // getters
+
+    public boolean getExtendBrakeSolenoid() {
+        return this.EXTEND_BRAKE_SOLENOID.get();
+    }
+
     public boolean getClawOpen() {
         return this.CLAW.get();
     }
@@ -323,7 +334,7 @@ public class SubArm {
         return this.PIVOT.getSelectedSensorPosition();
     }
 
-    private double getPivotAngle() {
+    public double getPivotAngle() {
         return (this.PIVOT.getSelectedSensorPosition() / Constants.TechnicalConstants.ENCODER_COUNTS_PER_DEGREE) % 360;
     }
 

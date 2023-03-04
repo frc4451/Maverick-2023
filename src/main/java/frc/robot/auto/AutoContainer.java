@@ -100,16 +100,16 @@ public class AutoContainer {
             case 1:
                 doOnTimer(3, autoStep + 1, () -> {
                     // Rest in Peace: "Ahoy!"
-                    RobotContainer.arm.gotoHigh();
+                    // RobotContainer.arm.gotoHigh();
                     // score the cone
                 });
                 break;
             case 2:
-                RobotContainer.arm.openClaw();
+                // RobotContainer.arm.openClaw();
                 autoStep++;
                 break;
             case 3:
-                RobotContainer.arm.travelPosition();
+                // RobotContainer.arm.travelPosition();
                 doTrajectory(first, autoStep + 1);
                 break;
             case 4:
@@ -134,7 +134,7 @@ public class AutoContainer {
                 autoStep++;
                 break;
             case 1:
-                doOnTimer(5, autoStep + 1, () -> {
+                doOnTimer(3, autoStep + 1, () -> {
                     // score the cone
                 });
                 break;
@@ -142,15 +142,15 @@ public class AutoContainer {
                 doTrajectory(first, autoStep + 1);
                 break;
             case 3:
-                doOnTimer(5, autoStep + 1, () -> {
+                doOnTimer(2, autoStep + 1, () -> {
                     // pick up cube
-                    RobotContainer.arm.armPickCube();
-                    RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
+                    // RobotContainer.arm.armPickCube();
+                    // RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
                 });
                 break;
             case 4:
-                doOnTimer(2, autoStep + 1, () -> {
-                    RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
+                doOnTimer(0, autoStep + 1, () -> {
+                    // RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
                 });
                 break;
             case 5:

@@ -15,7 +15,9 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 class Speeds {
     public static final PathConstraints none = new PathConstraints(0.0, 0.0);
     public static final PathConstraints fast = new PathConstraints(2.5, 2.0);
+    public static final PathConstraints medium = new PathConstraints(2.0, 2.0);
     public static final PathConstraints slow = new PathConstraints(1.5, 1.0);
+    public static final PathConstraints verySlow = new PathConstraints(1.0, 1.0);
 }
 
 public enum AutoStates {
@@ -34,7 +36,7 @@ public enum AutoStates {
     CENTER_BALANCE(
             "Center Balance",
             AutoContainer::centerBalance,
-            PathPlanner.loadPathGroup("centerBalance", Speeds.fast)),
+            PathPlanner.loadPathGroup("centerBalance", Speeds.verySlow)),
     RIGHT_BALANCE(
             "Right Balance",
             AutoContainer::rightBalance,
@@ -42,7 +44,7 @@ public enum AutoStates {
     RIGHT_SCORE(
             "Right Score",
             AutoContainer::rightScore,
-            PathPlanner.loadPathGroup("rightScore", Speeds.fast));
+            PathPlanner.loadPathGroup("rightScore", Speeds.medium));
 
     public final String label;
 
