@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoContainer;
@@ -83,6 +82,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
         SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
         SmartDashboard.putNumber("Balance Output", RobotContainer.driveTrain.getBalanceControllerOutput());
+        SmartDashboard.putBoolean("Beam Break", RobotContainer.intake.getLimitSwitch())
     }
 
     /**
