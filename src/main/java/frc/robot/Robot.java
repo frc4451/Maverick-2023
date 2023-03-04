@@ -76,19 +76,17 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Right Distance", RobotContainer.driveTrain.getRightPosition());
         SmartDashboard.putNumber("Left Speed", RobotContainer.driveTrain.getLeftSpeed());
         SmartDashboard.putNumber("Right Speed", RobotContainer.driveTrain.getRightSpeed());
-        // SmartDashboard.putNumber(
-        // "Delta Speed Right-Left",
-        // RobotContainer.driveTrain.getRightSpeed() -
-        // RobotContainer.driveTrain.getLeftSpeed());
         SmartDashboard.putData("Field/Field", RobotContainer.field);
         SmartDashboard.putBoolean("Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
-        SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
+        // SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
         SmartDashboard.putNumber("Pivot Position", RobotContainer.arm.getPivotPosition());
         SmartDashboard.putNumber("Pivot Degrees", RobotContainer.arm.getPivotAngle());
-        SmartDashboard.putNumber("Balance Output", RobotContainer.driveTrain.getBalanceControllerOutput());
-        SmartDashboard.putBoolean("Beam Break", RobotContainer.intake.getLimitSwitch());
-        SmartDashboard.putBoolean("Intake Deployed", RobotContainer.intake.getIntakeDeployed());
-        SmartDashboard.putBoolean("startbutton", IO.Operator.getStartButtonPressed());
+        // SmartDashboard.putNumber("Debug/Balance Output",
+        // RobotContainer.driveTrain.getBalanceControllerOutput());
+        // SmartDashboard.putBoolean("Debug/Intake Deployed",
+        // RobotContainer.intake.getIntakeDeployed());
+        // SmartDashboard.putBoolean("Debug/Beam Break",
+        // RobotContainer.intake.getLimitSwitch());
     }
 
     /**
@@ -150,6 +148,7 @@ public class Robot extends TimedRobot {
                 RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
             } else if (IO.Driver.getRightTrigger()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.CONE);
+                RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
             } else if (IO.Driver.getRightBumper()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
             } else if (IO.Operator.getButtonB()) {

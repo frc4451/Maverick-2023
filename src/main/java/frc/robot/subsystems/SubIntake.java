@@ -133,7 +133,7 @@ public class SubIntake {
     }
 
     public void stopPlatter() {
-        INTAKE_PLATTER.set(ControlMode.Velocity, 0);
+        this.runPlatter(0);
     }
 
     public void toggleIntakeSolenoid() {
