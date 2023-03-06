@@ -204,12 +204,16 @@ public class Robot extends TimedRobot {
                 RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
             } else if (IO.Operator.getRightTrigger()) {
                 RobotContainer.arm.runPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+            } else {
+                RobotContainer.arm.stopPivot();
             }
 
             if (IO.Operator.getLeftBumper()) {
                 RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
             } else if (IO.Operator.getRightBumper()) {
                 RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
+            } else {
+                RobotContainer.arm.stopExtend();
             }
         }
     }
