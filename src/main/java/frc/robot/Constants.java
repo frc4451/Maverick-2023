@@ -154,7 +154,7 @@ public class Constants {
     public static class Arm_Settings {
 
         // PIVOT RUNS IN PercentOutput
-        public static final double PIVOT_ACCELERATION = 15.0; // degrees per second
+        public static final double PIVOT_VELOCITY = 15.0; // degrees per second
         public static final double PIVOT_CRUISECONTROL = 15.0;
 
         public static final double PIVOT_MIN = 0.0;

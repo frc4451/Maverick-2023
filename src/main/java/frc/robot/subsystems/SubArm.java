@@ -177,6 +177,10 @@ public class SubArm {
         return Constants.TechnicalConstants.ENCODER_COUNTS_PER_DEGREE * degrees;
     }
 
+    public double encoder2deg(double clicks) {
+        return clicks / Constants.TechnicalConstants.ENCODER_COUNTS_PER_DEGREE;
+    }
+
     public void armPickCone() {
         armTo(Constants.Arm_Settings.PIVOT_PICK_CONE, Constants.Arm_Settings.EXTEND_PICK_CONE);
     }
@@ -197,7 +201,7 @@ public class SubArm {
         // https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/combining-feedforward-feedback.html#using-feedforward-components-with-pid
         final double feedforward = this.PIVOT_FEEDFORWARD.calculate(
                 RobotMath.deg2rad(setpointDegrees),
-                RobotMath.deg2rad(Constants.Arm_Settings.PIVOT_ACCELERATION));
+                RobotMath.deg2rad(Constants.Arm_Settings.PIVOT_VELOCITY));
         final double feedback = this.PIVOT_FEEDBACK.calculate(RobotMath.deg2rad(this.getPivotAngle()));
         final double velocity = feedforward + feedback;
 
@@ -211,10 +215,8 @@ public class SubArm {
     public void runPivot(double percentValue, boolean override) {
         if (override) {
             this.setPivotSpeed(percentValue);
-        }
-        // TODO: update to be type safe and confirm units
-        else if (this.PIVOT.getSelectedSensorPosition() <= Constants.Arm_Settings.PIVOT_MAX
-                || this.PIVOT.getSelectedSensorPosition() >= Constants.Arm_Settings.PIVOT_MIN) {
+        } else if (this.encoder2deg(this.PIVOT.getSelectedSensorPosition()) <= Constants.Arm_Settings.PIVOT_MAX
+                || this.encoder2deg(this.PIVOT.getSelectedSensorPosition()) >= Constants.Arm_Settings.PIVOT_MIN) {
             this.setPivotSpeed(percentValue);
         } else {
             this.stopPivot();
