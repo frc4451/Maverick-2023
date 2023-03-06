@@ -54,7 +54,7 @@ public class SubArm {
         this.PIVOT.setNeutralMode(NeutralMode.Brake);
         this.EXTEND.setNeutralMode(NeutralMode.Brake);
 
-        this.EXTEND.setInverted(true);
+        this.EXTEND.setInverted(false);
         // motion profile settings
         // this.PIVOT.configMotionCruiseVelocity(Arm_Settings.PIVOT_CRUISECONTROL);
         // this.PIVOT.configMotionAcceleration(Arm_Settings.PIVOT_ACCELERATION);
@@ -214,21 +214,27 @@ public class SubArm {
 
     public void runPivot(double percentValue, boolean override) {
         if (override) {
-            this.setPivotSpeed(percentValue);
+            this.PIVOT.set(ControlMode.PercentOutput, percentValue);
         } else if (this.encoder2deg(this.PIVOT.getSelectedSensorPosition()) <= Constants.Arm_Settings.PIVOT_MAX
-                || this.encoder2deg(this.PIVOT.getSelectedSensorPosition()) >= Constants.Arm_Settings.PIVOT_MIN) {
-            this.setPivotSpeed(percentValue);
+                && Math.signum(percentValue) > 0) {
+            this.PIVOT.set(ControlMode.PercentOutput, percentValue);
+            System.out.println("Should go negative");
+        } else if (this.encoder2deg(this.PIVOT.getSelectedSensorPosition()) >= Constants.Arm_Settings.PIVOT_MIN
+                && Math.signum(percentValue) < 0) {
+            this.PIVOT.set(ControlMode.PercentOutput, percentValue);
+            System.out.println("Should go positive");
         } else {
             this.stopPivot();
         }
     }
 
-    private void setPivotSpeed(double voltage) {
-        this.PIVOT.set(ControlMode.PercentOutput, voltage / RobotController.getBatteryVoltage());
-    }
+    // private void setPivotSpeed(double voltage) {
+    // this.PIVOT.set(ControlMode.PercentOutput, voltage /
+    // RobotController.getBatteryVoltage());
+    // }
 
     public void stopPivot() {
-        this.setPivotSpeed(0);
+        this.PIVOT.set(ControlMode.PercentOutput, 0.0);
     }
 
     private boolean pivotBreakMode = true;
@@ -263,10 +269,16 @@ public class SubArm {
     }
 
     public void runExtend(double percentValue, boolean override) {
-        if (override) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
-        } else if (getExtendIsOkay()) {
-            EXTEND.set(ControlMode.PercentOutput, percentValue);
+        if (override || getExtendIsOkay()) {
+            if (this.EXTEND.getSelectedSensorPosition() <= Constants.Arm_Settings.EXTEND_MAX
+                    && Math.signum(percentValue) > 0) {
+                EXTEND.set(ControlMode.PercentOutput, percentValue);
+            } else if (this.EXTEND.getSelectedSensorPosition() >= Constants.Arm_Settings.EXTEND_MIN
+                    && Math.signum(percentValue) < 0) {
+                EXTEND.set(ControlMode.PercentOutput, percentValue);
+            } else {
+                stopExtend();
+            }
         } else { // If getExtendIsOkay is not okay meaning false
             stopExtend();
         }
@@ -286,7 +298,7 @@ public class SubArm {
     }
 
     public void toggleClaw() {
-        this.CLAW.set(!this.getClawOpen());
+        this.CLAW.set(!this.getClawState());
     }
 
     public void openClaw() {
@@ -324,7 +336,7 @@ public class SubArm {
         return this.EXTEND_BRAKE_SOLENOID.get();
     }
 
-    public boolean getClawOpen() {
+    public boolean getClawState() {
         return this.CLAW.get();
     }
 

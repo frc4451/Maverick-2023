@@ -157,8 +157,8 @@ public class Constants {
         public static final double PIVOT_VELOCITY = 15.0; // degrees per second
         public static final double PIVOT_CRUISECONTROL = 15.0;
 
-        public static final double PIVOT_MIN = 0.0;
-        public static final double PIVOT_MAX = 0.0; // Software limits
+        public static final double PIVOT_MIN = 0.0; // Software limits degrees
+        public static final double PIVOT_MAX = 180.0;
 
         public static final double PIVOT_RAMP_RATE_SECS = 0.5;
         public static final double PIVOT_MAX_VELOCITY = 0;
@@ -167,16 +167,16 @@ public class Constants {
         // extension
         public static final double PIVOT_DEGREES_OF_DTH_BACKWARDS = 5.0;
 
-        public static final double PIVOT_OPERATOR_SPEED = 500;
+        public static final double PIVOT_OPERATOR_SPEED = 0.4;
         // EXTEND RUNS IN PERCENT OUTPUT
         public static final double EXTEND_ACCELERATION = 0.2;
         public static final double EXTEND_CRUISECONTROL = 0.2;
         public static final double EXTEND_MM_DTH_SLOWTO_PERCENT = 0.5;
 
-        public static final double EXTEND_MAX = 200_000; // Software limits
-        public static final double EXTEND_MIN = 100; // soft 0
-        public static final double EXTEND_TUCKED = 1000; // we use this in SubArm to check if the arm is retracted or
-                                                         // not
+        public static final double EXTEND_MAX = 45_000; // Software limits
+        public static final double EXTEND_MIN = 5_000; // soft 0
+        public static final double EXTEND_TUCKED = 10_000; // we use this in SubArm to check if the arm is retracted or
+                                                           // not
         public static final double EXTEND_HARD_LIMIT = 0;
 
         public static final int TIMEOUT_MS = 30;
@@ -185,7 +185,7 @@ public class Constants {
 
         // Arm setpoints (degrees)
         public static final double PIVOT_HIGH = 160;
-        public static final double EXTEND_HIGH = 0;
+        public static final double EXTEND_HIGH = 43_100;
 
         public static final double PIVOT_MID = 180;
         public static final double EXTEND_MID = 0;
@@ -208,17 +208,17 @@ public class Constants {
 
     // Arm PID
     public static class ARM_PIDF {
-        public static final double PIVOT_PG = 0.3; // proportional
-        public static final double PIVOT_IG = 0.0; // integral
-        public static final double PIVOT_DG = 0.0; // derivative
-        public static final double PIVOT_F = 1023.0 / 20300.0; // feedforward
-
         public static final double EXTEND_PG = 0.3; // proportional
         public static final double EXTEND_IG = 0.0; // integral
         public static final double EXTEND_DG = 0.0; // derivative
         public static final double EXTEND_F = 1023.0 / 20300.0; // feedforward
 
-        public static final double PIVOT_SG = 100.0;
+        public static final double PIVOT_PG = 0.0; // proportional
+        public static final double PIVOT_IG = 0.0; // integral
+        public static final double PIVOT_DG = 0.0; // derivative
+        public static final double PIVOT_F = 1023.0 / 20300.0; // feedforward
+
+        public static final double PIVOT_SG = 0.0;
         public static final double PIVOT_GG = 0.0;
         public static final double PIVOT_VG = 0.0;
         public static final double PIVOT_AG = 0.0;

@@ -122,8 +122,8 @@ public class IO {
             return controller.getRightBumper();
         }
 
-        public static boolean getButtonA() {
-            return controller.getAButton();
+        public static boolean getButtonAPressed() {
+            return controller.getAButtonPressed();
         }
 
         public static boolean getButtonB() {

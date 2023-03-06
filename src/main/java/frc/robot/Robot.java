@@ -36,7 +36,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         RobotContainer.arm.resetArmEncoders();
-        RobotContainer.arm.closeClaw();
         RobotContainer.driveTrain.resetNavigation();
         RobotContainer.driveTrain.resetBalanceController();
         RobotContainer.driveTrain.setCoastMode();
@@ -72,14 +71,19 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Gyro Pitch", RobotContainer.driveTrain.getGyroPitch());
         SmartDashboard.putNumber("Gyro Rotation", RobotContainer.driveTrain.getGyroAngle());
         SmartDashboard.putNumber("Gyro Absolute Rotation", RobotContainer.driveTrain.getGyroAngleAbsolute());
-        SmartDashboard.putNumber("Left Distance", RobotContainer.driveTrain.getLeftPosition());
-        SmartDashboard.putNumber("Right Distance", RobotContainer.driveTrain.getRightPosition());
-        SmartDashboard.putNumber("Left Speed", RobotContainer.driveTrain.getLeftSpeed());
-        SmartDashboard.putNumber("Right Speed", RobotContainer.driveTrain.getRightSpeed());
+        // SmartDashboard.putNumber("Left Distance",
+        // RobotContainer.driveTrain.getLeftPosition());
+        // SmartDashboard.putNumber("Right Distance",
+        // RobotContainer.driveTrain.getRightPosition());
+        // SmartDashboard.putNumber("Left Speed",
+        // RobotContainer.driveTrain.getLeftSpeed());
+        // SmartDashboard.putNumber("Right Speed",
+        // RobotContainer.driveTrain.getRightSpeed());
         SmartDashboard.putData("Field/Field", RobotContainer.field);
         SmartDashboard.putBoolean("Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
         // SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
         SmartDashboard.putNumber("Pivot Position", RobotContainer.arm.getPivotPosition());
+        SmartDashboard.putNumber("Extend Position", RobotContainer.arm.getExtendPosition());
         SmartDashboard.putNumber("Pivot Degrees", RobotContainer.arm.getPivotAngle());
         // SmartDashboard.putNumber("Debug/Balance Output",
         // RobotContainer.driveTrain.getBalanceControllerOutput());
@@ -186,42 +190,41 @@ public class Robot extends TimedRobot {
             }
         }
 
-        if (IO.Operator.getButtonA()) {
+        if (IO.Operator.getButtonAPressed()) {
             RobotContainer.arm.toggleClaw();
         }
 
-        if (IO.Operator.getPOVUp()) {
-            RobotContainer.arm.gotoHigh();
-        } else if (IO.Operator.getPOVRight()) {
-            RobotContainer.arm.gotoMid();
-        } else if (IO.Operator.getPOVDown()) {
-            RobotContainer.arm.armPickCone();
-        } else if (IO.Operator.getPOVLeft()) {
-            RobotContainer.arm.armPickCube();
+        // if (IO.Operator.getPOVUp()) {
+        // RobotContainer.arm.gotoHigh();
+        // } else if (IO.Operator.getPOVRight()) {
+        // RobotContainer.arm.gotoMid();
+        // } else if (IO.Operator.getPOVDown()) {
+        // RobotContainer.arm.armPickCone();
+        // } else if (IO.Operator.getPOVLeft()) {
+        // RobotContainer.arm.armPickCube();
+        // } else {
+        // Manual arm control
+        if (IO.Operator.getLeftTrigger()) {
+            RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+        } else if (IO.Operator.getRightTrigger()) {
+            RobotContainer.arm.runPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
         } else {
-            // Manual arm control
-            if (IO.Operator.getLeftTrigger()) {
-                RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
-            } else if (IO.Operator.getRightTrigger()) {
-                RobotContainer.arm.runPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
-            } else {
-                RobotContainer.arm.stopPivot();
-            }
-
-            if (IO.Operator.getLeftBumper()) {
-                RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
-            } else if (IO.Operator.getRightBumper()) {
-                RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED);
-            } else {
-                RobotContainer.arm.stopExtend();
-            }
+            RobotContainer.arm.stopPivot();
         }
+
+        if (IO.Operator.getLeftBumper()) {
+            RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED, true);
+        } else if (IO.Operator.getRightBumper()) {
+            RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED, true);
+        } else {
+            RobotContainer.arm.stopExtend();
+        }
+        // }
     }
 
     /** This function is called once when the robot is disabled. */
     @Override
     public void disabledInit() {
-        RobotContainer.arm.closeClaw();
         AutoContainer.resetAutoStep();
     }
 
