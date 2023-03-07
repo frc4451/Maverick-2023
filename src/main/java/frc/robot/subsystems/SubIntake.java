@@ -44,8 +44,8 @@ public class SubIntake {
         this.INTAKE_BOTTOM.setInverted(true);
         this.INTAKE_TOP.setInverted(true);
 
-        this.INTAKE_BOTTOM.setNeutralMode(NeutralMode.Coast);
-        this.INTAKE_TOP.setNeutralMode(NeutralMode.Coast);
+        this.INTAKE_BOTTOM.setNeutralMode(NeutralMode.Brake);
+        this.INTAKE_TOP.setNeutralMode(NeutralMode.Brake);
         // Ok this work now
         this.INTAKE_BOTTOM.configSupplyCurrentLimit(
                 new SupplyCurrentLimitConfiguration(
@@ -77,6 +77,7 @@ public class SubIntake {
         this.INTAKE_PLATTER.setInverted(false);
         this.INTAKE_PLATTER.setNeutralMode(NeutralMode.Brake);
         this.INTAKE_PLATTER.configClosedloopRamp(Constants.Intake_Settings.PLATTER_RAMP_RATE_SECS);
+        // this.INTAKE_TOP.set
 
         this.INTAKE_PLATTER.configSelectedFeedbackSensor(
                 FeedbackDevice.IntegratedSensor,
