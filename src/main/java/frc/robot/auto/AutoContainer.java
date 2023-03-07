@@ -98,25 +98,10 @@ public class AutoContainer {
                 autoStep++;
                 break;
             case 1:
-                doOnTimer(3, autoStep + 1, () -> {
-                    // Rest in Peace: "Ahoy!"
-                    // RobotContainer.arm.gotoHigh();
-                    // score the cone
-                });
-                break;
-            case 2:
-                // RobotContainer.arm.openClaw();
-                autoStep++;
-                break;
-            case 3:
-                // RobotContainer.arm.travelPosition();
-                doTrajectory(first, autoStep + 1);
-                break;
-            case 4:
                 RobotContainer.driveTrain.setBrakeMode();
                 autoStep++;
                 break;
-            case 5:
+            case 2:
                 RobotContainer.driveTrain.balanceChargeStation();
                 break;
         }

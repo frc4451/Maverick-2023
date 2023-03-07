@@ -174,7 +174,7 @@ public class Constants {
         public static final double EXTEND_MM_DTH_SLOWTO_PERCENT = 0.5;
 
         public static final double EXTEND_MAX = 45_000; // Software limits
-        public static final double EXTEND_MIN = 5_000; // soft 0
+        public static final double EXTEND_MIN = 2_000; // soft 0
         public static final double EXTEND_TUCKED = 17_000; // we use this in SubArm to check if the arm is retracted or
                                                            // not
         public static final double EXTEND_HARD_LIMIT = 0;

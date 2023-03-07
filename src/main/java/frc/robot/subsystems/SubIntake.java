@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.Constants;
 
 public class SubIntake {
-
     WPI_TalonFX INTAKE_TOP;
     WPI_TalonFX INTAKE_BOTTOM;
     WPI_TalonFX INTAKE_PLATTER;

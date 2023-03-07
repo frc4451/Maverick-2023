@@ -155,13 +155,17 @@ public class Robot extends TimedRobot {
                 RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
             } else if (IO.Operator.getButtonB()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
+            } else if (IO.Driver.getLeftTrigger()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
+            } else {
+                RobotContainer.intake.stopIntake();
             }
-        }
-
-        if (IO.Driver.getLeftTrigger()) {
-            RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
         } else {
-            RobotContainer.intake.stopIntake();
+            if (IO.Driver.getLeftTrigger()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
+            } else {
+                RobotContainer.intake.stopIntake();
+            }
         }
 
         if (IO.Driver.getButtonXPressed()) {
@@ -205,26 +209,19 @@ public class Robot extends TimedRobot {
 
         if (IO.Operator.getPOVUp()) {
             RobotContainer.arm.gotoHigh();
-            System.out.println("POV Up");
         } else if (IO.Operator.getPOVRight()) {
             RobotContainer.arm.gotoMid();
-            System.out.println("POV Right");
         } else if (IO.Operator.getPOVDown()) {
             RobotContainer.arm.armPickCone();
-            System.out.println("POV Down");
         } else if (IO.Operator.getPOVLeft()) {
             RobotContainer.arm.armPickCube();
-            System.out.println("POV Left");
         } else {
             if (IO.Operator.getLeftBumper()) {
                 RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED, true);
-                System.out.println("Bumper Left");
             } else if (IO.Operator.getRightBumper()) {
-                System.out.println("Bumper Right");
                 RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED, true);
             } else {
                 RobotContainer.arm.stopExtend();
-                System.out.println("Extend stopping");
             }
         }
     }
