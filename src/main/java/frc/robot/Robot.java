@@ -175,7 +175,7 @@ public class Robot extends TimedRobot {
         if (IO.Driver.getButtonB()) {
             RobotContainer.driveTrain.balanceChargeStation();
         } else {
-            RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
+            RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX());
         }
 
         // OPERATOR

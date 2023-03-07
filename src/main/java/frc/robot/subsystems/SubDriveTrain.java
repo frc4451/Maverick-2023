@@ -233,24 +233,27 @@ public class SubDriveTrain {
      * @param rotate
      * @param quickTurningEnabled
      */
-    public void runDrive(double forward, double rotate, boolean quickTurningEnabled) {
-        double _forward = Math.abs(forward);
-        double sens = Constants.DT_Settings.TURN_SENSITIVITY;
-        // This is experimental, proceed with caution.
-        if (quickTurningEnabled) {
-            _forward = 1;
-            sens = Constants.DT_Settings.QUICK_TURN;
-        }
-        double left = -forward + rotate * _forward * sens;
-        double right = -forward - rotate * _forward * sens;
-        double maxMagnitude = Math.max(Math.abs(left), Math.abs(right));
-        if (maxMagnitude > 1) {
-            left /= maxMagnitude;
-            right /= maxMagnitude;
-        }
-        this.LEFT_FRONT.set(ControlMode.Velocity, left * Constants.DT_Settings.MAX_VELOCITY);
-        this.RIGHT_FRONT.set(ControlMode.Velocity, right * Constants.DT_Settings.MAX_VELOCITY);
-    }
+    // public void runDrive(double forward, double rotate, boolean
+    // quickTurningEnabled) {
+    // double _forward = Math.abs(forward);
+    // double sens = Constants.DT_Settings.TURN_SENSITIVITY;
+    // // This is experimental, proceed with caution.
+    // if (quickTurningEnabled) {
+    // _forward = 1;
+    // sens = Constants.DT_Settings.QUICK_TURN;
+    // }
+    // double left = -forward + rotate * _forward * sens;
+    // double right = -forward - rotate * _forward * sens;
+    // double maxMagnitude = Math.max(Math.abs(left), Math.abs(right));
+    // if (maxMagnitude > 1) {
+    // left /= maxMagnitude;
+    // right /= maxMagnitude;
+    // }
+    // this.LEFT_FRONT.set(ControlMode.Velocity, left *
+    // Constants.DT_Settings.MAX_VELOCITY);
+    // this.RIGHT_FRONT.set(ControlMode.Velocity, right *
+    // Constants.DT_Settings.MAX_VELOCITY);
+    // }
 
     /**
      * Drives the robot with linear and angular velocities derived from a
