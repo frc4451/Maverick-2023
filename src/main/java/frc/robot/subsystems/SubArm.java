@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ARM_PIDF;
@@ -28,6 +29,7 @@ public class SubArm {
     private final WPI_TalonFX PIVOT;
     private final WPI_TalonFX EXTEND;
     private final Solenoid EXTEND_BRAKE_SOLENOID;
+    private final Timer extendBrakeTimer = new Timer();
 
     // PID CONTROLLERS
     private final ArmFeedforward PIVOT_FEEDFORWARD = new ArmFeedforward(
@@ -136,6 +138,7 @@ public class SubArm {
      */
     public void armTo(double pivotDegrees, double extendEncoderCounts) {
         // if goes throguh degrees of death AND arm is not tucked
+        // TODO: make this work with extendBrakeTimer
         if (getPathPassedThroughDegreesOfDeath(pivotDegrees)) {
             if (getArmTucked()) {
                 pivotTo(pivotDegrees);
@@ -256,20 +259,33 @@ public class SubArm {
 
     // Extension uses motionmagic.
     public void extendTo(double targetDistanceExtend) {
-        // double mmacc = Constants.Arm_Settings.EXTEND_ACCELERATION *
-        // Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
-        // double mmcc = Constants.Arm_Settings.EXTEND_CRUISECONTROL *
-        // Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
+        double mmacc = Constants.Arm_Settings.EXTEND_ACCELERATION *
+                Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
+        double mmcc = Constants.Arm_Settings.EXTEND_CRUISECONTROL *
+                Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
 
-        // if (getExtendIsCloseToDth()) {
-        // this.EXTEND.configMotionAcceleration(mmacc);
-        // this.EXTEND.configMotionCruiseVelocity(mmcc);
-        // } else {
-        // this.EXTEND.configMotionAcceleration(Constants.Arm_Settings.EXTEND_ACCELERATION);
-        // this.EXTEND.configMotionCruiseVelocity(Constants.Arm_Settings.EXTEND_CRUISECONTROL);
-        // }
+        if (getExtendIsCloseToDth()) {
+            this.EXTEND.configMotionAcceleration(mmacc);
+            this.EXTEND.configMotionCruiseVelocity(mmcc);
+        } else {
+            this.EXTEND.configMotionAcceleration(Constants.Arm_Settings.EXTEND_ACCELERATION);
+            this.EXTEND.configMotionCruiseVelocity(Constants.Arm_Settings.EXTEND_CRUISECONTROL);
+        }
         setArmBrakeOff();
         EXTEND.set(ControlMode.MotionMagic, targetDistanceExtend);
+    }
+
+    public boolean extendBrakeTimer() {
+        if (this.extendBrakeTimer.get() == 0) {
+            this.extendBrakeTimer.start();
+        }
+
+        if (this.extendBrakeTimer.hasElapsed(0.2)) {
+            this.extendBrakeTimer.stop();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void runExtend(double percentValue) {
@@ -277,14 +293,19 @@ public class SubArm {
     }
 
     public void runExtend(double percentValue, boolean override) {
-        setArmBrakeOff();
         if (override || getExtendIsOkay()) {
             if (this.EXTEND.getSelectedSensorPosition() <= Constants.Arm_Settings.EXTEND_MAX
                     && Math.signum(percentValue) > 0) {
-                EXTEND.set(ControlMode.PercentOutput, percentValue);
+                setArmBrakeOff();
+                if (extendBrakeTimer()) {
+                    EXTEND.set(ControlMode.PercentOutput, percentValue);
+                }
             } else if (this.EXTEND.getSelectedSensorPosition() >= Constants.Arm_Settings.EXTEND_MIN
                     && Math.signum(percentValue) < 0) {
-                EXTEND.set(ControlMode.PercentOutput, percentValue);
+                setArmBrakeOff();
+                if (extendBrakeTimer()) {
+                    EXTEND.set(ControlMode.PercentOutput, percentValue);
+                }
             } else {
                 stopExtend();
             }
@@ -304,10 +325,13 @@ public class SubArm {
     public void stopExtend() {
         setArmBrakeOn();
         this.EXTEND.set(ControlMode.PercentOutput, 0);
+        this.extendBrakeTimer.reset();
     }
 
     public void tuckArm() {
-        EXTEND.set(ControlMode.MotionMagic, Constants.Arm_Settings.EXTEND_MIN);
+        if (extendBrakeTimer()) {
+            EXTEND.set(ControlMode.MotionMagic, Constants.Arm_Settings.EXTEND_MIN);
+        }
     }
 
     public void stopArm() {

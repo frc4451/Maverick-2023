@@ -144,8 +144,8 @@ public class IO {
         }
 
         public static boolean getPOVUp() {
-            return controller.getPOV() < 0 + Constants.Misc.CONTROLLER_POV_MARGIN
-                    && controller.getPOV() > 0 - Constants.Misc.CONTROLLER_POV_MARGIN;
+            return (controller.getPOV() >= 0 && controller.getPOV() < Constants.Misc.CONTROLLER_POV_MARGIN)
+                    || controller.getPOV() > 360 - Constants.Misc.CONTROLLER_POV_MARGIN;
         }
 
         public static boolean getPOVRight() {

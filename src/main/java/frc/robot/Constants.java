@@ -49,7 +49,7 @@ public class Constants {
         public static final double MAX_VELOCITY = 18_000.0; // Drive train max velocity encoder per 100ms
         public static final double MIN_BALANCE_VELOCITY = 2000.0; // Drive train min velocity when balancing
         public static final double BALANCE_MAX_VELOCITY = 2000.0; // Drive train max velocity when balancing
-        public static final double RAMP_RATE_SECS = 0.5; // Drive train ramp rate in velocity control
+        public static final double RAMP_RATE_SECS = 0.75; // Drive train ramp rate in velocity control
         /*
          * NOTE: Ramp rate - in seconds - is the time it takes for the output to go from
          * 0% output to 100% output.
