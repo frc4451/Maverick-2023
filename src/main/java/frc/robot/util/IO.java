@@ -9,6 +9,7 @@ import frc.robot.Constants;
 
 public class IO {
 
+    // We could probably change this to instead inherit XboxController
     public static class Driver {
         private static final XboxController controller = new XboxController(0);
 
@@ -47,6 +48,10 @@ public class IO {
 
         public static boolean getButtonA() {
             return controller.getAButton();
+        }
+
+        public static boolean getButtonAPressed() {
+            return controller.getAButtonPressed();
         }
 
         public static boolean getButtonB() {

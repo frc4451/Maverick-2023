@@ -157,7 +157,7 @@ public class Constants {
         public static final double PIVOT_VELOCITY = 15.0; // degrees per second
         public static final double PIVOT_CRUISECONTROL = 15.0;
 
-        public static final double PIVOT_MIN = 0.0; // Software limits degrees
+        public static final double PIVOT_MIN = -53.0; // Software limits degrees
         public static final double PIVOT_MAX = 180.0;
 
         public static final double PIVOT_RAMP_RATE_SECS = 0.5;
@@ -169,13 +169,13 @@ public class Constants {
 
         public static final double PIVOT_OPERATOR_SPEED = 0.4;
         // EXTEND RUNS IN PERCENT OUTPUT
-        public static final double EXTEND_ACCELERATION = 0.2;
-        public static final double EXTEND_CRUISECONTROL = 0.2;
+        public static final double EXTEND_ACCELERATION = 6000;
+        public static final double EXTEND_CRUISECONTROL = 6000;
         public static final double EXTEND_MM_DTH_SLOWTO_PERCENT = 0.5;
 
         public static final double EXTEND_MAX = 45_000; // Software limits
         public static final double EXTEND_MIN = 5_000; // soft 0
-        public static final double EXTEND_TUCKED = 10_000; // we use this in SubArm to check if the arm is retracted or
+        public static final double EXTEND_TUCKED = 17_000; // we use this in SubArm to check if the arm is retracted or
                                                            // not
         public static final double EXTEND_HARD_LIMIT = 0;
 
@@ -188,7 +188,7 @@ public class Constants {
         public static final double EXTEND_HIGH = 43_100;
 
         public static final double PIVOT_MID = 180;
-        public static final double EXTEND_MID = 0;
+        public static final double EXTEND_MID = EXTEND_TUCKED;
 
         // public static final double PIVOT_LOW = 0;
         // public static final double EXTEND_LOW = 0;

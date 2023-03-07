@@ -15,7 +15,7 @@ public class RobotContainer {
 
         public static final SubDriveTrain driveTrain = new SubDriveTrain(RioPortMaps.LEFT_FRONT_DRIVETRAIN,
                         RioPortMaps.LEFT_BACK_DRIVETRAIN, RioPortMaps.RIGHT_FRONT_DRIVETRAIN,
-                        RioPortMaps.RIGHT_BACK_DRIVETRAIN, RioPortMaps.GYRO);
+                        RioPortMaps.RIGHT_BACK_DRIVETRAIN, RioPortMaps.GYRO, RioPortMaps.WHEEL_DROPDOWN_SOLENOID);
         public static final SubArm arm = new SubArm(RioPortMaps.PIVOT,
                         RioPortMaps.EXTEND, RioPortMaps.EXTENSION_BRAKE_SOLENOID, RioPortMaps.CLAW_SOLENOID);
         public static final SubIntake intake = new SubIntake(RioPortMaps.BOTTOM_INTAKE, RioPortMaps.TOP_INTAKE,

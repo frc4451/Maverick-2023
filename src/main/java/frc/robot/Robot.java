@@ -148,9 +148,7 @@ public class Robot extends TimedRobot {
 
         // DRIVER
         if (RobotContainer.intake.getIntakeDeployed()) {
-            if (IO.Driver.getLeftTrigger()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
-            } else if (IO.Driver.getRightTrigger()) {
+            if (IO.Driver.getRightTrigger()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.CONE);
                 RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
             } else if (IO.Driver.getRightBumper()) {
@@ -160,6 +158,8 @@ public class Robot extends TimedRobot {
             } else {
                 RobotContainer.intake.stopIntake();
             }
+        } else if (IO.Driver.getLeftTrigger()) {
+            RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
         } else {
             RobotContainer.intake.stopIntake();
         }
@@ -168,7 +168,7 @@ public class Robot extends TimedRobot {
             RobotContainer.intake.toggleIntakeSolenoid();
         }
 
-        if (IO.Driver.getButtonA()) {
+        if (IO.Driver.getButtonAPressed()) {
             RobotContainer.driveTrain.toggleDropdownWheels();
         }
 
@@ -194,15 +194,6 @@ public class Robot extends TimedRobot {
             RobotContainer.arm.toggleClaw();
         }
 
-        // if (IO.Operator.getPOVUp()) {
-        // RobotContainer.arm.gotoHigh();
-        // } else if (IO.Operator.getPOVRight()) {
-        // RobotContainer.arm.gotoMid();
-        // } else if (IO.Operator.getPOVDown()) {
-        // RobotContainer.arm.armPickCone();
-        // } else if (IO.Operator.getPOVLeft()) {
-        // RobotContainer.arm.armPickCube();
-        // } else {
         // Manual arm control
         if (IO.Operator.getLeftTrigger()) {
             RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
@@ -212,14 +203,23 @@ public class Robot extends TimedRobot {
             RobotContainer.arm.stopPivot();
         }
 
-        if (IO.Operator.getLeftBumper()) {
-            RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED, true);
-        } else if (IO.Operator.getRightBumper()) {
-            RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED, true);
+        if (IO.Operator.getPOVUp()) {
+            RobotContainer.arm.gotoHigh();
+        } else if (IO.Operator.getPOVRight()) {
+            RobotContainer.arm.gotoMid();
+        } else if (IO.Operator.getPOVDown()) {
+            RobotContainer.arm.armPickCone();
+        } else if (IO.Operator.getPOVLeft()) {
+            RobotContainer.arm.armPickCube();
         } else {
-            RobotContainer.arm.stopExtend();
+            if (IO.Operator.getLeftBumper()) {
+                RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED, true);
+            } else if (IO.Operator.getRightBumper()) {
+                RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED, true);
+            } else {
+                RobotContainer.arm.stopExtend();
+            }
         }
-        // }
     }
 
     /** This function is called once when the robot is disabled. */

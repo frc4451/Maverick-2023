@@ -22,7 +22,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Constants;
 import frc.robot.util.RobotMath;
 
@@ -33,6 +35,7 @@ public class SubDriveTrain {
     private final WPI_TalonFX LEFT_REAR;
     private final WPI_TalonFX RIGHT_REAR;
     private final WPI_PigeonIMU GYROSCOPE;
+    private final Solenoid DROPDOWN_SOLENOID;
 
     private final DifferentialDriveKinematics KINEMATICS;
     private final DifferentialDrivePoseEstimator ODOMETRY;
@@ -70,7 +73,7 @@ public class SubDriveTrain {
      * Receives CAN address of 4 drive train Falcon motors and Pigeon IMU
      * Note: Do not create the Pigeon IMU in the first test
      */
-    public SubDriveTrain(int leftFront, int leftRear, int rightFront, int rightRear, int gyro) {
+    public SubDriveTrain(int leftFront, int leftRear, int rightFront, int rightRear, int gyro, int dropDownSolenoid) {
         /*
          * 1. Make instances of all 4 WPI_TalonFX motor classes
          * 2. Factory reset each
@@ -87,6 +90,7 @@ public class SubDriveTrain {
         this.RIGHT_FRONT = new WPI_TalonFX(rightFront);
         this.RIGHT_REAR = new WPI_TalonFX(rightRear);
         this.GYROSCOPE = new WPI_PigeonIMU(gyro);
+        this.DROPDOWN_SOLENOID = new Solenoid(PneumaticsModuleType.CTREPCM, dropDownSolenoid);
 
         // Kinematics translates drivetrain linear and angular speeds to left / right
         // wheel speeds
@@ -288,7 +292,7 @@ public class SubDriveTrain {
     }
 
     public void toggleDropdownWheels() {
-        // TODO: toggleDropdownWheels()
+        this.DROPDOWN_SOLENOID.set(!getDropDownSolenoid());
     }
 
     // public void runMotionMagic(double targetDistanceL, double targetDistanceR) {
@@ -298,6 +302,10 @@ public class SubDriveTrain {
     // }
 
     // getters
+    public boolean getDropDownSolenoid() {
+        return this.DROPDOWN_SOLENOID.get();
+    }
+
     public double getLeftSpeed() {
         return this.LEFT_FRONT.getSelectedSensorVelocity(); // replace 0 with get sensor velocity
     }

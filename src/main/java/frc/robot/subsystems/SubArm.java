@@ -154,19 +154,25 @@ public class SubArm {
 
     // setpoints
     public void startPosition() {
-        armTo(Constants.Arm_Settings.PIVOT_START, Constants.Arm_Settings.EXTEND_START);
+        // armTo(Constants.Arm_Settings.PIVOT_START,
+        // Constants.Arm_Settings.EXTEND_START);
+        extendTo(Constants.Arm_Settings.EXTEND_START);
     }
 
     public void travelPosition() {
-        armTo(Constants.Arm_Settings.PIVOT_TRAVEL, Constants.Arm_Settings.EXTEND_TRAVEL);
+        // armTo(Constants.Arm_Settings.PIVOT_TRAVEL,
+        // Constants.Arm_Settings.EXTEND_TRAVEL);
+        extendTo(Constants.Arm_Settings.EXTEND_TRAVEL);
     }
 
     public void gotoHigh() {
-        armTo(Constants.Arm_Settings.PIVOT_HIGH, Constants.Arm_Settings.EXTEND_HIGH);
+        // armTo(Constants.Arm_Settings.PIVOT_HIGH, Constants.Arm_Settings.EXTEND_HIGH);
+        extendTo(Constants.Arm_Settings.EXTEND_HIGH);
     }
 
     public void gotoMid() {
-        armTo(Constants.Arm_Settings.PIVOT_MID, Constants.Arm_Settings.EXTEND_MID);
+        // armTo(Constants.Arm_Settings.PIVOT_MID, Constants.Arm_Settings.EXTEND_MID);
+        extendTo(Constants.Arm_Settings.EXTEND_MID);
     }
 
     // public void scoreLow() {
@@ -250,17 +256,19 @@ public class SubArm {
 
     // Extension uses motionmagic.
     public void extendTo(double targetDistanceExtend) {
+        // double mmacc = Constants.Arm_Settings.EXTEND_ACCELERATION *
+        // Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
+        // double mmcc = Constants.Arm_Settings.EXTEND_CRUISECONTROL *
+        // Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
 
-        double mmacc = Constants.Arm_Settings.EXTEND_ACCELERATION * Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
-        double mmcc = Constants.Arm_Settings.EXTEND_CRUISECONTROL * Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
-
-        if (getExtendIsCloseToDth()) {
-            this.EXTEND.configMotionAcceleration(mmacc);
-            this.EXTEND.configMotionCruiseVelocity(mmcc);
-        } else {
-            this.EXTEND.configMotionAcceleration(Constants.Arm_Settings.EXTEND_ACCELERATION);
-            this.EXTEND.configMotionCruiseVelocity(Constants.Arm_Settings.EXTEND_CRUISECONTROL);
-        }
+        // if (getExtendIsCloseToDth()) {
+        // this.EXTEND.configMotionAcceleration(mmacc);
+        // this.EXTEND.configMotionCruiseVelocity(mmcc);
+        // } else {
+        // this.EXTEND.configMotionAcceleration(Constants.Arm_Settings.EXTEND_ACCELERATION);
+        // this.EXTEND.configMotionCruiseVelocity(Constants.Arm_Settings.EXTEND_CRUISECONTROL);
+        // }
+        setArmBrakeOff();
         EXTEND.set(ControlMode.MotionMagic, targetDistanceExtend);
     }
 
@@ -269,6 +277,7 @@ public class SubArm {
     }
 
     public void runExtend(double percentValue, boolean override) {
+        setArmBrakeOff();
         if (override || getExtendIsOkay()) {
             if (this.EXTEND.getSelectedSensorPosition() <= Constants.Arm_Settings.EXTEND_MAX
                     && Math.signum(percentValue) > 0) {
@@ -284,7 +293,16 @@ public class SubArm {
         }
     }
 
+    private void setArmBrakeOn() {
+        this.EXTEND_BRAKE_SOLENOID.set(false);
+    }
+
+    private void setArmBrakeOff() {
+        this.EXTEND_BRAKE_SOLENOID.set(true);
+    }
+
     public void stopExtend() {
+        setArmBrakeOn();
         this.EXTEND.set(ControlMode.PercentOutput, 0);
     }
 
