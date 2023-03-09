@@ -215,13 +215,14 @@ public class SubDriveTrain {
             _forward = 1;
             sens = Constants.DT_Settings.QUICK_TURN;
         }
-        double left = -forward + rotate * _forward * sens;
-        double right = -forward - rotate * _forward * sens;
+        double left = -forward + rotate * Math.max(_forward * sens, Constants.DT_Settings.MIN_TURN);
+        double right = -forward - rotate * Math.max(_forward * sens, Constants.DT_Settings.MIN_TURN);
         double maxMagnitude = Math.max(Math.abs(left), Math.abs(right));
         if (maxMagnitude > 1) {
             left /= maxMagnitude;
             right /= maxMagnitude;
         }
+        // System.out.println(sens);
         this.LEFT_FRONT.set(ControlMode.Velocity, left * Constants.DT_Settings.MAX_VELOCITY);
         this.RIGHT_FRONT.set(ControlMode.Velocity, right * Constants.DT_Settings.MAX_VELOCITY);
     }

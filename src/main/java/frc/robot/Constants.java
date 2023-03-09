@@ -45,6 +45,7 @@ public class Constants {
     // Settings for arcade velocity drive
     public static class DT_Settings {
         public static final double TURN_SENSITIVITY = 0.65; // Joystick turn scaling factor for Curve Drive
+        public static final double MIN_TURN = 0.2;
         public static final double QUICK_TURN = 0.3; // Joystick turn scaling factor for QuickTurn Drive
         public static final double MAX_VELOCITY = 18_000.0; // Drive train max velocity encoder per 100ms
         public static final double MIN_BALANCE_VELOCITY = 2000.0; // Drive train min velocity when balancing
@@ -124,6 +125,9 @@ public class Constants {
         public static final double CUBE_INTAKE_SPEED = 0.4;
         public static final double CONE_INTAKE_SPEED = 0.525;
         public static final double REVERSE = -0.5;
+
+        public static final double MID_EJECT = -0.5;
+        public static final double HIGH_EJECT = -1.0;
         // Ripped docs from SupplyCurrentLimitConfiguration CTRE class
         /**
          * The "holding" current (amperes) to limit to when feature is activated.
@@ -140,7 +144,7 @@ public class Constants {
          */
         public static final double INTAKE_CURRENT_THRESHOLD_TIME_SECONDS = 0.5;
         // Platter
-        public static final double PLATTER_SPEED = 1_500; // equivalent to 0.1 in percentOutput
+        public static final double PLATTER_SPEED = 1_000; // 1_500 equivalent to 0.1 in percentOutput
         public static final double PLATTER_FF = 1023 / 20_300.0;
         public static final double PLATTER_RAMP_RATE_SECS = 0.5;
 
@@ -157,7 +161,7 @@ public class Constants {
         public static final double PIVOT_VELOCITY = 15.0; // degrees per second
         public static final double PIVOT_CRUISECONTROL = 15.0;
 
-        public static final double PIVOT_MIN = -53.0; // Software limits degrees
+        public static final double PIVOT_MIN = -62.0; // Software limits degrees
         public static final double PIVOT_MAX = 180.0;
 
         public static final double PIVOT_RAMP_RATE_SECS = 0.5;
@@ -167,13 +171,13 @@ public class Constants {
         // extension
         public static final double PIVOT_DEGREES_OF_DTH_BACKWARDS = 5.0;
 
-        public static final double PIVOT_OPERATOR_SPEED = 0.4;
+        public static final double PIVOT_OPERATOR_SPEED = 0.6; // was 0.4 in button control mode
         // EXTEND RUNS IN PERCENT OUTPUT
         public static final double EXTEND_ACCELERATION = 6000;
         public static final double EXTEND_CRUISECONTROL = 6000;
         public static final double EXTEND_MM_DTH_SLOWTO_PERCENT = 0.5;
 
-        public static final double EXTEND_MAX = 45_000; // Software limits
+        public static final double EXTEND_MAX = 15_700; // Software limits
         public static final double EXTEND_MIN = 2_000; // soft 0
         public static final double EXTEND_TUCKED = 17_000; // we use this in SubArm to check if the arm is retracted or
                                                            // not
@@ -181,7 +185,7 @@ public class Constants {
 
         public static final int TIMEOUT_MS = 30;
 
-        public static final double EXTEND_OPERATOR_SPEED = 0.1;
+        public static final double EXTEND_OPERATOR_SPEED = 0.3; // was 0.3 in button control mode
 
         // Arm setpoints (degrees)
         public static final double PIVOT_HIGH = 160;
@@ -197,7 +201,7 @@ public class Constants {
         public static final double EXTEND_TRAVEL = 0;
 
         public static final double PIVOT_PICK_CONE = -54;
-        public static final double EXTEND_PICK_CONE = 0;
+        public static final double EXTEND_PICK_CONE = 15_700;
 
         public static final double PIVOT_PICK_CUBE = -37;
         public static final double EXTEND_PICK_CUBE = 0;

@@ -114,6 +114,14 @@ public class SubIntake {
                 INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.REVERSE);
                 INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.REVERSE);
                 break;
+            case EJECT_HIGH:
+                INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.HIGH_EJECT);
+                INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.HIGH_EJECT);
+                break;
+            case EJECT_MID:
+                INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.MID_EJECT);
+                INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.MID_EJECT);
+                break;
             default:
                 INTAKE_BOTTOM.set(ControlMode.PercentOutput, 0);
                 INTAKE_TOP.set(ControlMode.PercentOutput, 0);

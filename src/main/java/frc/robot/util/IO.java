@@ -67,8 +67,8 @@ public class IO {
         }
 
         public static boolean getPOVUp() {
-            return controller.getPOV() < 0 + Constants.Misc.CONTROLLER_POV_MARGIN
-                    && controller.getPOV() > 0 - Constants.Misc.CONTROLLER_POV_MARGIN;
+            return (controller.getPOV() >= 0 && controller.getPOV() < Constants.Misc.CONTROLLER_POV_MARGIN)
+                    || controller.getPOV() > 360 - Constants.Misc.CONTROLLER_POV_MARGIN;
         }
 
         public static boolean getPOVRight() {
@@ -100,7 +100,7 @@ public class IO {
         }
 
         public static double getRightY() {
-            return Math.pow(joyDeadband(controller.getRightY()), 2) * Math.signum(controller.getLeftY());
+            return Math.pow(joyDeadband(controller.getRightY()), 2) * Math.signum(controller.getRightY());
         }
 
         public static double getRightX() {

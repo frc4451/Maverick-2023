@@ -142,11 +142,7 @@ public class Robot extends TimedRobot {
             RobotContainer.arm.pivotToggleBrakeMode();
         }
 
-        if (IO.Driver.getStartButtonPressed()) {
-            RobotContainer.arm.toggleExtendBrakeSolenoid();
-        }
-
-        // DRIVER
+        // INTAKE
         if (RobotContainer.intake.getIntakeDeployed()) {
             if (IO.Driver.getRightTrigger()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.CONE);
@@ -163,11 +159,27 @@ public class Robot extends TimedRobot {
         } else {
             if (IO.Driver.getLeftTrigger()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
+            } else if (false) {
+                RobotContainer.intake.runIntake(SubIntakeModes.EJECT_MID);
+            } else if (IO.Driver.getLeftBumper()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.EJECT_HIGH);
             } else {
                 RobotContainer.intake.stopIntake();
             }
         }
+        // PLATTER
 
+        if (!(IO.Driver.getRightBumper() || IO.Operator.getButtonX() || IO.Operator.getButtonY())) {
+            RobotContainer.intake.stopPlatter();
+        } else {
+            if (IO.Operator.getButtonX()) {
+                RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
+            } else if (IO.Operator.getButtonY()) {
+                RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+            }
+        }
+
+        // DRIVER
         if (IO.Driver.getButtonXPressed()) {
             RobotContainer.intake.toggleIntakeSolenoid();
         }
@@ -182,27 +194,23 @@ public class Robot extends TimedRobot {
             RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX());
         }
 
-        // OPERATOR
-
-        if (!(IO.Driver.getRightBumper() || IO.Operator.getButtonX() || IO.Operator.getButtonY())) {
-            RobotContainer.intake.stopPlatter();
-        } else {
-            if (IO.Operator.getButtonX()) {
-                RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
-            } else if (IO.Operator.getButtonY()) {
-                RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
-            }
-        }
-
+        // DRIVER
         if (IO.Operator.getButtonAPressed()) {
             RobotContainer.arm.toggleClaw();
         }
 
-        // Manual arm control
-        if (IO.Operator.getLeftTrigger()) {
-            RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
-        } else if (IO.Operator.getRightTrigger()) {
-            RobotContainer.arm.runPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+        // Manual arm control with buttons
+        // if (IO.Operator.getLeftTrigger()) {
+        // RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+        // } else if (IO.Operator.getRightTrigger()) {
+        // RobotContainer.arm.runPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+        // } else {
+        // RobotContainer.arm.stopPivot();
+        // }
+
+        // Manual arm control with variable speed control
+        if (IO.Operator.getLeftY() != 0) {
+            RobotContainer.arm.runPivot(IO.Operator.getLeftY() * Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
         } else {
             RobotContainer.arm.stopPivot();
         }
@@ -216,10 +224,16 @@ public class Robot extends TimedRobot {
         } else if (IO.Operator.getPOVLeft()) {
             RobotContainer.arm.armPickCube();
         } else {
-            if (IO.Operator.getLeftBumper()) {
-                RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED, true);
-            } else if (IO.Operator.getRightBumper()) {
-                RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED, true);
+            // if (IO.Operator.getLeftBumper()) {
+            // RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
+            // true);
+            // } else if (IO.Operator.getRightBumper()) {
+            // RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
+            // true);
+            // }
+            if (IO.Operator.getRightY() != 0) {
+                RobotContainer.arm.runExtend(-IO.Operator.getRightY() * Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
+                        true);
             } else {
                 RobotContainer.arm.stopExtend();
             }
@@ -261,13 +275,13 @@ public class Robot extends TimedRobot {
 
         // Misc
 
-        if (IO.Operator.getStartButtonPressed()) {
-            RobotContainer.arm.pivotToggleBrakeMode();
-        }
+        // if (IO.Operator.getStartButtonPressed()) {
+        // RobotContainer.arm.pivotToggleBrakeMode();
+        // }
 
-        if (IO.Driver.getStartButtonPressed()) {
-            RobotContainer.arm.toggleExtendBrakeSolenoid();
-        }
+        // if (IO.Driver.getStartButtonPressed()) {
+        // RobotContainer.arm.toggleExtendBrakeSolenoid();
+        // }
     }
 
     /** This function is called once when test mode is enabled. */

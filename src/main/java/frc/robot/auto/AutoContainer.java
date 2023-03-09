@@ -98,10 +98,13 @@ public class AutoContainer {
                 autoStep++;
                 break;
             case 1:
+                doTrajectory(first, autoStep + 1);
+                break;
+            case 2:
                 RobotContainer.driveTrain.setBrakeMode();
                 autoStep++;
                 break;
-            case 2:
+            case 3:
                 RobotContainer.driveTrain.balanceChargeStation();
                 break;
         }
