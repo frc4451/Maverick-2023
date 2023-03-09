@@ -53,18 +53,11 @@ public enum AutoStates {
     public final List<PathPlannerTrajectory> paths;
 
     /**
-     * Static int storing the longest path group in the enum.
-     * This variable's intended purpose is for Shuffleboard
-     * to know how many Trajectory's it needs to deal with.
-     */
-    public final static int longestPathGroup = getLongestGroup();
-
-    /**
      * We use this for the ShuffleBoard field widget to properly display paths
      * 
      * @see #longestPathGroup
      */
-    private static int getLongestGroup() {
+    public static int getLongestGroup() {
         int longest = 0;
         for (AutoStates state : AutoStates.values()) {
             if (state.paths.size() > longest) {

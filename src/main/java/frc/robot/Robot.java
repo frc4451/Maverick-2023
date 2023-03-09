@@ -149,7 +149,7 @@ public class Robot extends TimedRobot {
                 RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
             } else if (IO.Driver.getRightBumper()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
-            } else if (IO.Operator.getButtonB()) {
+            } else if (IO.Operator.getBButton()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
             } else if (IO.Driver.getLeftTrigger()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
@@ -159,8 +159,8 @@ public class Robot extends TimedRobot {
         } else {
             if (IO.Driver.getLeftTrigger()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
-            } else if (false) {
-                RobotContainer.intake.runIntake(SubIntakeModes.EJECT_MID);
+            // } else if (false) { // ????????????
+            //     RobotContainer.intake.runIntake(SubIntakeModes.EJECT_MID);
             } else if (IO.Driver.getLeftBumper()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.EJECT_HIGH);
             } else {
@@ -169,33 +169,33 @@ public class Robot extends TimedRobot {
         }
         // PLATTER
 
-        if (!(IO.Driver.getRightBumper() || IO.Operator.getButtonX() || IO.Operator.getButtonY())) {
+        if (!(IO.Driver.getRightBumper() || IO.Operator.getXButton() || IO.Operator.getYButton())) {
             RobotContainer.intake.stopPlatter();
         } else {
-            if (IO.Operator.getButtonX()) {
+            if (IO.Operator.getXButton()) {
                 RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
-            } else if (IO.Operator.getButtonY()) {
+            } else if (IO.Operator.getYButton()) {
                 RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
             }
         }
 
         // DRIVER
-        if (IO.Driver.getButtonXPressed()) {
+        if (IO.Driver.getXButtonPressed()) {
             RobotContainer.intake.toggleIntakeSolenoid();
         }
 
-        if (IO.Driver.getButtonAPressed()) {
+        if (IO.Driver.getAButtonPressed()) {
             RobotContainer.driveTrain.toggleDropdownWheels();
         }
 
-        if (IO.Driver.getButtonB()) {
+        if (IO.Driver.getBButton()) {
             RobotContainer.driveTrain.balanceChargeStation();
         } else {
             RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX());
         }
 
-        // DRIVER
-        if (IO.Operator.getButtonAPressed()) {
+        // Operator
+        if (IO.Operator.getAButtonPressed()) {
             RobotContainer.arm.toggleClaw();
         }
 
@@ -252,16 +252,16 @@ public class Robot extends TimedRobot {
         // Update the autoSelected string even when disabled so we can use it
         autoSelected = chooser.getSelected();
 
-        if (IO.Driver.getButtonB()) {
+        if (IO.Driver.getBButton()) {
             RobotContainer.driveTrain.setBrakeMode();
-        } else if (IO.Driver.getButtonA()) {
+        } else if (IO.Driver.getAButton()) {
             RobotContainer.driveTrain.setCoastMode();
         }
 
         // If Y is pressed this'll set the field trajectories and reset the robot's
         // position to the trajectory's start
-        if (IO.Driver.getButtonY()) {
-            for (int i = 0; i < AutoStates.longestPathGroup; i++) {
+        if (IO.Driver.getYButton()) {
+            for (int i = 0; i < AutoStates.getLongestGroup(); i++) {
                 final Trajectory path;
                 if (autoSelected.paths.get(i) != null) {
                     path = autoSelected.paths.get(i);
