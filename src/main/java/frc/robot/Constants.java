@@ -172,6 +172,7 @@ public class Constants {
         public static final double PIVOT_DEGREES_OF_DTH_BACKWARDS = 5.0;
 
         public static final double PIVOT_OPERATOR_SPEED = 0.6; // was 0.4 in button control mode
+        public static final double PIVOT_AUTONOMOUS_SLOW = 0.3;
         // EXTEND RUNS IN PERCENT OUTPUT
         public static final double EXTEND_ACCELERATION = 6000;
         public static final double EXTEND_CRUISECONTROL = 6000;

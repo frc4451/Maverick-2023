@@ -271,6 +271,7 @@ public class Robot extends TimedRobot {
                 RobotContainer.field.getObject("Trajectory " + i).setTrajectory(path);
             }
             RobotContainer.driveTrain.resetNavigation(autoSelected.paths.get(0).getInitialPose());
+            System.out.println(autoSelected.paths.get(0).getInitialPose().getRotation().getDegrees());
         }
 
         // Misc

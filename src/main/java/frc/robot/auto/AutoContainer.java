@@ -11,6 +11,7 @@ import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SubIntakeModes;
 
@@ -110,9 +111,10 @@ public class AutoContainer {
         }
     }
 
-    public static void rightScore() {
-        final PathPlannerTrajectory first = AutoStates.RIGHT_SCORE.paths.get(0);
-        final PathPlannerTrajectory second = AutoStates.RIGHT_SCORE.paths.get(1);
+    public static void bottomScore() {
+        final PathPlannerTrajectory first = AutoStates.BOTTOM_SCORE.paths.get(0);
+        final PathPlannerTrajectory second = AutoStates.BOTTOM_SCORE.paths.get(1);
+        final PathPlannerTrajectory third = AutoStates.BOTTOM_SCORE.paths.get(2);
 
         switch (autoStep) {
             case 0:
@@ -122,34 +124,64 @@ public class AutoContainer {
                 autoStep++;
                 break;
             case 1:
-                doOnTimer(3, autoStep + 1, () -> {
-                    // score the cone
-                });
+                // doOnTimer(3, autoStep + 1, () -> {
+                // // Do nothing
+                // });
+                autoStep++;
                 break;
             case 2:
                 doTrajectory(first, autoStep + 1);
                 break;
             case 3:
-                doOnTimer(2, autoStep + 1, () -> {
-                    // pick up cube
-                    // RobotContainer.arm.armPickCube();
-                    // RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
-                });
+                autoStep++;
+                // doOnTimer(2, autoStep + 1, () -> {
+                // // Wait to stop moving (Probably unneeded)
+                // });
                 break;
             case 4:
-                doOnTimer(0, autoStep + 1, () -> {
-                    // RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
+                doOnTimer(2, autoStep + 1, () -> {
+                    // Move arm out of the way
+                    if (!(RobotContainer.arm.getPivotAngle() >= 0)) {
+                        RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_AUTONOMOUS_SLOW);
+                    } else {
+                        RobotContainer.arm.stopPivot();
+                    }
                 });
                 break;
             case 5:
-                doTrajectory(second, autoStep + 1);
-                break;
-            case 6:
-                doOnTimer(5, -1, () -> {
-                    // score the cube
+                doOnTimer(2, autoStep + 1, () -> {
+                    // Solenoid open
+                    RobotContainer.intake.setIntakeSolenoid(true);
                 });
                 break;
+            case 6:
+                doTrajectory(second, autoStep + 1);
+                RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
+                break;
+            case 7:
+                doOnTimer(0.5, autoStep + 1, () -> {
+                    RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
+                });
+                break;
+            // 8+ are untested
+            case 8:
+                RobotContainer.intake.setIntakeSolenoid(false);
+                autoStep++;
+                break;
+            case 9:
+                doTrajectory(third, 10);
+                break;
+            case 10:
+                doOnTimer(3, 11, () -> {
+                    RobotContainer.intake.runIntake(SubIntakeModes.EJECT_MID);
+                });
+                break;
+            case 11:
+                RobotContainer.intake.stopIntake();
+                autoStep = -1;
+                break;
         }
+
     }
 
     public static void leftScore() {

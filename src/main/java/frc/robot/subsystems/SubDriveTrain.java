@@ -22,9 +22,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.util.RobotMath;
 
@@ -369,11 +371,21 @@ public class SubDriveTrain {
     }
 
     public void resetGyro() {
+        this.resetGyro(0);
+    }
+
+    public void resetGyro(double angleDeg) {
         // NOTE: This doesn't reset the Pitch, we'll figure it out when Allred tells us
         // We're using setFusedHeading instead of setYaw because getAngle uses
         // fusedHeading
         // this.GYROSCOPE.setYaw(0, Constants.DT_PIDF.TIMEOUT_MS);
-        this.GYROSCOPE.setFusedHeading(0, Constants.DT_PIDF.TIMEOUT_MS);
+        // We did this funky math to make it set it correctly
+        // if (DriverStation.getAlliance() == Alliance.Red && angleDeg == 0) {
+        // angleDeg = 180;
+        // }
+        // this.GYROSCOPE.setFusedHeading((180.0 / 2.815) * angleDeg,
+        // Constants.DT_PIDF.TIMEOUT_MS);
+        this.GYROSCOPE.setFusedHeading((180.0 / 2.815) * angleDeg, Constants.DT_PIDF.TIMEOUT_MS);
     }
 
     public void resetNavigation() {
@@ -382,7 +394,7 @@ public class SubDriveTrain {
 
     public void resetNavigation(Pose2d pose) {
         this.resetOdometry(pose);
-        this.resetGyro();
+        this.resetGyro(pose.getRotation().getDegrees());
         // resetEncoders() called in resetOdometry
     }
 

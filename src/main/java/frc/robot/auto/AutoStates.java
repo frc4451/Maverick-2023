@@ -1,10 +1,13 @@
 package frc.robot.auto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Class that's only purpose is to store PathConstraints objects because they
@@ -41,10 +44,14 @@ public enum AutoStates {
             "Right Balance",
             AutoContainer::rightBalance,
             PathPlanner.loadPathGroup("rightBalance", Speeds.fast)),
-    RIGHT_SCORE(
-            "Right Score",
-            AutoContainer::rightScore,
-            PathPlanner.loadPathGroup("rightScore", Speeds.medium));
+    BOTTOM_SCORE(
+            "Bottom Score",
+            AutoContainer::bottomScore,
+            PathPlanner.loadPathGroup("bottomScore", Speeds.medium)),
+    // BOTTOM_SCORE_RED( // This shouldn't be needed
+    // "Bottom Score Red",
+    // AutoContainer::bottomScore,
+    // PathPlanner.loadPathGroup("bottomScoreRed", Speeds.medium));
 
     public final String label;
 
@@ -84,7 +91,12 @@ public enum AutoStates {
     private AutoStates(String label, UnamedFunction routine, List<PathPlannerTrajectory> paths) {
         this.label = label;
         this.routine = routine;
-        this.paths = paths;
+        // this.paths = paths;
+        this.paths = paths.stream()
+                .map(path -> PathPlannerTrajectory.transformTrajectoryForAlliance(
+                        path,
+                        DriverStation.getAlliance()))
+                .collect(Collectors.toList());
     }
 
     @Override
