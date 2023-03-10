@@ -47,7 +47,7 @@ public enum AutoStates {
     BOTTOM_SCORE(
             "Bottom Score",
             AutoContainer::bottomScore,
-            PathPlanner.loadPathGroup("bottomScore", Speeds.medium)),
+            PathPlanner.loadPathGroup("bottomScore", Speeds.medium));
     // BOTTOM_SCORE_RED( // This shouldn't be needed
     // "Bottom Score Red",
     // AutoContainer::bottomScore,
