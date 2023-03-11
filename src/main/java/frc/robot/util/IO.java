@@ -58,6 +58,10 @@ public class IO {
             return controller.getBButton();
         }
 
+        public static boolean getButtonBReleased() {
+            return controller.getBButtonReleased();
+        }
+
         public static boolean getButtonXPressed() {
             return controller.getXButtonPressed();
         }
