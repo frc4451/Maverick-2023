@@ -1,10 +1,13 @@
 package frc.robot.auto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Class that's only purpose is to store PathConstraints objects because they
@@ -15,7 +18,9 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 class Speeds {
     public static final PathConstraints none = new PathConstraints(0.0, 0.0);
     public static final PathConstraints fast = new PathConstraints(2.5, 2.0);
+    public static final PathConstraints medium = new PathConstraints(2.0, 2.0);
     public static final PathConstraints slow = new PathConstraints(1.5, 1.0);
+    public static final PathConstraints verySlow = new PathConstraints(1.0, 1.0);
 }
 
 public enum AutoStates {
@@ -34,15 +39,19 @@ public enum AutoStates {
     CENTER_BALANCE(
             "Center Balance",
             AutoContainer::centerBalance,
-            PathPlanner.loadPathGroup("centerBalance", Speeds.fast)),
+            PathPlanner.loadPathGroup("centerBalance", Speeds.verySlow)),
     RIGHT_BALANCE(
             "Right Balance",
             AutoContainer::rightBalance,
             PathPlanner.loadPathGroup("rightBalance", Speeds.fast)),
-    RIGHT_SCORE(
-            "Right Score",
-            AutoContainer::rightScore,
-            PathPlanner.loadPathGroup("rightScore", Speeds.fast));
+    BOTTOM_SCORE(
+            "Bottom Score",
+            AutoContainer::bottomScore,
+            PathPlanner.loadPathGroup("bottomScore", Speeds.medium));
+    // BOTTOM_SCORE_RED( // This shouldn't be needed
+    // "Bottom Score Red",
+    // AutoContainer::bottomScore,
+    // PathPlanner.loadPathGroup("bottomScoreRed", Speeds.medium));
 
     public final String label;
 
@@ -82,7 +91,12 @@ public enum AutoStates {
     private AutoStates(String label, UnamedFunction routine, List<PathPlannerTrajectory> paths) {
         this.label = label;
         this.routine = routine;
-        this.paths = paths;
+        // this.paths = paths;
+        this.paths = paths.stream()
+                .map(path -> PathPlannerTrajectory.transformTrajectoryForAlliance(
+                        path,
+                        DriverStation.getAlliance()))
+                .collect(Collectors.toList());
     }
 
     @Override

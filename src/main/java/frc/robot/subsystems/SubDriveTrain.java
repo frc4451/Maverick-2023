@@ -22,7 +22,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.util.RobotMath;
 
@@ -33,6 +37,7 @@ public class SubDriveTrain {
     private final WPI_TalonFX LEFT_REAR;
     private final WPI_TalonFX RIGHT_REAR;
     private final WPI_PigeonIMU GYROSCOPE;
+    private final Solenoid DROPDOWN_SOLENOID;
 
     private final DifferentialDriveKinematics KINEMATICS;
     private final DifferentialDrivePoseEstimator ODOMETRY;
@@ -70,7 +75,7 @@ public class SubDriveTrain {
      * Receives CAN address of 4 drive train Falcon motors and Pigeon IMU
      * Note: Do not create the Pigeon IMU in the first test
      */
-    public SubDriveTrain(int leftFront, int leftRear, int rightFront, int rightRear, int gyro) {
+    public SubDriveTrain(int leftFront, int leftRear, int rightFront, int rightRear, int gyro, int dropDownSolenoid) {
         /*
          * 1. Make instances of all 4 WPI_TalonFX motor classes
          * 2. Factory reset each
@@ -87,6 +92,7 @@ public class SubDriveTrain {
         this.RIGHT_FRONT = new WPI_TalonFX(rightFront);
         this.RIGHT_REAR = new WPI_TalonFX(rightRear);
         this.GYROSCOPE = new WPI_PigeonIMU(gyro);
+        this.DROPDOWN_SOLENOID = new Solenoid(PneumaticsModuleType.CTREPCM, dropDownSolenoid);
 
         // Kinematics translates drivetrain linear and angular speeds to left / right
         // wheel speeds
@@ -204,26 +210,53 @@ public class SubDriveTrain {
      * ... therefore when forward is zero, turn is zero
      * This is the default drive method in tele-op periodic
      */
-    public void runDrive(double forward, double rotate, boolean quickTurningEnabled) {
-        final double fward;
-        final double sens;
-        if (quickTurningEnabled) {
-            fward = 1;
+    public void runDrive(double forward, double rotate) {
+        double _forward = Math.abs(forward);
+        double sens = Constants.DT_Settings.TURN_SENSITIVITY;
+        if (forward == 0) {
+            _forward = 1;
             sens = Constants.DT_Settings.QUICK_TURN;
-        } else {
-            fward = Math.abs(forward);
-            sens = Constants.DT_Settings.TURN_SENSITIVITY;
         }
-        double left = -forward + rotate * fward * sens;
-        double right = -forward - rotate * fward * sens;
+        double left = -forward + rotate * Math.max(_forward * sens, Constants.DT_Settings.MIN_TURN);
+        double right = -forward - rotate * Math.max(_forward * sens, Constants.DT_Settings.MIN_TURN);
         double maxMagnitude = Math.max(Math.abs(left), Math.abs(right));
         if (maxMagnitude > 1) {
             left /= maxMagnitude;
             right /= maxMagnitude;
         }
+        // System.out.println(sens);
         this.LEFT_FRONT.set(ControlMode.Velocity, left * Constants.DT_Settings.MAX_VELOCITY);
         this.RIGHT_FRONT.set(ControlMode.Velocity, right * Constants.DT_Settings.MAX_VELOCITY);
     }
+
+    /**
+     * The Following is experimental, please proceed with caution.
+     * 
+     * @param forward
+     * @param rotate
+     * @param quickTurningEnabled
+     */
+    // public void runDrive(double forward, double rotate, boolean
+    // quickTurningEnabled) {
+    // double _forward = Math.abs(forward);
+    // double sens = Constants.DT_Settings.TURN_SENSITIVITY;
+    // // This is experimental, proceed with caution.
+    // if (quickTurningEnabled) {
+    // _forward = 1;
+    // sens = Constants.DT_Settings.QUICK_TURN;
+    // }
+    // double left = -forward + rotate * _forward * sens;
+    // double right = -forward - rotate * _forward * sens;
+    // double maxMagnitude = Math.max(Math.abs(left), Math.abs(right));
+    // if (maxMagnitude > 1) {
+    // left /= maxMagnitude;
+    // right /= maxMagnitude;
+    // }
+    // this.LEFT_FRONT.set(ControlMode.Velocity, left *
+    // Constants.DT_Settings.MAX_VELOCITY);
+    // this.RIGHT_FRONT.set(ControlMode.Velocity, right *
+    // Constants.DT_Settings.MAX_VELOCITY);
+    // }
 
     /**
      * Drives the robot with linear and angular velocities derived from a
@@ -264,17 +297,21 @@ public class SubDriveTrain {
         RIGHT_FRONT.set(ControlMode.PercentOutput, rightVolts / RobotController.getBatteryVoltage());
     }
 
-    public void runMotionMagic(double targetDistanceL, double targetDistanceR) {
-        this.LEFT_FRONT.set(ControlMode.MotionMagic, targetDistanceL);
-        this.RIGHT_FRONT.set(ControlMode.MotionMagic, targetDistanceR);
-        // at 6 seconds go back
+    public void toggleDropdownWheels() {
+        this.DROPDOWN_SOLENOID.set(!getDropDownSolenoid());
     }
 
-    /*
-     * getter methods to display values on the dashboard
-     * 1. Get left front speed
-     * 2. Get right front speed
-     */
+    // public void runMotionMagic(double targetDistanceL, double targetDistanceR) {
+    // this.LEFT_FRONT.set(ControlMode.MotionMagic, targetDistanceL);
+    // this.RIGHT_FRONT.set(ControlMode.MotionMagic, targetDistanceR);
+    // // at 6 seconds go back
+    // }
+
+    // getters
+    public boolean getDropDownSolenoid() {
+        return this.DROPDOWN_SOLENOID.get();
+    }
+
     public double getLeftSpeed() {
         return this.LEFT_FRONT.getSelectedSensorVelocity(); // replace 0 with get sensor velocity
     }
@@ -334,11 +371,21 @@ public class SubDriveTrain {
     }
 
     public void resetGyro() {
+        this.resetGyro(0);
+    }
+
+    public void resetGyro(double angleDeg) {
         // NOTE: This doesn't reset the Pitch, we'll figure it out when Allred tells us
         // We're using setFusedHeading instead of setYaw because getAngle uses
         // fusedHeading
         // this.GYROSCOPE.setYaw(0, Constants.DT_PIDF.TIMEOUT_MS);
-        this.GYROSCOPE.setFusedHeading(0, Constants.DT_PIDF.TIMEOUT_MS);
+        // We did this funky math to make it set it correctly
+        // if (DriverStation.getAlliance() == Alliance.Red && angleDeg == 0) {
+        // angleDeg = 180;
+        // }
+        // this.GYROSCOPE.setFusedHeading((180.0 / 2.815) * angleDeg,
+        // Constants.DT_PIDF.TIMEOUT_MS);
+        this.GYROSCOPE.setFusedHeading((180.0 / 2.815) * angleDeg, Constants.DT_PIDF.TIMEOUT_MS);
     }
 
     public void resetNavigation() {
@@ -347,7 +394,7 @@ public class SubDriveTrain {
 
     public void resetNavigation(Pose2d pose) {
         this.resetOdometry(pose);
-        this.resetGyro();
+        this.resetGyro(pose.getRotation().getDegrees());
         // resetEncoders() called in resetOdometry
     }
 
@@ -434,10 +481,11 @@ public class SubDriveTrain {
     }
 
     public double getBalanceControllerOutput() {
-        return -RobotMath.clamp(BALANCE_CONTROLLER.calculate(this.getGyroPitch()), -1, 1);
+        return RobotMath.clamp(BALANCE_CONTROLLER.calculate(this.getGyroPitch()), -1, 1);
     }
 
     public void balanceChargeStation() {
+        this.setBrakeMode();
         if (BALANCE_CONTROLLER.atSetpoint()) {
             this.drive(0, 0);
             return;

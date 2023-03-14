@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoContainer;
+import frc.robot.subsystems.SubIntakeModes;
+// import frc.robot.trajectories.TrajectoryContainer;
 import frc.robot.auto.AutoStates;
 import frc.robot.util.IO;
 
@@ -33,6 +35,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        RobotContainer.arm.resetArmEncoders();
         RobotContainer.driveTrain.resetNavigation();
         RobotContainer.driveTrain.resetBalanceController();
         RobotContainer.driveTrain.setCoastMode();
@@ -68,14 +71,26 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Gyro Pitch", RobotContainer.driveTrain.getGyroPitch());
         SmartDashboard.putNumber("Gyro Rotation", RobotContainer.driveTrain.getGyroAngle());
         SmartDashboard.putNumber("Gyro Absolute Rotation", RobotContainer.driveTrain.getGyroAngleAbsolute());
-        SmartDashboard.putNumber("Left Distance", RobotContainer.driveTrain.getLeftPosition());
-        SmartDashboard.putNumber("Right Distance", RobotContainer.driveTrain.getRightPosition());
-        SmartDashboard.putNumber("Left Speed", RobotContainer.driveTrain.getLeftSpeed());
-        SmartDashboard.putNumber("Right Speed", RobotContainer.driveTrain.getRightSpeed());
-        SmartDashboard.putNumber("Delta Speed Right-Left",
-                RobotContainer.driveTrain.getRightSpeed() - RobotContainer.driveTrain.getLeftSpeed());
+        // SmartDashboard.putNumber("Left Distance",
+        // RobotContainer.driveTrain.getLeftPosition());
+        // SmartDashboard.putNumber("Right Distance",
+        // RobotContainer.driveTrain.getRightPosition());
+        // SmartDashboard.putNumber("Left Speed",
+        // RobotContainer.driveTrain.getLeftSpeed());
+        // SmartDashboard.putNumber("Right Speed",
+        // RobotContainer.driveTrain.getRightSpeed());
         SmartDashboard.putData("Field/Field", RobotContainer.field);
-        SmartDashboard.putNumber("Balance Output", RobotContainer.driveTrain.getBalanceControllerOutput());
+        SmartDashboard.putBoolean("Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
+        // SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
+        SmartDashboard.putNumber("Pivot Position", RobotContainer.arm.getPivotPosition());
+        SmartDashboard.putNumber("Extend Position", RobotContainer.arm.getExtendPosition());
+        SmartDashboard.putNumber("Pivot Degrees", RobotContainer.arm.getPivotAngle());
+        // SmartDashboard.putNumber("Debug/Balance Output",
+        // RobotContainer.driveTrain.getBalanceControllerOutput());
+        // SmartDashboard.putBoolean("Debug/Intake Deployed",
+        // RobotContainer.intake.getIntakeDeployed());
+        // SmartDashboard.putBoolean("Debug/Beam Break",
+        // RobotContainer.intake.getLimitSwitch());
     }
 
     /**
@@ -113,7 +128,7 @@ public class Robot extends TimedRobot {
     /** This function is called once when teleop is enabled. */
     @Override
     public void teleopInit() {
-        RobotContainer.driveTrain.setBrakeMode();
+        RobotContainer.driveTrain.setCoastMode();
         RobotContainer.driveTrain.resetGyro();
         RobotContainer.driveTrain.resetBalanceController();
     }
@@ -121,26 +136,111 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        // Drive Train
-        // Balance
-        if (IO.Driver.getButtonB()) {
-            RobotContainer.driveTrain.balanceChargeStation();
-        } else {
-            RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX(), IO.Driver.getLeftBumper());
+        // Misc
+
+        if (IO.Operator.getStartButtonPressed()) {
+            RobotContainer.arm.pivotToggleBrakeMode();
         }
 
-        // Intake
-        if (IO.Driver.getRightBumper()) {
-            RobotContainer.intake.runIntake("Cube");
-        } else if (IO.Driver.getRightTrigger()) {
-            RobotContainer.intake.runIntake("Cone");
-        } else if (IO.Driver.getLeftTrigger()) {
-            RobotContainer.intake.runIntake("Reverse");
+        // INTAKE
+        if (RobotContainer.intake.getIntakeDeployed()) {
+            if (IO.Driver.getRightTrigger()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.CONE);
+                RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+            } else if (IO.Driver.getRightBumper()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
+            } else if (IO.Operator.getButtonB()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
+            } else if (IO.Driver.getLeftTrigger()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
+            } else {
+                RobotContainer.intake.stopIntake();
+            }
         } else {
-            RobotContainer.intake.stopIntake();
+            if (IO.Driver.getLeftTrigger()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
+            } else if (false) {
+                RobotContainer.intake.runIntake(SubIntakeModes.EJECT_MID);
+            } else if (IO.Driver.getLeftBumper()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.EJECT_HIGH);
+            } else {
+                RobotContainer.intake.stopIntake();
+            }
         }
-        if (IO.Driver.getButtonAPressed()) {
+        // PLATTER
+
+        if (!(IO.Driver.getRightBumper() || IO.Operator.getButtonX() || IO.Operator.getButtonY())) {
+            RobotContainer.intake.stopPlatter();
+        } else {
+            if (IO.Operator.getButtonX()) {
+                RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
+            } else if (IO.Operator.getButtonY()) {
+                RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+            }
+        }
+
+        // DRIVER
+        if (IO.Driver.getButtonXPressed()) {
             RobotContainer.intake.toggleIntakeSolenoid();
+        }
+
+        if (IO.Driver.getButtonAPressed()) {
+            RobotContainer.driveTrain.toggleDropdownWheels();
+        }
+
+        if (IO.Driver.getButtonB()) {
+            RobotContainer.driveTrain.balanceChargeStation();
+        } else if (IO.Driver.getButtonBReleased()) {
+            // We have to do this otherwise the we'll only be able to balance once.
+            // This is because the controller'll think it's already done the setpoint
+            RobotContainer.driveTrain.resetBalanceController();
+        } else {
+            RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX());
+        }
+
+        // DRIVER
+        if (IO.Operator.getButtonAPressed()) {
+            RobotContainer.arm.toggleClaw();
+        }
+
+        // Manual arm control with buttons
+        // if (IO.Operator.getLeftTrigger()) {
+        // RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+        // } else if (IO.Operator.getRightTrigger()) {
+        // RobotContainer.arm.runPivot(-Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+        // } else {
+        // RobotContainer.arm.stopPivot();
+        // }
+
+        // Manual arm control with variable speed control
+        if (IO.Operator.getLeftY() != 0) {
+            RobotContainer.arm.runPivot(IO.Operator.getLeftY() * Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+        } else {
+            RobotContainer.arm.stopPivot();
+        }
+
+        if (IO.Operator.getPOVUp()) {
+            RobotContainer.arm.gotoHigh();
+        } else if (IO.Operator.getPOVRight()) {
+            RobotContainer.arm.gotoMid();
+        } else if (IO.Operator.getPOVDown()) {
+            RobotContainer.arm.armPickCone();
+        } else if (IO.Operator.getPOVLeft()) {
+            RobotContainer.arm.armPickCube();
+        } else {
+            // if (IO.Operator.getLeftBumper()) {
+            // RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
+            // true);
+            // } else if (IO.Operator.getRightBumper()) {
+            // RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
+            // true);
+            // }
+            if (IO.Operator.getRightY() != 0) {
+                RobotContainer.arm.runExtend(-IO.Operator.getRightY() * Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
+                        true);
+            } else {
+                RobotContainer.arm.stopExtend();
+            }
         }
     }
 
@@ -165,7 +265,6 @@ public class Robot extends TimedRobot {
         // If Y is pressed this'll set the field trajectories and reset the robot's
         // position to the trajectory's start
         if (IO.Driver.getButtonY()) {
-            RobotContainer.driveTrain.resetNavigation(autoSelected.paths.get(0).getInitialPose());
             for (int i = 0; i < AutoStates.longestPathGroup; i++) {
                 final Trajectory path;
                 if (autoSelected.paths.get(i) != null) {
@@ -175,7 +274,19 @@ public class Robot extends TimedRobot {
                 }
                 RobotContainer.field.getObject("Trajectory " + i).setTrajectory(path);
             }
+            RobotContainer.driveTrain.resetNavigation(autoSelected.paths.get(0).getInitialPose());
+            System.out.println(autoSelected.paths.get(0).getInitialPose().getRotation().getDegrees());
         }
+
+        // Misc
+
+        // if (IO.Operator.getStartButtonPressed()) {
+        // RobotContainer.arm.pivotToggleBrakeMode();
+        // }
+
+        // if (IO.Driver.getStartButtonPressed()) {
+        // RobotContainer.arm.toggleExtendBrakeSolenoid();
+        // }
     }
 
     /** This function is called once when test mode is enabled. */

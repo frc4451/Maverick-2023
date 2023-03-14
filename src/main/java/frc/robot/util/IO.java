@@ -9,6 +9,7 @@ import frc.robot.Constants;
 
 public class IO {
 
+    // We could probably change this to instead inherit XboxController
     public static class Driver {
         private static final XboxController controller = new XboxController(0);
 
@@ -57,6 +58,10 @@ public class IO {
             return controller.getBButton();
         }
 
+        public static boolean getButtonBReleased() {
+            return controller.getBButtonReleased();
+        }
+
         public static boolean getButtonXPressed() {
             return controller.getXButtonPressed();
         }
@@ -65,8 +70,28 @@ public class IO {
             return controller.getYButton();
         }
 
-        public static boolean getStartButton() {
-            return controller.getStartButton();
+        public static boolean getPOVUp() {
+            return (controller.getPOV() >= 0 && controller.getPOV() < Constants.Misc.CONTROLLER_POV_MARGIN)
+                    || controller.getPOV() > 360 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVRight() {
+            return controller.getPOV() < 90 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 90 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVDown() {
+            return controller.getPOV() < 180 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 180 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVLeft() {
+            return controller.getPOV() < 270 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 270 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getStartButtonPressed() {
+            return controller.getStartButtonPressed();
         }
     }
 
@@ -79,7 +104,7 @@ public class IO {
         }
 
         public static double getRightY() {
-            return Math.pow(joyDeadband(controller.getRightY()), 2) * Math.signum(controller.getLeftY());
+            return Math.pow(joyDeadband(controller.getRightY()), 2) * Math.signum(controller.getRightY());
         }
 
         public static double getRightX() {
@@ -106,10 +131,6 @@ public class IO {
             return controller.getRightBumper();
         }
 
-        public static boolean getButtonA() {
-            return controller.getAButton();
-        }
-
         public static boolean getButtonAPressed() {
             return controller.getAButtonPressed();
         }
@@ -118,16 +139,36 @@ public class IO {
             return controller.getBButton();
         }
 
-        public static boolean getButtonXPressed() {
-            return controller.getXButtonPressed();
+        public static boolean getButtonX() {
+            return controller.getXButton();
         }
 
         public static boolean getButtonY() {
             return controller.getYButton();
         }
 
-        public static boolean getStartButton() {
-            return controller.getStartButton();
+        public static boolean getPOVUp() {
+            return (controller.getPOV() >= 0 && controller.getPOV() < Constants.Misc.CONTROLLER_POV_MARGIN)
+                    || controller.getPOV() > 360 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVRight() {
+            return controller.getPOV() < 90 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 90 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVDown() {
+            return controller.getPOV() < 180 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 180 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getPOVLeft() {
+            return controller.getPOV() < 270 + Constants.Misc.CONTROLLER_POV_MARGIN
+                    && controller.getPOV() > 270 - Constants.Misc.CONTROLLER_POV_MARGIN;
+        }
+
+        public static boolean getStartButtonPressed() {
+            return controller.getStartButtonPressed();
         }
     }
 
@@ -143,10 +184,10 @@ public class IO {
         }
     }
 
-    /*
-     * Joystick square method to provide a better driver control
-     */
-    public static double joySquareValue(double rawValue) {
-        return Math.signum(rawValue) * rawValue * rawValue;
-    }
+    // /*
+    // * Joystick square method to provide a better driver control
+    // */
+    // public static double joySquareValue(double rawValue) {
+    // return Math.signum(rawValue) * rawValue * rawValue;
+    // }
 }
