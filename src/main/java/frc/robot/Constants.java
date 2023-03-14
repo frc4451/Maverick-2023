@@ -67,8 +67,8 @@ public class Constants {
         // encoder counts Auto#, Step
 
         // Cruise/acceleration = seconds
-        public static final double MM_ACCELERATION = 6000.0; // in one second
-        public static final double MM_CRUISECONTROL = 6000.0; // per tenth of second
+        public static final double MM_ACCELERATION = 3000.0; // in one second
+        public static final double MM_CRUISECONTROL = 3000.0; // per tenth of second
         public static final double INTAKE_SPEED = -0.7; // Intake speed
         public static final double GYRO_FRIXION_DEADBAND = 0.5;
         public static final double INTAKE_CENTERWHEEL_SPEED = 0.4; // Intake Centering wheel speed
@@ -193,7 +193,7 @@ public class Constants {
         public static final double EXTEND_HIGH = 43_100;
 
         public static final double PIVOT_MID = 180;
-        public static final double EXTEND_MID = EXTEND_TUCKED;
+        public static final double EXTEND_MID = 2000;
 
         // public static final double PIVOT_LOW = 0;
         // public static final double EXTEND_LOW = 0;

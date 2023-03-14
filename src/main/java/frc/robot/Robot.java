@@ -226,7 +226,7 @@ public class Robot extends TimedRobot {
         } else if (IO.Operator.getPOVDown()) {
             RobotContainer.arm.armPickCone();
         } else if (IO.Operator.getPOVLeft()) {
-            RobotContainer.arm.armPickCube();
+            // RobotContainer.arm.armPickCube();
         } else {
             // if (IO.Operator.getLeftBumper()) {
             // RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
@@ -236,7 +236,8 @@ public class Robot extends TimedRobot {
             // true);
             // }
             if (IO.Operator.getRightY() != 0) {
-                RobotContainer.arm.runExtend(-IO.Operator.getRightY() * Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
+                RobotContainer.arm.runExtend(
+                        -IO.Operator.getRightY() * Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
                         true);
             } else {
                 RobotContainer.arm.stopExtend();

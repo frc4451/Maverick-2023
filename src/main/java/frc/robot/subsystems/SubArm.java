@@ -189,11 +189,16 @@ public class SubArm {
     }
 
     public void armPickCone() {
-        armTo(Constants.Arm_Settings.PIVOT_PICK_CONE, Constants.Arm_Settings.EXTEND_PICK_CONE);
+        // armTo(Constants.Arm_Settings.PIVOT_PICK_CONE,
+        // Constants.Arm_Settings.EXTEND_PICK_CONE);
+        extendTo(Constants.Arm_Settings.EXTEND_PICK_CONE);
     }
 
     public void armPickCube() {
-        armTo(Constants.Arm_Settings.PIVOT_PICK_CUBE, Constants.Arm_Settings.EXTEND_PICK_CUBE);
+        // armTo(Constants.Arm_Settings.PIVOT_PICK_CUBE,
+        // Constants.Arm_Settings.EXTEND_PICK_CUBE);
+        extendTo(Constants.Arm_Settings.EXTEND_PICK_CUBE);
+
     }
 
     // Pivot uses feedforward and feedback controller
@@ -255,22 +260,28 @@ public class SubArm {
         pivotBreakMode = !pivotBreakMode;
     }
 
-    // Extension uses motionmagic.
+    // Extension using motionmagic.
     public void extendTo(double targetDistanceExtend) {
-        double mmacc = Constants.Arm_Settings.EXTEND_ACCELERATION *
-                Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
-        double mmcc = Constants.Arm_Settings.EXTEND_CRUISECONTROL *
-                Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
+        // double accel = Constants.Arm_Settings.EXTEND_ACCELERATION *
+        // Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
+        // double cruiseAccel = Constants.Arm_Settings.EXTEND_CRUISECONTROL *
+        // Constants.Arm_Settings.EXTEND_MM_DTH_SLOWTO_PERCENT;
 
-        if (getExtendIsCloseToDth()) {
-            this.EXTEND.configMotionAcceleration(mmacc);
-            this.EXTEND.configMotionCruiseVelocity(mmcc);
-        } else {
-            this.EXTEND.configMotionAcceleration(Constants.Arm_Settings.EXTEND_ACCELERATION);
-            this.EXTEND.configMotionCruiseVelocity(Constants.Arm_Settings.EXTEND_CRUISECONTROL);
-        }
+        // Commented out degrees of death for now
+        // if (getExtendIsCloseToDth()) {
+        // this.EXTEND.configMotionAcceleration(accel);
+        // this.EXTEND.configMotionCruiseVelocity(cruiseAccel);
+        // } else {
+        // }
+        // setExtendIfTimer(ControlMode.MotionMagic, targetDistanceExtend);
+        setExtendIfTimer(ControlMode.MotionMagic, targetDistanceExtend);
+    }
+
+    public void setExtendIfTimer(ControlMode mode, double value) {
         setArmBrakeOff();
-        EXTEND.set(ControlMode.MotionMagic, targetDistanceExtend);
+        if (extendBrakeTimer()) {
+            this.EXTEND.set(mode, value);
+        }
     }
 
     public boolean extendBrakeTimer() {
