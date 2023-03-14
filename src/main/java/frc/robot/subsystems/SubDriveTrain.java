@@ -485,6 +485,7 @@ public class SubDriveTrain {
     }
 
     public void balanceChargeStation() {
+        this.setBrakeMode();
         if (BALANCE_CONTROLLER.atSetpoint()) {
             this.drive(0, 0);
             return;
