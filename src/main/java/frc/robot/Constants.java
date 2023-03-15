@@ -174,8 +174,8 @@ public class Constants {
         public static final double PIVOT_OPERATOR_SPEED = 0.6; // was 0.4 in button control mode
         public static final double PIVOT_AUTONOMOUS_SLOW = 0.3;
         // EXTEND RUNS IN PERCENT OUTPUT
-        public static final double EXTEND_ACCELERATION = 6000;
-        public static final double EXTEND_CRUISECONTROL = 6000;
+        public static final double EXTEND_ACCELERATION = 16_000;
+        public static final double EXTEND_CRUISECONTROL = 16_000;
         public static final double EXTEND_MM_DTH_SLOWTO_PERCENT = 0.5;
 
         public static final double EXTEND_MAX = 15_700; // Software limits
@@ -213,7 +213,7 @@ public class Constants {
 
     // Arm PID
     public static class ARM_PIDF {
-        public static final double EXTEND_PG = 0.3; // proportional
+        public static final double EXTEND_PG = 1.0; // proportional
         public static final double EXTEND_IG = 0.0; // integral
         public static final double EXTEND_DG = 0.0; // derivative
         public static final double EXTEND_F = 1023.0 / 20300.0; // feedforward

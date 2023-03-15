@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ARM_PIDF;
@@ -230,11 +231,9 @@ public class SubArm {
         } else if (this.encoder2deg(this.PIVOT.getSelectedSensorPosition()) <= Constants.Arm_Settings.PIVOT_MAX
                 && Math.signum(percentValue) > 0) {
             this.PIVOT.set(ControlMode.PercentOutput, percentValue);
-            System.out.println("Should go negative");
         } else if (this.encoder2deg(this.PIVOT.getSelectedSensorPosition()) >= Constants.Arm_Settings.PIVOT_MIN
                 && Math.signum(percentValue) < 0) {
             this.PIVOT.set(ControlMode.PercentOutput, percentValue);
-            System.out.println("Should go positive");
         } else {
             this.stopPivot();
         }
@@ -285,10 +284,11 @@ public class SubArm {
     }
 
     public boolean extendBrakeTimer() {
+        // start timer if reset
         if (this.extendBrakeTimer.get() == 0) {
             this.extendBrakeTimer.start();
         }
-
+        // After time, stop timer, return true; else return false
         if (this.extendBrakeTimer.hasElapsed(0.2)) {
             this.extendBrakeTimer.stop();
             return true;
@@ -302,7 +302,7 @@ public class SubArm {
     }
 
     public void runExtend(double percentValue, boolean override) {
-        if (override || getExtendIsOkay()) {
+        if (override /* || getExtendIsOkay() */) {
             if (this.EXTEND.getSelectedSensorPosition() <= Constants.Arm_Settings.EXTEND_MAX
                     && Math.signum(percentValue) > 0) {
                 setArmBrakeOff();
