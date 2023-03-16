@@ -176,7 +176,7 @@ public class SubArm {
      * @param extendEncoderCounts Extend setpoint in encoder counts.
      */
 
-    public void armTo(double pivotDegrees, double extendEncoderCounts) {
+    public void armToWithDeath(double pivotDegrees, double extendEncoderCounts) {
         if (getShouldTuckToPivot(pivotDegrees)) { // If inside tuck zone
             if (!getArmTucked()) { // If arm is not tucked
                 stopPivot(); // Disallow pivoting for armTo until tucked
@@ -192,33 +192,43 @@ public class SubArm {
         }
     }
 
+    public void armTo(final double pivotDegrees, final double extendEncoderCounts) {
+        if (Math.abs(this.getPivotAngle() - pivotDegrees) < 10) {
+            this.extendTo(extendEncoderCounts);
+        } else {
+            if (this.getExtendPosition() > 5000) {
+                this.tuckArm();
+            } else {
+                this.pivotTo(pivotDegrees);
+            }
+        }
+    }
+
     // setpoints
     public void startPosition() {
-        // armTo(Constants.Arm_Settings.PIVOT_START,
-        // Constants.Arm_Settings.EXTEND_START);
+        armTo(Constants.Arm_Settings.PIVOT_START, Constants.Arm_Settings.EXTEND_START);
         // extendTo(Constants.Arm_Settings.EXTEND_START);
-        pivotTo(Constants.Arm_Settings.PIVOT_START);
+        // pivotTo(Constants.Arm_Settings.PIVOT_START);
 
     }
 
     public void travelPosition() {
-        // armTo(Constants.Arm_Settings.PIVOT_TRAVEL,
-        // Constants.Arm_Settings.EXTEND_TRAVEL);
+        armTo(Constants.Arm_Settings.PIVOT_TRAVEL, Constants.Arm_Settings.EXTEND_TRAVEL);
         // extendTo(Constants.Arm_Settings.EXTEND_TRAVEL);
-        pivotTo(Constants.Arm_Settings.PIVOT_TRAVEL);
+        // pivotTo(Constants.Arm_Settings.PIVOT_TRAVEL);
 
     }
 
     public void gotoHigh() {
-        // armTo(Constants.Arm_Settings.PIVOT_HIGH, Constants.Arm_Settings.EXTEND_HIGH);
+        armTo(Constants.Arm_Settings.PIVOT_HIGH, Constants.Arm_Settings.EXTEND_HIGH);
         // extendTo(Constants.Arm_Settings.EXTEND_HIGH);
-        pivotTo(Constants.Arm_Settings.PIVOT_HIGH);
+        // pivotTo(Constants.Arm_Settings.PIVOT_HIGH);
     }
 
     public void gotoMid() {
-        // armTo(Constants.Arm_Settings.PIVOT_MID, Constants.Arm_Settings.EXTEND_MID);
+        armTo(Constants.Arm_Settings.PIVOT_MID, Constants.Arm_Settings.EXTEND_MID);
         // extendTo(Constants.Arm_Settings.EXTEND_MID);
-        pivotTo(Constants.Arm_Settings.PIVOT_MID);
+        // pivotTo(Constants.Arm_Settings.PIVOT_MID);
     }
 
     // public void scoreLow() {
@@ -467,8 +477,7 @@ public class SubArm {
         // Variable declarations | gets current angle and setpoint
         final double upperBound = Constants.Arm_Settings.PIVOT_SHOULD_TUCK_UPPER_BOUND;
         final double lowerBound = Constants.Arm_Settings.PIVOT_SHOULD_TUCK_LOWER_BOUND;
-        double start = getPivotAngle();
-        double end = setpoint;
+        double current = getPivotAngle();
         /*
          * Gets the max and min of start and end to simplify comparisons
          * Checks if the smaller number (from Math.min) is less than the upper bound
@@ -477,7 +486,7 @@ public class SubArm {
          * 1. start is less than end
          * 2. end is less than start
          */
-        return Math.min(start, end) < upperBound && Math.max(start, end) > lowerBound;
+        return Math.min(current, setpoint) < upperBound && Math.max(current, setpoint) > lowerBound;
     }
 
     // public boolean getExtendIsCloseToDth() {
