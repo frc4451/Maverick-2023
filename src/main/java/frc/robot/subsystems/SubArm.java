@@ -66,27 +66,27 @@ public class SubArm {
         this.PIVOT.configClosedloopRamp(Constants.Arm_Settings.PIVOT_RAMP_RATE_SECS);
 
         // Pivot PIDF
-        // TODO: Figure out if we actually need this probably do
-        this.PIVOT.configSelectedFeedbackSensor(
-                FeedbackDevice.IntegratedSensor,
-                ARM_PIDF.PID_LOOP_INDEX,
-                ARM_PIDF.TIMEOUT_MS);
-        this.PIVOT.config_kP(
-                ARM_PIDF.PID_LOOP_INDEX,
-                ARM_PIDF.PIVOT_PG,
-                ARM_PIDF.TIMEOUT_MS);
-        this.PIVOT.config_kI(
-                ARM_PIDF.PID_LOOP_INDEX,
-                ARM_PIDF.PIVOT_IG,
-                ARM_PIDF.TIMEOUT_MS);
-        this.PIVOT.config_kD(
-                ARM_PIDF.PID_LOOP_INDEX,
-                ARM_PIDF.PIVOT_DG,
-                ARM_PIDF.TIMEOUT_MS);
-        this.PIVOT.config_kF(
-                ARM_PIDF.PID_LOOP_INDEX,
-                ARM_PIDF.PIVOT_F,
-                ARM_PIDF.TIMEOUT_MS);
+        // TODO: Figure out if we actually need this probably do EDIT: WE DON'T
+        // this.PIVOT.configSelectedFeedbackSensor(
+        // FeedbackDevice.IntegratedSensor,
+        // ARM_PIDF.PID_LOOP_INDEX,
+        // ARM_PIDF.TIMEOUT_MS);
+        // this.PIVOT.config_kP(
+        // ARM_PIDF.PID_LOOP_INDEX,
+        // ARM_PIDF.PIVOT_PG,
+        // ARM_PIDF.TIMEOUT_MS);
+        // this.PIVOT.config_kI(
+        // ARM_PIDF.PID_LOOP_INDEX,
+        // ARM_PIDF.PIVOT_IG,
+        // ARM_PIDF.TIMEOUT_MS);
+        // this.PIVOT.config_kD(
+        // ARM_PIDF.PID_LOOP_INDEX,
+        // ARM_PIDF.PIVOT_DG,
+        // ARM_PIDF.TIMEOUT_MS);
+        // this.PIVOT.config_kF(
+        // ARM_PIDF.PID_LOOP_INDEX,
+        // ARM_PIDF.PIVOT_F,
+        // ARM_PIDF.TIMEOUT_MS);
 
         this.EXTEND.configSelectedFeedbackSensor(
                 FeedbackDevice.IntegratedSensor,
@@ -196,28 +196,50 @@ public class SubArm {
     public void startPosition() {
         // armTo(Constants.Arm_Settings.PIVOT_START,
         // Constants.Arm_Settings.EXTEND_START);
-        extendTo(Constants.Arm_Settings.EXTEND_START);
+        // extendTo(Constants.Arm_Settings.EXTEND_START);
+        pivotTo(Constants.Arm_Settings.PIVOT_START);
+
     }
 
     public void travelPosition() {
         // armTo(Constants.Arm_Settings.PIVOT_TRAVEL,
         // Constants.Arm_Settings.EXTEND_TRAVEL);
-        extendTo(Constants.Arm_Settings.EXTEND_TRAVEL);
+        // extendTo(Constants.Arm_Settings.EXTEND_TRAVEL);
+        pivotTo(Constants.Arm_Settings.PIVOT_TRAVEL);
+
     }
 
     public void gotoHigh() {
         // armTo(Constants.Arm_Settings.PIVOT_HIGH, Constants.Arm_Settings.EXTEND_HIGH);
-        extendTo(Constants.Arm_Settings.EXTEND_HIGH);
+        // extendTo(Constants.Arm_Settings.EXTEND_HIGH);
+        pivotTo(Constants.Arm_Settings.PIVOT_HIGH);
     }
 
     public void gotoMid() {
         // armTo(Constants.Arm_Settings.PIVOT_MID, Constants.Arm_Settings.EXTEND_MID);
-        extendTo(Constants.Arm_Settings.EXTEND_MID);
+        // extendTo(Constants.Arm_Settings.EXTEND_MID);
+        pivotTo(Constants.Arm_Settings.PIVOT_MID);
     }
 
     // public void scoreLow() {
     // armTo(Constants.Arm_Settings.PIVOT_LOW, Constants.Arm_Settings.EXTEND_LOW);
     // }
+
+    public void armPickCone() {
+        // armTo(Constants.Arm_Settings.PIVOT_PICK_CONE,
+        // Constants.Arm_Settings.EXTEND_PICK_CONE);
+        // extendTo(Constants.Arm_Settings.EXTEND_PICK_CONE);
+        pivotTo(Constants.Arm_Settings.PIVOT_PICK_CONE);
+
+    }
+
+    public void armPickCube() {
+        // armTo(Constants.Arm_Settings.PIVOT_PICK_CUBE,
+        // Constants.Arm_Settings.EXTEND_PICK_CUBE);
+        // extendTo(Constants.Arm_Settings.EXTEND_PICK_CUBE);
+        pivotTo(Constants.Arm_Settings.PIVOT_PICK_CUBE);
+
+    }
 
     public double deg2encoder(double degrees) {
         return Constants.TechnicalConstants.ENCODER_COUNTS_PER_DEGREE * degrees;
@@ -227,26 +249,15 @@ public class SubArm {
         return clicks / Constants.TechnicalConstants.ENCODER_COUNTS_PER_DEGREE;
     }
 
-    public void armPickCone() {
-        // armTo(Constants.Arm_Settings.PIVOT_PICK_CONE,
-        // Constants.Arm_Settings.EXTEND_PICK_CONE);
-        extendTo(Constants.Arm_Settings.EXTEND_PICK_CONE);
-    }
-
-    public void armPickCube() {
-        // armTo(Constants.Arm_Settings.PIVOT_PICK_CUBE,
-        // Constants.Arm_Settings.EXTEND_PICK_CUBE);
-        extendTo(Constants.Arm_Settings.EXTEND_PICK_CUBE);
-
-    }
-
     // Pivot uses feedforward and feedback controller
     public void pivotTo(final double setpointDegrees) {
         this.PIVOT_FEEDBACK.setSetpoint(RobotMath.deg2rad(setpointDegrees));
 
         if (this.PIVOT_FEEDBACK.atSetpoint()) {
-            this.stopPivot();
-            return;
+            // this.PIVOT_FEEDBACK.reset();
+            // this.stopPivot();
+            // return;
+            System.out.println("Setpoint");
         }
 
         // https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/combining-feedforward-feedback.html#using-feedforward-components-with-pid
@@ -256,7 +267,8 @@ public class SubArm {
         final double feedback = this.PIVOT_FEEDBACK.calculate(RobotMath.deg2rad(this.getPivotAngle()));
         final double velocity = feedforward + feedback;
 
-        this.runPivot(velocity, true);
+        this.runPivot(velocity / RobotContainer.pdp.getVoltage(), true);
+        System.out.println("velocity:" + velocity);
     }
 
     public void runPivot(double percentValue) {
@@ -311,6 +323,7 @@ public class SubArm {
         // } else {
         // }
         // setExtendIfTimer(ControlMode.MotionMagic, targetDistanceExtend);
+
         setExtendIfTimer(ControlMode.MotionMagic, targetDistanceExtend);
     }
 
@@ -376,9 +389,7 @@ public class SubArm {
     }
 
     public void tuckArm() {
-        if (extendBrakeTimer()) {
-            EXTEND.set(ControlMode.MotionMagic, Constants.Arm_Settings.EXTEND_MIN);
-        }
+        extendTo(Constants.Arm_Settings.EXTEND_MIN);
     }
 
     public void stopArm() {

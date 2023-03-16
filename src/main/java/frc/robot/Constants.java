@@ -188,17 +188,17 @@ public class Constants {
         public static final double EXTEND_OPERATOR_SPEED = 0.3; // was 0.3 in button control mode
 
         // Arm setpoints (degrees)
-        public static final double PIVOT_HIGH = 160;
+        public static final double PIVOT_HIGH = 170; // 160
         public static final double EXTEND_HIGH = 43_100;
 
-        public static final double PIVOT_MID = 180;
+        public static final double PIVOT_MID = 185;
         public static final double EXTEND_MID = 2000;
 
         // public static final double PIVOT_LOW = 0;
         // public static final double EXTEND_LOW = 0;
 
-        public static final double PIVOT_TRAVEL = 0;
-        public static final double EXTEND_TRAVEL = 0;
+        public static final double PIVOT_TRAVEL = 0.1;
+        public static final double EXTEND_TRAVEL = EXTEND_TUCKED;
 
         public static final double PIVOT_PICK_CONE = -54;
         public static final double EXTEND_PICK_CONE = 15_700;
@@ -217,15 +217,16 @@ public class Constants {
         public static final double EXTEND_DG = 0.0; // derivative
         public static final double EXTEND_F = 1023.0 / 20300.0; // feedforward
 
-        public static final double PIVOT_PG = 0.0; // proportional
+        // USES PIVOT_FEEDFORWARD CONTROLLER
+        public static final double PIVOT_PG = 8.0; // proportional
         public static final double PIVOT_IG = 0.0; // integral
-        public static final double PIVOT_DG = 0.0; // derivative
-        public static final double PIVOT_F = 1023.0 / 20300.0; // feedforward
+        public static final double PIVOT_DG = 1.0; // derivative
+        // public static final double PIVOT_F = 1023.0 / 20300.0; // feedforward
 
-        public static final double PIVOT_SG = 0.0;
-        public static final double PIVOT_GG = 0.0;
-        public static final double PIVOT_VG = 0.0;
-        public static final double PIVOT_AG = 0.0;
+        public static final double PIVOT_GG = 1.0; // Gravity gain (volts)
+        public static final double PIVOT_SG = 0.0; // Static
+        public static final double PIVOT_VG = 0.0; // Velocity (volts * seconds / radians)
+        public static final double PIVOT_AG = 0.0; // Acceleration
 
         public static final int PID_SLOT_INDEX = 0;
         public static final int PID_LOOP_INDEX = 0;

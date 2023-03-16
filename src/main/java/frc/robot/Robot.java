@@ -81,7 +81,7 @@ public class Robot extends TimedRobot {
         // RobotContainer.driveTrain.getRightSpeed());
         SmartDashboard.putData("Field/Field", RobotContainer.field);
         SmartDashboard.putBoolean("Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
-        // SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
+        SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
         SmartDashboard.putNumber("Pivot Position", RobotContainer.arm.getPivotPosition());
         SmartDashboard.putNumber("Extend Position", RobotContainer.arm.getExtendPosition());
         SmartDashboard.putNumber("Pivot Degrees", RobotContainer.arm.getPivotAngle());
@@ -220,11 +220,13 @@ public class Robot extends TimedRobot {
         if (IO.Operator.getPOVUp()) {
             RobotContainer.arm.gotoHigh();
         } else if (IO.Operator.getPOVRight()) {
-            RobotContainer.arm.gotoMid();
+            // RobotContainer.arm.gotoMid();
+            RobotContainer.arm.travelPosition();
         } else if (IO.Operator.getPOVDown()) {
             RobotContainer.arm.armPickCone();
         } else if (IO.Operator.getPOVLeft()) {
             // RobotContainer.arm.armPickCube();
+            RobotContainer.arm.gotoMid();
         } else {
             // if (IO.Operator.getLeftBumper()) {
             // RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
