@@ -167,9 +167,8 @@ public class Constants {
         public static final double PIVOT_RAMP_RATE_SECS = 0.5;
         public static final double PIVOT_MAX_VELOCITY = 0;
 
-        public static final double PIVOT_DEGREES_OF_DTH_FORWARDS = 175.0; // degrees arm has to be retracted to minimum
-        // extension
-        public static final double PIVOT_DEGREES_OF_DTH_BACKWARDS = 5.0;
+        public static final double PIVOT_SHOULD_TUCK_UPPER_BOUND = 175.0; // degrees arm has to be tucked
+        public static final double PIVOT_SHOULD_TUCK_LOWER_BOUND = 5.0;
 
         public static final double PIVOT_OPERATOR_SPEED = 0.6; // was 0.4 in button control mode
         public static final double PIVOT_AUTONOMOUS_SLOW = 0.3;

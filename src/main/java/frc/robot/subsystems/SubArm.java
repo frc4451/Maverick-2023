@@ -11,10 +11,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ARM_PIDF;
@@ -42,7 +42,7 @@ public class SubArm {
             Constants.ARM_PIDF.PIVOT_DG);
 
     public SubArm(int pivot, int extend, int extendBrake, int claw) {
-        this.PIVOT_FEEDBACK.setTolerance(RobotMath.deg2rad(5)); // mess with this later
+        this.PIVOT_FEEDBACK.setTolerance(RobotMath.deg2rad(3)); // mess with this later
 
         this.PIVOT = new WPI_TalonFX(pivot);
         this.EXTEND = new WPI_TalonFX(extend);
@@ -131,24 +131,62 @@ public class SubArm {
     // Constants.Arm_Settings.PIVOT_MIN_VELOCITY);
     // }
 
+    // OLD armTo
+    // /**
+    // * @param pivotDegrees
+    // * @param extendEncoderCounts
+    // */
+    // public void armTo(double pivotDegrees, double extendEncoderCounts) {
+    // // if goes throguh degrees of death AND arm is not tucked
+    // // TODO: make this work with extendBrakeTimer
+    // if (getPathPassedThroughDegreesOfDeath(pivotDegrees)) { // Get if the arm
+    // passes through the top area
+    // if (getArmTucked()) {
+    // pivotTo(pivotDegrees);
+    // } else if (getExtendIsCloseToDth()) { // Stop pivoting and tuck the arm if
+    // it's close to the top area.
+    // stopPivot();
+    // tuckArm();
+    // } else { //
+    // pivotTo(pivotDegrees);
+    // tuckArm();
+    // }
+    // } else { // If the arm is past the top, continue pivoting and extending
+    // pivotTo(pivotDegrees);
+    // extendTo(extendEncoderCounts);
+    // }
+    // }
+
     /**
-     * @param pivotDegrees
-     * @param extendEncoderCounts
+     * Checks if the current path intersects with the tuck zone.
+     * <br>
+     * <p>
+     * If it intersects the tuck zone:
+     * <ul>
+     * <li>Disallow pivoting until tucked.</li>
+     * <li>Tuck arm.</li>
+     * <li>Once tucked, pivot until outside tuck zone.</li>
+     * </ul>
+     * If it does NOT intersect the tuck zone:
+     * <ul>
+     * <li>Pivot and extend to respective setpoints.</li>
+     * </ul>
+     * 
+     * @param pivotDegrees        Pivot setpoint in degrees.
+     * @param extendEncoderCounts Extend setpoint in encoder counts.
      */
+
     public void armTo(double pivotDegrees, double extendEncoderCounts) {
-        // if goes throguh degrees of death AND arm is not tucked
-        // TODO: make this work with extendBrakeTimer
-        if (getPathPassedThroughDegreesOfDeath(pivotDegrees)) {
-            if (getArmTucked()) {
-                pivotTo(pivotDegrees);
-            } else if (getExtendIsCloseToDth()) {
-                tuckArm();
-                stopPivot();
-            } else {
-                pivotTo(pivotDegrees);
-                tuckArm();
+        if (getShouldTuckToPivot(pivotDegrees)) { // If inside tuck zone
+            if (!getArmTucked()) { // If arm is not tucked
+                stopPivot(); // Disallow pivoting for armTo until tucked
+                tuckArm(); // Tuck the arm if it is not tucked
+            } else { // Once (if) arm is tucked
+                pivotTo(pivotDegrees); // Pivot until does not intersect tuck zone
+                stopExtend(); // Stop extending if it's tucked
             }
-        } else {
+        } else { // Once (if) outside tuck zone
+            // Go to setpoints
             pivotTo(pivotDegrees);
             extendTo(extendEncoderCounts);
         }
@@ -407,23 +445,43 @@ public class SubArm {
         return this.EXTEND.getSelectedSensorPosition();
     }
 
-    public boolean getPathPassedThroughDegreesOfDeath(double setpoint) {
-        double s = getPivotAngle();
-        double e = setpoint;
-        double hr = Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS;
-        double lr = Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS;
-        return (e < lr && lr < s) || (e < hr && hr < s) || (e > lr && lr > s) || (e > hr && hr > s);
+    /**
+     * Used for armTo method
+     * 
+     * @param setpoint
+     * @return whether or not the top area intersects the path from current position
+     *         to setpoint
+     */
+    public boolean getShouldTuckToPivot(double setpoint) {
+        // Variable declarations | gets current angle and setpoint
+        final double upperBound = Constants.Arm_Settings.PIVOT_SHOULD_TUCK_UPPER_BOUND;
+        final double lowerBound = Constants.Arm_Settings.PIVOT_SHOULD_TUCK_LOWER_BOUND;
+        double start = getPivotAngle();
+        double end = setpoint;
+        /*
+         * Gets the max and min of start and end to simplify comparisons
+         * Checks if the smaller number (from Math.min) is less than the upper bound
+         * Checks if the bigger number (from Math.max) is more than the lower bound
+         * Without using Math.max and Math.min, we would need checks for both of these:
+         * 1. start is less than end
+         * 2. end is less than start
+         */
+        return Math.min(start, end) < upperBound && Math.max(start, end) > lowerBound;
     }
 
-    public boolean getExtendIsCloseToDth() {
-        return Math.abs(this.getPivotAngle() - Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS) < 10
-                || Math.abs(this.getPivotAngle() - Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS) < 10;
-    }
+    // public boolean getExtendIsCloseToDth() {
+    // return Math.abs(this.getPivotAngle() -
+    // Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS) < 10
+    // || Math.abs(this.getPivotAngle() -
+    // Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS) < 10;
+    // }
 
-    public boolean getExtendIsOkay() {
-        return this.getPivotAngle() > Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS
-                && this.getPivotAngle() < Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS;
-    }
+    // public boolean getExtendIsOkay() {
+    // return this.getPivotAngle() >
+    // Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_BACKWARDS
+    // && this.getPivotAngle() <
+    // Constants.Arm_Settings.PIVOT_DEGREES_OF_DTH_FORWARDS;
+    // }
 
     public boolean getArmTucked() {
         return this.getExtendPosition() <= Constants.Arm_Settings.EXTEND_TUCKED;
