@@ -28,7 +28,9 @@ public class SubArm {
     private final WPI_TalonFX PIVOT;
     private final WPI_TalonFX EXTEND;
     private final Solenoid EXTEND_BRAKE_SOLENOID;
+    private final Solenoid KICKER_SOLENOID;
     private final Timer extendBrakeTimer = new Timer();
+    private final Timer motionMagicTimer = new Timer();
 
     // PID CONTROLLERS
     private final ArmFeedforward PIVOT_FEEDFORWARD = new ArmFeedforward(
@@ -41,13 +43,14 @@ public class SubArm {
             Constants.ARM_PIDF.PIVOT_IG,
             Constants.ARM_PIDF.PIVOT_DG);
 
-    public SubArm(int pivot, int extend, int extendBrake, int claw) {
+    public SubArm(int pivot, int extend, int extendBrake, int claw, int kicker) {
         this.PIVOT_FEEDBACK.setTolerance(RobotMath.deg2rad(3)); // mess with this later
 
         this.PIVOT = new WPI_TalonFX(pivot);
         this.EXTEND = new WPI_TalonFX(extend);
         this.EXTEND_BRAKE_SOLENOID = new Solenoid(PneumaticsModuleType.CTREPCM, extendBrake);
         this.CLAW = new Solenoid(PneumaticsModuleType.CTREPCM, claw);
+        this.KICKER_SOLENOID = new Solenoid(PneumaticsModuleType.CTREPCM, kicker);
 
         this.PIVOT.configFactoryDefault();
         this.EXTEND.configFactoryDefault();
@@ -193,12 +196,21 @@ public class SubArm {
     }
 
     public void armTo(final double pivotDegrees, final double extendEncoderCounts) {
-        if (Math.abs(this.getPivotAngle() - pivotDegrees) < 10) {
-            this.extendTo(extendEncoderCounts);
-        } else {
-            if (this.getExtendPosition() > 5000) {
-                this.tuckArm();
+
+        if (Math.abs(Math.abs(this.getPivotAngle()) - Math.abs(pivotDegrees)) <= 15.0) {
+            if (this.motionMagicTimer.get() == 0.0) {
+                this.motionMagicTimer.start();
+            }
+
+            if (!this.motionMagicTimer.hasElapsed(5.0)) {
+                this.extendTo(extendEncoderCounts);
             } else {
+                this.stopExtend();
+            }
+            this.pivotTo(pivotDegrees);
+        } else {
+            this.tuckArm();
+            if (this.getExtendPosition() < 5000) {
                 this.pivotTo(pivotDegrees);
             }
         }
@@ -231,25 +243,18 @@ public class SubArm {
         // pivotTo(Constants.Arm_Settings.PIVOT_MID);
     }
 
-    // public void scoreLow() {
-    // armTo(Constants.Arm_Settings.PIVOT_LOW, Constants.Arm_Settings.EXTEND_LOW);
-    // }
-
-    public void armPickCone() {
-        // armTo(Constants.Arm_Settings.PIVOT_PICK_CONE,
-        // Constants.Arm_Settings.EXTEND_PICK_CONE);
+    public void gotoPlatter() {
+        armTo(Constants.Arm_Settings.PIVOT_PICK_CONE, Constants.Arm_Settings.EXTEND_PICK_CONE);
         // extendTo(Constants.Arm_Settings.EXTEND_PICK_CONE);
-        pivotTo(Constants.Arm_Settings.PIVOT_PICK_CONE);
-
+        // pivotTo(Constants.Arm_Settings.PIVOT_PICK_CONE);
     }
 
-    public void armPickCube() {
-        // armTo(Constants.Arm_Settings.PIVOT_PICK_CUBE,
-        // Constants.Arm_Settings.EXTEND_PICK_CUBE);
-        // extendTo(Constants.Arm_Settings.EXTEND_PICK_CUBE);
-        pivotTo(Constants.Arm_Settings.PIVOT_PICK_CUBE);
-
-    }
+    // public void armPickCube() {
+    // armTo(Constants.Arm_Settings.PIVOT_PICK_CUBE,
+    // Constants.Arm_Settings.EXTEND_PICK_CUBE);
+    // // extendTo(Constants.Arm_Settings.EXTEND_PICK_CUBE);
+    // // pivotTo(Constants.Arm_Settings.PIVOT_PICK_CUBE);
+    // }
 
     public double deg2encoder(double degrees) {
         return Constants.TechnicalConstants.ENCODER_COUNTS_PER_DEGREE * degrees;
@@ -263,13 +268,6 @@ public class SubArm {
     public void pivotTo(final double setpointDegrees) {
         this.PIVOT_FEEDBACK.setSetpoint(RobotMath.deg2rad(setpointDegrees));
 
-        if (this.PIVOT_FEEDBACK.atSetpoint()) {
-            // this.PIVOT_FEEDBACK.reset();
-            // this.stopPivot();
-            // return;
-            System.out.println("Setpoint");
-        }
-
         // https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/combining-feedforward-feedback.html#using-feedforward-components-with-pid
         final double feedforward = this.PIVOT_FEEDFORWARD.calculate(
                 RobotMath.deg2rad(setpointDegrees),
@@ -278,7 +276,6 @@ public class SubArm {
         final double velocity = feedforward + feedback;
 
         this.runPivot(velocity / RobotContainer.pdp.getVoltage(), true);
-        System.out.println("velocity:" + velocity);
     }
 
     public void runPivot(double percentValue) {
@@ -337,6 +334,10 @@ public class SubArm {
         setExtendIfTimer(ControlMode.MotionMagic, targetDistanceExtend);
     }
 
+    public void resetMotionMagicTimer() {
+        this.motionMagicTimer.reset();
+    }
+
     public void setExtendIfTimer(ControlMode mode, double value) {
         setArmBrakeOff();
         if (extendBrakeTimer()) {
@@ -390,6 +391,14 @@ public class SubArm {
 
     private void setArmBrakeOff() {
         this.EXTEND_BRAKE_SOLENOID.set(true);
+    }
+
+    public void setKickerOn() {
+        this.KICKER_SOLENOID.set(true);
+    }
+
+    public void setKickerOff() {
+        this.KICKER_SOLENOID.set(false);
     }
 
     public void stopExtend() {

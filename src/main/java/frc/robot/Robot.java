@@ -223,7 +223,7 @@ public class Robot extends TimedRobot {
             // RobotContainer.arm.gotoMid();
             RobotContainer.arm.travelPosition();
         } else if (IO.Operator.getPOVDown()) {
-            RobotContainer.arm.armPickCone();
+            RobotContainer.arm.gotoPlatter();
         } else if (IO.Operator.getPOVLeft()) {
             // RobotContainer.arm.armPickCube();
             RobotContainer.arm.gotoMid();
@@ -235,6 +235,7 @@ public class Robot extends TimedRobot {
             // RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
             // true);
             // }
+            RobotContainer.arm.resetMotionMagicTimer();
             if (IO.Operator.getRightY() != 0) {
                 RobotContainer.arm.runExtend(
                         -IO.Operator.getRightY() * Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,

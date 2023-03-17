@@ -27,6 +27,7 @@ public class Constants {
         public static final int EXTEND = 5;
         public static final int EXTENSION_BRAKE_SOLENOID = 4;
         public static final int CLAW_SOLENOID = 3;
+        public static final int KICKER_SOLENOID = 5;
         // Intake
         public static final int BOTTOM_INTAKE = 6;
         public static final int TOP_INTAKE = 7;
@@ -161,7 +162,7 @@ public class Constants {
         public static final double PIVOT_VELOCITY = 15.0; // degrees per second
         public static final double PIVOT_CRUISECONTROL = 15.0;
 
-        public static final double PIVOT_MIN = -62.0; // Software limits degrees
+        public static final double PIVOT_MIN = Constants.Arm_Settings.PIVOT_PICK_CONE; // Software limits degrees
         public static final double PIVOT_MAX = 180.0;
 
         public static final double PIVOT_RAMP_RATE_SECS = 0.5;
@@ -177,10 +178,9 @@ public class Constants {
         public static final double EXTEND_CRUISECONTROL = 16_000;
         public static final double EXTEND_MM_DTH_SLOWTO_PERCENT = 0.5;
 
-        public static final double EXTEND_MAX = 15_700; // Software limits
+        public static final double EXTEND_MAX = 43_100; // Software limits
         public static final double EXTEND_MIN = 2_000; // soft 0
-        public static final double EXTEND_TUCKED = 17_000; // we use this in SubArm to check if the arm is retracted or
-                                                           // not
+        public static final double EXTEND_TUCKED = 17_000; // we use this in SubArm to check if the arm is retracted
         public static final double EXTEND_HARD_LIMIT = 0;
 
         public static final int TIMEOUT_MS = 30;
@@ -188,25 +188,25 @@ public class Constants {
         public static final double EXTEND_OPERATOR_SPEED = 0.3; // was 0.3 in button control mode
 
         // Arm setpoints (degrees)
-        public static final double PIVOT_HIGH = 170; // 160
+        public static final double PIVOT_HIGH = 165; // 160
         public static final double EXTEND_HIGH = 43_100;
 
-        public static final double PIVOT_MID = 185;
+        public static final double PIVOT_MID = 180;
         public static final double EXTEND_MID = 2000;
 
         // public static final double PIVOT_LOW = 0;
         // public static final double EXTEND_LOW = 0;
 
-        public static final double PIVOT_TRAVEL = 0.1;
-        public static final double EXTEND_TRAVEL = EXTEND_TUCKED;
+        public static final double PIVOT_TRAVEL = 0.0;
+        public static final double EXTEND_TRAVEL = 2000;
 
-        public static final double PIVOT_PICK_CONE = -54;
+        public static final double PIVOT_PICK_CONE = -70;
         public static final double EXTEND_PICK_CONE = 15_700;
 
         public static final double PIVOT_PICK_CUBE = -37;
         public static final double EXTEND_PICK_CUBE = 0;
 
-        public static final double PIVOT_START = -40.0;
+        public static final double PIVOT_START = -45.0;
         public static final double EXTEND_START = 0;
     }
 
