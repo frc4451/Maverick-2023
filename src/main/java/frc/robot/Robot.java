@@ -221,7 +221,7 @@ public class Robot extends TimedRobot {
             RobotContainer.arm.gotoHigh();
         } else if (IO.Operator.getPOVRight()) {
             // RobotContainer.arm.gotoMid();
-            RobotContainer.arm.travelPosition();
+            RobotContainer.arm.gotoTravel();
         } else if (IO.Operator.getPOVDown()) {
             RobotContainer.arm.gotoPlatter();
         } else if (IO.Operator.getPOVLeft()) {

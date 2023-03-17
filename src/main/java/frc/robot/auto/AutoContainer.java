@@ -11,12 +11,12 @@ import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SubIntakeModes;
 
 public class AutoContainer {
     private static final Timer autoTimer = new Timer();
+    private static final Timer miniTimer = new Timer();
 
     private static int autoStep = 0;
 
@@ -24,10 +24,21 @@ public class AutoContainer {
         AutoContainer.autoStep = 0;
     }
 
-    private static void resetTimer() {
+    private static void resetAutoTimer() {
         autoTimer.reset();
         autoTimer.start();
     }
+
+    private static void resetMiniTimer() {
+        autoTimer.reset();
+        autoTimer.start();
+    }
+
+    // private static void incAutoStep(int value) {
+    // autoStep += value;
+    // resetAutoTimer();
+    // resetMiniTimer();
+    // }
 
     /**
      * Sets driveTrain pose to trajectory's inital pose
@@ -52,8 +63,23 @@ public class AutoContainer {
                     refChassisSpeeds.omegaRadiansPerSecond);
         } else {
             RobotContainer.driveTrain.drive(0, 0);
+            // incAutoStep(1);
             autoStep = nextAutoStep;
-            resetTimer();
+            resetAutoTimer();
+        }
+    }
+
+    /**
+     * @param seconds How many seconds in must've passed to call fn
+     * @param fn      An unnamed function that'll be called if `seconds` has passed.
+     */
+    private static void doAfterTime(double seconds, UnamedFunction fn) {
+        if (miniTimer.get() == 0.0) {
+            miniTimer.start();
+        }
+
+        if (miniTimer.hasElapsed(seconds)) {
+            fn.callback();
         }
     }
 
@@ -70,7 +96,7 @@ public class AutoContainer {
             fn.callback();
         } else {
             autoStep = nextAutoStep;
-            resetTimer();
+            resetAutoTimer();
         }
     }
 
@@ -95,7 +121,7 @@ public class AutoContainer {
             case 0:
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
-                resetTimer();
+                resetAutoTimer();
                 autoStep++;
                 break;
             case 1:
@@ -111,74 +137,95 @@ public class AutoContainer {
         }
     }
 
-    public static void bottomScore() {
-        final PathPlannerTrajectory first = AutoStates.BOTTOM_SCORE.paths.get(0);
-        final PathPlannerTrajectory second = AutoStates.BOTTOM_SCORE.paths.get(1);
-        final PathPlannerTrajectory third = AutoStates.BOTTOM_SCORE.paths.get(2);
+    public static void centerBalanceKick() {
+        final PathPlannerTrajectory first = AutoStates.CENTER_BALANCE_KICK.paths.get(0);
 
         switch (autoStep) {
             case 0:
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
-                resetTimer();
+                resetAutoTimer();
                 autoStep++;
                 break;
             case 1:
-                // doOnTimer(3, autoStep + 1, () -> {
-                // // Do nothing
-                // });
-                autoStep++;
-                break;
+                doOnTimer(0.5, autoStep + 1, () -> {
+                    RobotContainer.arm.setKickerOn();
+                });
             case 2:
+                RobotContainer.arm.setKickerOff();
+                autoStep++;
+            case 3:
                 doTrajectory(first, autoStep + 1);
                 break;
-            case 3:
-                autoStep++;
-                // doOnTimer(2, autoStep + 1, () -> {
-                // // Wait to stop moving (Probably unneeded)
-                // });
-                break;
             case 4:
-                doOnTimer(2, autoStep + 1, () -> {
-                    // Move arm out of the way
-                    if (!(RobotContainer.arm.getPivotAngle() >= 0)) {
-                        RobotContainer.arm.runPivot(Constants.Arm_Settings.PIVOT_AUTONOMOUS_SLOW);
-                    } else {
-                        RobotContainer.arm.stopPivot();
-                    }
-                });
+                RobotContainer.driveTrain.setBrakeMode();
+                autoStep++;
                 break;
             case 5:
-                doOnTimer(2, autoStep + 1, () -> {
-                    // Solenoid open
+                RobotContainer.driveTrain.balanceChargeStation();
+                break;
+        }
+    }
+
+    public static void rightScoreRed() {
+        final PathPlannerTrajectory first = AutoStates.RIGHT_SCORE_RED.paths.get(0);
+        final PathPlannerTrajectory second = AutoStates.RIGHT_SCORE_RED.paths.get(1);
+
+        switch (autoStep) {
+            case 0:
+                // Reset the drivetrain's odometry to the starting pose of the trajectory.
+                setNavigationToTrajectoryStart(first);
+                resetAutoTimer();
+                autoStep++;
+                break;
+            case 1:
+                doOnTimer(0.5, autoStep + 1, () -> {
+                    RobotContainer.arm.setKickerOn();
+                });
+                break;
+            case 2:
+                RobotContainer.arm.gotoTravel();
+                doTrajectory(first, autoStep + 1);
+                doAfterTime(0.5, () -> {
                     RobotContainer.intake.setIntakeSolenoid(true);
+                });
+                doAfterTime(0.9, () -> {
+                    RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
+                    RobotContainer.arm.openClaw();
+                });
+                break;
+            case 3:
+                doTrajectory(second, autoStep + 1);
+                RobotContainer.intake.stopIntake();
+                RobotContainer.arm.gotoTravel();
+                break;
+            case 4:
+                RobotContainer.arm.resetMotionMagicTimer();
+                autoStep++;
+                break;
+            case 5:
+                doOnTimer(3, autoStep + 1, () -> {
+                    RobotContainer.arm.gotoPlatter();
                 });
                 break;
             case 6:
-                doTrajectory(second, autoStep + 1);
-                RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
+                doOnTimer(0.5, autoStep + 1, () -> {
+                    RobotContainer.arm.closeClaw();
+                    RobotContainer.arm.gotoPlatter();
+                });
                 break;
             case 7:
-                doOnTimer(0.5, autoStep + 1, () -> {
-                    RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
-                });
-                break;
-            // 8+ are untested
-            case 8:
-                RobotContainer.intake.setIntakeSolenoid(false);
+                RobotContainer.arm.resetMotionMagicTimer();
                 autoStep++;
                 break;
-            case 9:
-                doTrajectory(third, 10);
-                break;
-            case 10:
-                doOnTimer(3, 11, () -> {
-                    RobotContainer.intake.runIntake(SubIntakeModes.EJECT_MID);
+            case 8:
+                doOnTimer(3, autoStep + 1, () -> {
+                    RobotContainer.arm.gotoMid();
                 });
                 break;
-            case 11:
-                RobotContainer.intake.stopIntake();
-                autoStep = -1;
+            case 9:
+                RobotContainer.arm.gotoMid();
+                RobotContainer.arm.openClaw();
                 break;
         }
 
@@ -192,7 +239,7 @@ public class AutoContainer {
             case 0:
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
-                resetTimer();
+                resetAutoTimer();
                 autoStep++;
                 break;
             case 1:
@@ -222,7 +269,7 @@ public class AutoContainer {
             case 0:
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
-                resetTimer();
+                resetAutoTimer();
                 autoStep++;
                 break;
             case 1:
@@ -254,7 +301,7 @@ public class AutoContainer {
             case 0:
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
-                resetTimer();
+                resetAutoTimer();
                 autoStep++;
                 break;
             case 1:

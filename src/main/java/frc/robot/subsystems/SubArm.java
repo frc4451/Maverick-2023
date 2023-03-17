@@ -224,7 +224,7 @@ public class SubArm {
 
     }
 
-    public void travelPosition() {
+    public void gotoTravel() {
         armTo(Constants.Arm_Settings.PIVOT_TRAVEL, Constants.Arm_Settings.EXTEND_TRAVEL);
         // extendTo(Constants.Arm_Settings.EXTEND_TRAVEL);
         // pivotTo(Constants.Arm_Settings.PIVOT_TRAVEL);
@@ -421,11 +421,11 @@ public class SubArm {
     }
 
     public void openClaw() {
-        this.CLAW.set(false);
+        this.CLAW.set(true);
     }
 
     public void closeClaw() {
-        this.CLAW.set(true);
+        this.CLAW.set(false);
     }
 
     public void resetArmEncoders() {
