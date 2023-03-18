@@ -34,11 +34,11 @@ public class AutoContainer {
         autoTimer.start();
     }
 
-    // private static void incAutoStep(int value) {
-    // autoStep += value;
-    // resetAutoTimer();
-    // resetMiniTimer();
-    // }
+    private static void incAutoStep(int value) {
+        autoStep += value;
+        resetAutoTimer();
+        resetMiniTimer();
+    }
 
     /**
      * Sets driveTrain pose to trajectory's inital pose
@@ -64,6 +64,7 @@ public class AutoContainer {
         } else {
             RobotContainer.driveTrain.drive(0, 0);
             // incAutoStep(1);
+            // TODO: Use incAutoStep instead (should probably work)
             autoStep = nextAutoStep;
             resetAutoTimer();
         }
@@ -231,35 +232,100 @@ public class AutoContainer {
 
     }
 
-    public static void leftScore() {
-        final PathPlannerTrajectory first = AutoStates.LEFT_SCORE.paths.get(0);
-        final PathPlannerTrajectory second = AutoStates.LEFT_SCORE.paths.get(1);
+    // TODO: FLIP PATH
+    public static void leftScoreRed() {
+        final PathPlannerTrajectory first = AutoStates.LEFT_SCORE_RED.paths.get(0);
+        final PathPlannerTrajectory second = AutoStates.LEFT_SCORE_RED.paths.get(1);
 
-        switch (autoStep) {
-            case 0:
-                // Reset the drivetrain's odometry to the starting pose of the trajectory.
-                setNavigationToTrajectoryStart(first);
-                resetAutoTimer();
-                autoStep++;
-                break;
-            case 1:
-                doOnTimer(5, autoStep + 1, () -> {
-                    // score the cone
-                });
-                break;
-            case 2:
-                doTrajectory(first, autoStep + 1);
-                break;
-            case 3:
-                doTrajectory(second, autoStep + 1);
-                break;
-            case 4:
-                doOnTimer(5, -1, () -> {
-                    // score cube
-                });
-                break;
-        }
+        // switch (autoStep) {
+        // case 0:
+        // // Reset the drivetrain's odometry to the starting pose of the trajectory.
+        // setNavigationToTrajectoryStart(first);
+        // resetAutoTimer();
+        // autoStep++;
+        // break;
+        // case 1:
+        // doOnTimer(0.5, autoStep + 1, () -> {
+        // RobotContainer.arm.setKickerOn();
+        // });
+        // break;
+        // case 2:
+        // RobotContainer.arm.gotoTravel();
+        // doTrajectory(first, autoStep + 1);
+        // doAfterTime(0.5, () -> {
+        // RobotContainer.intake.setIntakeSolenoid(true);
+        // });
+        // doAfterTime(0.9, () -> {
+        // RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
+        // RobotContainer.arm.openClaw();
+        // });
+        // break;
+        // case 3:
+        // doTrajectory(second, autoStep + 1);
+        // RobotContainer.intake.stopIntake();
+        // RobotContainer.arm.gotoTravel();
+        // break;
+        // case 4:
+        // RobotContainer.arm.resetMotionMagicTimer();
+        // autoStep++;
+        // break;
+        // case 5:
+        // doOnTimer(3, autoStep + 1, () -> {
+        // RobotContainer.arm.gotoPlatter();
+        // });
+        // break;
+        // case 6:
+        // doOnTimer(0.5, autoStep + 1, () -> {
+        // RobotContainer.arm.closeClaw();
+        // RobotContainer.arm.gotoPlatter();
+        // });
+        // break;
+        // case 7:
+        // RobotContainer.arm.resetMotionMagicTimer();
+        // autoStep++;
+        // break;
+        // case 8:
+        // doOnTimer(3, autoStep + 1, () -> {
+        // RobotContainer.arm.gotoMid();
+        // });
+        // break;
+        // case 9:
+        // RobotContainer.arm.gotoMid();
+        // RobotContainer.arm.openClaw();
+        // break;
+        // }
+
     }
+
+    // public static void leftScore() {
+    // final PathPlannerTrajectory first = AutoStates.LEFT_SCORE.paths.get(0);
+    // final PathPlannerTrajectory second = AutoStates.LEFT_SCORE.paths.get(1);
+
+    // switch (autoStep) {
+    // case 0:
+    // // Reset the drivetrain's odometry to the starting pose of the trajectory.
+    // setNavigationToTrajectoryStart(first);
+    // resetAutoTimer();
+    // autoStep++;
+    // break;
+    // case 1:
+    // doOnTimer(5, autoStep + 1, () -> {
+    // // score the cone
+    // });
+    // break;
+    // case 2:
+    // doTrajectory(first, autoStep + 1);
+    // break;
+    // case 3:
+    // doTrajectory(second, autoStep + 1);
+    // break;
+    // case 4:
+    // doOnTimer(5, -1, () -> {
+    // // score cube
+    // });
+    // break;
+    // }
+    // }
 
     public static void rightBalance() {
         final PathPlannerTrajectory first = AutoStates.RIGHT_BALANCE.paths.get(0);
