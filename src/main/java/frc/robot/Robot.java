@@ -159,8 +159,6 @@ public class Robot extends TimedRobot {
         } else {
             if (IO.Driver.getLeftTrigger()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
-            // } else if (false) { // ????????????
-            //     RobotContainer.intake.runIntake(SubIntakeModes.EJECT_MID);
             } else if (IO.Driver.getLeftBumper()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.EJECT_HIGH);
             } else {

@@ -94,39 +94,11 @@ public class SubIntake {
      * @param intakeMode CONE, CUBE, CUBE_LIMITED, REVERSE
      */
     public void runIntake(SubIntakeModes intakeMode) {
-        switch (intakeMode) {
-            case CONE:
-                this.INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.CONE_INTAKE_SPEED);
-                this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.CONE_INTAKE_SPEED);
-                runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
-                break;
-            case CUBE:
-                this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.CUBE_INTAKE_SPEED);
-                break;
-            case CUBE_LIMITED:
-                if (this.getLimitSwitch()) {
-                    stopIntake();
-                } else {
-                    this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.CUBE_INTAKE_SPEED);
-                }
-                break;
-            case REVERSE:
-                INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.REVERSE);
-                INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.REVERSE);
-                break;
-            case EJECT_HIGH:
-                INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.HIGH_EJECT);
-                INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.HIGH_EJECT);
-                break;
-            case EJECT_MID:
-                INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.MID_EJECT);
-                INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.MID_EJECT);
-                break;
-            default:
-                INTAKE_BOTTOM.set(ControlMode.PercentOutput, 0);
-                INTAKE_TOP.set(ControlMode.PercentOutput, 0);
-                System.out.println("ERROR:: invalid intakeMode");
-                break;
+        if (intakeMode.limited && this.getLimitSwitch()) {
+            stopIntake();
+        } else {
+            this.INTAKE_TOP.set(ControlMode.PercentOutput, intakeMode.topSpeed);
+            this.INTAKE_BOTTOM.set(ControlMode.PercentOutput, intakeMode.bottomSpeed);
         }
     }
 
