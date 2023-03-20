@@ -131,6 +131,7 @@ public class Robot extends TimedRobot {
         RobotContainer.driveTrain.setCoastMode();
         RobotContainer.driveTrain.resetGyro();
         RobotContainer.driveTrain.resetBalanceController();
+        RobotContainer.arm.resetMotionMagicTimer();
     }
 
     /** This function is called periodically during operator control. */

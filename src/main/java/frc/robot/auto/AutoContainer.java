@@ -30,14 +30,22 @@ public class AutoContainer {
     }
 
     private static void resetMiniTimer() {
-        autoTimer.reset();
-        autoTimer.start();
+        miniTimer.reset();
+        miniTimer.start();
+    }
+
+    private static void setAutoStep(int value) {
+        autoStep = value;
+        resetAutoTimer();
+        resetMiniTimer();
     }
 
     private static void incAutoStep(int value) {
-        autoStep += value;
-        resetAutoTimer();
-        resetMiniTimer();
+        setAutoStep(autoStep + value);
+    }
+
+    private static void incAutoStep() {
+        incAutoStep(1);
     }
 
     /**
@@ -63,11 +71,12 @@ public class AutoContainer {
                     refChassisSpeeds.omegaRadiansPerSecond);
         } else {
             RobotContainer.driveTrain.drive(0, 0);
-            // incAutoStep(1);
-            // TODO: Use incAutoStep instead (should probably work)
-            autoStep = nextAutoStep;
-            resetAutoTimer();
+            incAutoStep();
         }
+    }
+
+    private static void doTrajectory(PathPlannerTrajectory trajectory) {
+        doTrajectory(trajectory, autoStep + 1);
     }
 
     /**
@@ -96,9 +105,12 @@ public class AutoContainer {
         if (!autoTimer.hasElapsed(seconds)) {
             fn.callback();
         } else {
-            autoStep = nextAutoStep;
-            resetAutoTimer();
+            incAutoStep();
         }
+    }
+
+    private static void doOnTimer(double seconds, UnamedFunction fn) {
+        doOnTimer(seconds, autoStep + 1, fn);
     }
 
     // Idea psuedo-code
@@ -122,15 +134,14 @@ public class AutoContainer {
             case 0:
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
-                resetAutoTimer();
-                autoStep++;
+                incAutoStep();
                 break;
             case 1:
-                doTrajectory(first, autoStep + 1);
+                doTrajectory(first);
                 break;
             case 2:
                 RobotContainer.driveTrain.setBrakeMode();
-                autoStep++;
+                incAutoStep();
                 break;
             case 3:
                 RobotContainer.driveTrain.balanceChargeStation();
@@ -145,22 +156,21 @@ public class AutoContainer {
             case 0:
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
-                resetAutoTimer();
-                autoStep++;
+                incAutoStep();
                 break;
             case 1:
-                doOnTimer(0.5, autoStep + 1, () -> {
+                doOnTimer(0.5, () -> {
                     RobotContainer.arm.setKickerOn();
                 });
             case 2:
                 RobotContainer.arm.setKickerOff();
-                autoStep++;
+                incAutoStep();
             case 3:
-                doTrajectory(first, autoStep + 1);
+                doTrajectory(first);
                 break;
             case 4:
                 RobotContainer.driveTrain.setBrakeMode();
-                autoStep++;
+                incAutoStep();
                 break;
             case 5:
                 RobotContainer.driveTrain.balanceChargeStation();
@@ -176,17 +186,16 @@ public class AutoContainer {
             case 0:
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
-                resetAutoTimer();
-                autoStep++;
+                incAutoStep();
                 break;
             case 1:
-                doOnTimer(0.5, autoStep + 1, () -> {
+                doOnTimer(0.5, () -> {
                     RobotContainer.arm.setKickerOn();
                 });
                 break;
             case 2:
                 RobotContainer.arm.gotoTravel();
-                doTrajectory(first, autoStep + 1);
+                doTrajectory(first);
                 doAfterTime(0.5, () -> {
                     RobotContainer.intake.setIntakeSolenoid(true);
                 });
@@ -196,31 +205,31 @@ public class AutoContainer {
                 });
                 break;
             case 3:
-                doTrajectory(second, autoStep + 1);
+                doTrajectory(second);
                 RobotContainer.intake.stopIntake();
                 RobotContainer.arm.gotoTravel();
                 break;
             case 4:
                 RobotContainer.arm.resetMotionMagicTimer();
-                autoStep++;
+                incAutoStep();
                 break;
             case 5:
-                doOnTimer(3, autoStep + 1, () -> {
+                doOnTimer(3, () -> {
                     RobotContainer.arm.gotoPlatter();
                 });
                 break;
             case 6:
-                doOnTimer(0.5, autoStep + 1, () -> {
+                doOnTimer(0.5, () -> {
                     RobotContainer.arm.closeClaw();
                     RobotContainer.arm.gotoPlatter();
                 });
                 break;
             case 7:
                 RobotContainer.arm.resetMotionMagicTimer();
-                autoStep++;
+                incAutoStep();
                 break;
             case 8:
-                doOnTimer(3, autoStep + 1, () -> {
+                doOnTimer(3, () -> {
                     RobotContainer.arm.gotoMid();
                 });
                 break;
@@ -234,8 +243,8 @@ public class AutoContainer {
 
     // TODO: FLIP PATH
     public static void leftScoreRed() {
-        final PathPlannerTrajectory first = AutoStates.LEFT_SCORE_RED.paths.get(0);
-        final PathPlannerTrajectory second = AutoStates.LEFT_SCORE_RED.paths.get(1);
+        // final PathPlannerTrajectory first = AutoStates.LEFT_SCORE_RED.paths.get(0);
+        // final PathPlannerTrajectory second = AutoStates.LEFT_SCORE_RED.paths.get(1);
 
         // switch (autoStep) {
         // case 0:
@@ -297,35 +306,35 @@ public class AutoContainer {
 
     }
 
-    // public static void leftScore() {
-    // final PathPlannerTrajectory first = AutoStates.LEFT_SCORE.paths.get(0);
-    // final PathPlannerTrajectory second = AutoStates.LEFT_SCORE.paths.get(1);
+    public static void leftScore() {
+        // final PathPlannerTrajectory first = AutoStates.LEFT_SCORE.paths.get(0);
+        // final PathPlannerTrajectory second = AutoStates.LEFT_SCORE.paths.get(1);
 
-    // switch (autoStep) {
-    // case 0:
-    // // Reset the drivetrain's odometry to the starting pose of the trajectory.
-    // setNavigationToTrajectoryStart(first);
-    // resetAutoTimer();
-    // autoStep++;
-    // break;
-    // case 1:
-    // doOnTimer(5, autoStep + 1, () -> {
-    // // score the cone
-    // });
-    // break;
-    // case 2:
-    // doTrajectory(first, autoStep + 1);
-    // break;
-    // case 3:
-    // doTrajectory(second, autoStep + 1);
-    // break;
-    // case 4:
-    // doOnTimer(5, -1, () -> {
-    // // score cube
-    // });
-    // break;
-    // }
-    // }
+        // switch (autoStep) {
+        // case 0:
+        // // Reset the drivetrain's odometry to the starting pose of the trajectory.
+        // setNavigationToTrajectoryStart(first);
+        // resetAutoTimer();
+        // autoStep++;
+        // break;
+        // case 1:
+        // doOnTimer(5, autoStep + 1, () -> {
+        // // score the cone
+        // });
+        // break;
+        // case 2:
+        // doTrajectory(first, autoStep + 1);
+        // break;
+        // case 3:
+        // doTrajectory(second, autoStep + 1);
+        // break;
+        // case 4:
+        // doOnTimer(5, -1, () -> {
+        // // score cube
+        // });
+        // break;
+        // }
+    }
 
     public static void rightBalance() {
         final PathPlannerTrajectory first = AutoStates.RIGHT_BALANCE.paths.get(0);
@@ -336,22 +345,22 @@ public class AutoContainer {
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
                 resetAutoTimer();
-                autoStep++;
+                incAutoStep();
                 break;
             case 1:
-                doOnTimer(5, autoStep + 1, () -> {
+                doOnTimer(5, () -> {
                     // score the cone
                 });
                 break;
             case 2:
-                doTrajectory(first, autoStep + 1);
+                doTrajectory(first);
                 break;
             case 3:
-                doTrajectory(second, autoStep + 1);
+                doTrajectory(second);
                 break;
             case 4:
                 RobotContainer.driveTrain.setBrakeMode();
-                autoStep++;
+                incAutoStep();
                 break;
             case 5:
                 RobotContainer.driveTrain.balanceChargeStation();
@@ -367,28 +376,27 @@ public class AutoContainer {
             case 0:
                 // Reset the drivetrain's odometry to the starting pose of the trajectory.
                 setNavigationToTrajectoryStart(first);
-                resetAutoTimer();
-                autoStep++;
+                incAutoStep();
                 break;
             case 1:
-                doOnTimer(5, autoStep + 1, () -> {
+                doOnTimer(5, () -> {
                     // score the cone
                 });
                 break;
             case 2:
-                doTrajectory(first, autoStep + 1);
+                doTrajectory(first);
                 break;
             case 3:
-                doOnTimer(5, autoStep + 1, () -> {
+                doOnTimer(5, () -> {
                     // pick up the cube
                 });
                 break;
             case 4:
-                doTrajectory(second, autoStep + 1);
+                doTrajectory(second);
                 break;
             case 5:
                 RobotContainer.driveTrain.setBrakeMode();
-                autoStep++;
+                incAutoStep();
                 break;
             case 6:
                 RobotContainer.driveTrain.balanceChargeStation();

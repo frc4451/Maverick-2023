@@ -98,7 +98,6 @@ public class SubIntake {
             case CONE:
                 this.INTAKE_BOTTOM.set(ControlMode.PercentOutput, Constants.Intake_Settings.CONE_INTAKE_SPEED);
                 this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.CONE_INTAKE_SPEED);
-                runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
                 break;
             case CUBE:
                 this.INTAKE_TOP.set(ControlMode.PercentOutput, Constants.Intake_Settings.CUBE_INTAKE_SPEED);
