@@ -217,12 +217,12 @@ public class Constants {
         public static final double EXTEND_DG = 0.0; // derivative
         public static final double EXTEND_F = 1023.0 / 20300.0; // feedforward
 
-        // USES PIVOT_FEEDFORWARD CONTROLLER
-        public static final double PIVOT_PG = 8.0; // proportional
+        // Feedback
+        public static final double PIVOT_PG = 10.0; // proportional
         public static final double PIVOT_IG = 0.0; // integral
         public static final double PIVOT_DG = 1.0; // derivative
-        // public static final double PIVOT_F = 1023.0 / 20300.0; // feedforward
 
+        // Feedforward
         public static final double PIVOT_GG = 1.0; // Gravity gain (volts)
         public static final double PIVOT_SG = 0.0; // Static
         public static final double PIVOT_VG = 0.0; // Velocity (volts * seconds / radians)

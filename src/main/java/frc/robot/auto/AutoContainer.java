@@ -5,6 +5,8 @@
  */
 package frc.robot.auto;
 
+import java.util.List;
+
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
@@ -178,9 +180,17 @@ public class AutoContainer {
         }
     }
 
+    public static void leftScoreBlue() {
+        kickOutGrabCubeBack(AutoStates.LEFT_SCORE_BLUE.paths);
+    }
+
     public static void rightScoreRed() {
-        final PathPlannerTrajectory first = AutoStates.RIGHT_SCORE_RED.paths.get(0);
-        final PathPlannerTrajectory second = AutoStates.RIGHT_SCORE_RED.paths.get(1);
+        kickOutGrabCubeBack(AutoStates.RIGHT_SCORE_RED.paths);
+    }
+
+    public static void kickOutGrabCubeBack(List<PathPlannerTrajectory> paths) {
+        PathPlannerTrajectory first = paths.get(0);
+        PathPlannerTrajectory second = paths.get(1);
 
         switch (autoStep) {
             case 0:
@@ -214,7 +224,7 @@ public class AutoContainer {
                 incAutoStep();
                 break;
             case 5:
-                doOnTimer(3, () -> {
+                doOnTimer(1.5, () -> {
                     RobotContainer.arm.gotoPlatter();
                 });
                 break;
@@ -238,7 +248,6 @@ public class AutoContainer {
                 RobotContainer.arm.openClaw();
                 break;
         }
-
     }
 
     // TODO: FLIP PATH

@@ -19,7 +19,7 @@ class Speeds {
     public static final PathConstraints none = new PathConstraints(0.0, 0.0);
     public static final PathConstraints fast = new PathConstraints(2.5, 2.0);
     public static final PathConstraints medium = new PathConstraints(2.0, 2.0);
-    public static final PathConstraints slow = new PathConstraints(1.5, 1.5);
+    public static final PathConstraints slow = new PathConstraints(1.5, 2.0);
     public static final PathConstraints centerBalance = new PathConstraints(1.2, 1.2);
 }
 
@@ -31,11 +31,11 @@ public enum AutoStates {
     LEFT_BALANCE(
             "Left Balance",
             AutoContainer::leftBalance,
-            PathPlanner.loadPathGroup("leftBalance", Speeds.fast)),
-    LEFT_SCORE(
-            "Left Score",
-            AutoContainer::leftScore,
-            PathPlanner.loadPathGroup("leftScore", Speeds.fast)),
+            PathPlanner.loadPathGroup("leftBalance", Speeds.slow)),
+    LEFT_SCORE_BLUE(
+            "Left Score Blue",
+            AutoContainer::leftScoreBlue,
+            PathPlanner.loadPathGroup("leftScoreBlue", Speeds.fast)),
     CENTER_BALANCE(
             "Center Balance",
             AutoContainer::centerBalance,
