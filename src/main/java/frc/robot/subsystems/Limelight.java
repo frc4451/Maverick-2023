@@ -43,11 +43,12 @@ public class Limelight {
         }
     }
 
-    public double coneNodeTurnValue() {
+    public double getTurnFromLimelight() {
         double error = this.horizontalOffsetFromCrosshair();
 
         if (this.hasTargets()) {
-            return error * Constants.DT_Settings.TARGETING_TURNING_PG + Constants.DT_Settings.TARGETING_TURNING_SG
-        }
+            return error * Constants.DT_Settings.TARGETING_TURNING_PG + Constants.DT_Settings.TARGETING_TURNING_SG;
+        } else
+            return 0;
     }
 }

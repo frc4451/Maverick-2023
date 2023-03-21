@@ -128,6 +128,7 @@ public class Robot extends TimedRobot {
     /** This function is called once when teleop is enabled. */
     @Override
     public void teleopInit() {
+        RobotContainer.limelight.setAimingPipelineEnabled(true);
         RobotContainer.driveTrain.setCoastMode();
         RobotContainer.driveTrain.resetGyro();
         RobotContainer.driveTrain.resetBalanceController();
@@ -194,8 +195,8 @@ public class Robot extends TimedRobot {
             // We have to do this otherwise the we'll only be able to balance once.
             // This is because the controller'll think it's already done the setpoint
             RobotContainer.driveTrain.resetBalanceController();
-        } else if (false) {
-            RobotContainer.driveTrain.runDrive(0, RobotContainer.limelight.coneNodeTurnValue());
+        } else if (IO.Driver.getButtonY()) {
+            RobotContainer.driveTrain.runDrive(0, RobotContainer.limelight.getTurnFromLimelight());
         } else {
             RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX());
         }
