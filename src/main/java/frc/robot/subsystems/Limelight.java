@@ -55,7 +55,7 @@ public class Limelight {
 
     public double getTurnFromLimelight() {
         if (this.hasTargets()) {
-            return this.TURN_CONTROLLER.calculate(this.getXOffset()) * Constants.DT_Settings.MAX_VELOCITY;
+            return this.TURN_CONTROLLER.calculate(this.getXOffset());
         } else {
             return 0;
         }
