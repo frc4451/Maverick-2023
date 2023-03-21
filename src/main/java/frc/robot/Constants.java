@@ -146,6 +146,7 @@ public class Constants {
         public static final double INTAKE_CURRENT_THRESHOLD_TIME_SECONDS = 0.5;
         // Platter
         public static final double PLATTER_SPEED = 1_000; // 1_500 equivalent to 0.1 in percentOutput
+        public static final double PLATTER_SPEED_TURBO = 3_500;
         public static final double PLATTER_FF = 1023 / 20_300.0;
         public static final double PLATTER_RAMP_RATE_SECS = 0.5;
 

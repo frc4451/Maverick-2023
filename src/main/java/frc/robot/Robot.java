@@ -168,13 +168,20 @@ public class Robot extends TimedRobot {
         }
         // PLATTER
 
-        if (!(IO.Driver.getRightBumper() || IO.Operator.getButtonX() || IO.Operator.getButtonY())) {
+        if (!(IO.Operator.getButtonX()
+                || IO.Operator.getButtonY()
+                || IO.Operator.getLeftTrigger()
+                || IO.Operator.getRightTrigger())) {
             RobotContainer.intake.stopPlatter();
         } else {
             if (IO.Operator.getButtonX()) {
                 RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
             } else if (IO.Operator.getButtonY()) {
                 RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+            } else if (IO.Operator.getLeftTrigger()) {
+                RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED_TURBO);
+            } else if (IO.Operator.getRightTrigger()) {
+                RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED_TURBO);
             }
         }
 
