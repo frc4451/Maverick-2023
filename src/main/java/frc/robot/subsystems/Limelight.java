@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
+import frc.robot.util.RobotMath;
 
 public class Limelight {
     private final NetworkTable table;
@@ -41,7 +42,7 @@ public class Limelight {
      * @return Vertical Offset From Crosshair To Target (-20.5 to 20.5 degrees)
      */
     // public double getYOffset() {
-    //     return this.table.getEntry("ty").getDouble(0.0);
+    // return this.table.getEntry("ty").getDouble(0.0);
     // }
 
     // We can make these constants later if needed.
@@ -55,7 +56,7 @@ public class Limelight {
 
     public double getTurnFromLimelight() {
         if (this.hasTargets()) {
-            return this.TURN_CONTROLLER.calculate(this.getXOffset());
+            return RobotMath.clamp(this.TURN_CONTROLLER.calculate(this.getXOffset()), -1, 1);
         } else {
             return 0;
         }
