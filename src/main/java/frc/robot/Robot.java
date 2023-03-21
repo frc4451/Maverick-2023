@@ -199,6 +199,8 @@ public class Robot extends TimedRobot {
             RobotContainer.driveTrain.resetBalanceController();
         } else if (IO.Driver.getButtonY()) {
             RobotContainer.driveTrain.runDrive(0, RobotContainer.limelight.getTurnFromLimelight());
+        } else if (IO.Driver.getButtonYReleased()) {
+            RobotContainer.limelight.resetTurnController();
         } else {
             RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX());
         }

@@ -22,6 +22,10 @@ public class Limelight {
         this.TURN_CONTROLLER.setTolerance(1);
     }
 
+    public void resetTurnController() {
+        this.TURN_CONTROLLER.reset();
+    }
+
     // Epic boilerplate per:
     // https://docs.limelightvision.io/en/latest/getting_started.html#basic-programming
     /**
@@ -55,7 +59,7 @@ public class Limelight {
     }
 
     public double getTurnFromLimelight() {
-        if (this.hasTargets()) {
+        if (this.hasTargets() && !this.TURN_CONTROLLER.atSetpoint()) {
             return RobotMath.clamp(this.TURN_CONTROLLER.calculate(this.getXOffset()), -1, 1);
         } else {
             return 0;
