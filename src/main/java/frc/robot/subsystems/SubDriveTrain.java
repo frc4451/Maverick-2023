@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.util.RobotMath;
 
 public class SubDriveTrain {
@@ -411,38 +412,6 @@ public class SubDriveTrain {
                 pose);
     }
 
-    public double getLeftEncoderPos() {
-        return (this.LEFT_FRONT.getSelectedSensorPosition() + this.LEFT_REAR.getSelectedSensorPosition()) / 2.0;
-    }
-
-    public double getRightEncoderPos() {
-        return (this.RIGHT_FRONT.getSelectedSensorPosition() + this.RIGHT_REAR.getSelectedSensorPosition()) / 2.0;
-    }
-
-    public double getLeftEncoderMeters() {
-        return this.getLeftEncoderPos() * Constants.TechnicalConstants.METERS_PER_TICK;
-    }
-
-    public double getRightEncoderMeters() {
-        return this.getRightEncoderPos() * Constants.TechnicalConstants.METERS_PER_TICK;
-    }
-
-    public double getLeftEncoderVel() {
-        return (this.LEFT_FRONT.getSelectedSensorVelocity() + this.LEFT_REAR.getSelectedSensorVelocity()) / 2.0;
-    }
-
-    public double getRightEncoderVel() {
-        return (this.RIGHT_FRONT.getSelectedSensorVelocity() + this.RIGHT_REAR.getSelectedSensorVelocity()) / 2.0;
-    }
-
-    public double getLeftEncoderMeterRate() {
-        return this.getLeftEncoderVel() * Constants.TechnicalConstants.TICKS_PER_DECI_SECOND_TO_METERS_PER_SECOND;
-    }
-
-    public double getRightEncoderMeterRate() {
-        return this.getRightEncoderVel() * Constants.TechnicalConstants.TICKS_PER_DECI_SECOND_TO_METERS_PER_SECOND;
-    }
-
     public DifferentialDriveWheelSpeeds getDirectWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(this.getLeftEncoderMeterRate(), this.getRightEncoderMeterRate());
     }
@@ -509,5 +478,37 @@ public class SubDriveTrain {
         this.LEFT_REAR.setNeutralMode(NeutralMode.Brake);
         this.RIGHT_FRONT.setNeutralMode(NeutralMode.Brake);
         this.RIGHT_REAR.setNeutralMode(NeutralMode.Brake);
+    }
+
+    public double getLeftEncoderPos() {
+        return (this.LEFT_FRONT.getSelectedSensorPosition() + this.LEFT_REAR.getSelectedSensorPosition()) / 2.0;
+    }
+
+    public double getRightEncoderPos() {
+        return (this.RIGHT_FRONT.getSelectedSensorPosition() + this.RIGHT_REAR.getSelectedSensorPosition()) / 2.0;
+    }
+
+    public double getLeftEncoderMeters() {
+        return this.getLeftEncoderPos() * Constants.TechnicalConstants.METERS_PER_TICK;
+    }
+
+    public double getRightEncoderMeters() {
+        return this.getRightEncoderPos() * Constants.TechnicalConstants.METERS_PER_TICK;
+    }
+
+    public double getLeftEncoderVel() {
+        return (this.LEFT_FRONT.getSelectedSensorVelocity() + this.LEFT_REAR.getSelectedSensorVelocity()) / 2.0;
+    }
+
+    public double getRightEncoderVel() {
+        return (this.RIGHT_FRONT.getSelectedSensorVelocity() + this.RIGHT_REAR.getSelectedSensorVelocity()) / 2.0;
+    }
+
+    public double getLeftEncoderMeterRate() {
+        return this.getLeftEncoderVel() * Constants.TechnicalConstants.TICKS_PER_DECI_SECOND_TO_METERS_PER_SECOND;
+    }
+
+    public double getRightEncoderMeterRate() {
+        return this.getRightEncoderVel() * Constants.TechnicalConstants.TICKS_PER_DECI_SECOND_TO_METERS_PER_SECOND;
     }
 }
