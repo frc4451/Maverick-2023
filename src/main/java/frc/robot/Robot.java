@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
         // Update robot position on Field2d.
         RobotContainer.field.setRobotPose(RobotContainer.driveTrain.getPose2d());
 
+        SmartDashboard.putData("Field/Field", RobotContainer.field);
         SmartDashboard.putNumber("Pose2D X", RobotContainer.driveTrain.getPose2d().getX());
         SmartDashboard.putNumber("Pose2D Y", RobotContainer.driveTrain.getPose2d().getY());
         SmartDashboard.putNumber("Pose2D Rotation", RobotContainer.driveTrain.getPose2d().getRotation().getDegrees());
@@ -79,12 +80,13 @@ public class Robot extends TimedRobot {
         // RobotContainer.driveTrain.getLeftSpeed());
         // SmartDashboard.putNumber("Right Speed",
         // RobotContainer.driveTrain.getRightSpeed());
-        SmartDashboard.putData("Field/Field", RobotContainer.field);
-        SmartDashboard.putBoolean("Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
-        SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
-        SmartDashboard.putNumber("Pivot Position", RobotContainer.arm.getPivotPosition());
         SmartDashboard.putNumber("Extend Position", RobotContainer.arm.getExtendPosition());
+        SmartDashboard.putNumber("Pivot Position", RobotContainer.arm.getPivotPosition());
         SmartDashboard.putNumber("Pivot Degrees", RobotContainer.arm.getPivotAngle());
+        SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
+        SmartDashboard.putBoolean("Debug/Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
+        SmartDashboard.putBoolean("Debug/Limelight has target", RobotContainer.limelight.hasTargets());
+        SmartDashboard.putNumber("Debug/Limelight horizontal offset", RobotContainer.limelight.getXOffset());
         // SmartDashboard.putNumber("Debug/Balance Output",
         // RobotContainer.driveTrain.getBalanceControllerOutput());
         // SmartDashboard.putBoolean("Debug/Intake Deployed",

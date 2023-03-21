@@ -23,14 +23,14 @@ public class Limelight {
     /**
      * @return Horizontal Offset From Crosshair To Target (-27 to 27 degrees)
      */
-    public double horizontalOffsetFromCrosshair() {
+    public double getXOffset() {
         return this.table.getEntry("tx").getDouble(0.0);
     }
 
     /**
      * @return Vertical Offset From Crosshair To Target (-20.5 to 20.5 degrees)
      */
-    // public double verticallOffsetFromCrosshair() {
+    // public double getYOffset() {
     // return this.table.getEntry("ty").getDouble(0.0);
     // }
 
@@ -44,10 +44,10 @@ public class Limelight {
     }
 
     public double getTurnFromLimelight() {
-        double error = this.horizontalOffsetFromCrosshair();
-
         if (this.hasTargets()) {
-            return error * Constants.DT_Settings.TARGETING_TURNING_PG + Constants.DT_Settings.TARGETING_TURNING_SG;
+            return this.getXOffset()
+                    * Constants.DT_Settings.TARGETING_TURNING_PG
+                    + Constants.DT_Settings.TARGETING_TURNING_SG;
         } else
             return 0;
     }
