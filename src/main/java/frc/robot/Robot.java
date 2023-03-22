@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
         // Update robot position on Field2d.
         RobotContainer.field.setRobotPose(RobotContainer.driveTrain.getPose2d());
 
+        SmartDashboard.putData("Field/Field", RobotContainer.field);
         SmartDashboard.putNumber("Pose2D X", RobotContainer.driveTrain.getPose2d().getX());
         SmartDashboard.putNumber("Pose2D Y", RobotContainer.driveTrain.getPose2d().getY());
         SmartDashboard.putNumber("Pose2D Rotation", RobotContainer.driveTrain.getPose2d().getRotation().getDegrees());
@@ -79,12 +80,13 @@ public class Robot extends TimedRobot {
         // RobotContainer.driveTrain.getLeftSpeed());
         // SmartDashboard.putNumber("Right Speed",
         // RobotContainer.driveTrain.getRightSpeed());
-        SmartDashboard.putData("Field/Field", RobotContainer.field);
-        SmartDashboard.putBoolean("Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
-        SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
-        SmartDashboard.putNumber("Pivot Position", RobotContainer.arm.getPivotPosition());
         SmartDashboard.putNumber("Extend Position", RobotContainer.arm.getExtendPosition());
+        SmartDashboard.putNumber("Pivot Position", RobotContainer.arm.getPivotPosition());
         SmartDashboard.putNumber("Pivot Degrees", RobotContainer.arm.getPivotAngle());
+        SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
+        SmartDashboard.putBoolean("Debug/Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
+        SmartDashboard.putBoolean("Debug/Limelight has target", RobotContainer.limelight.hasTargets());
+        SmartDashboard.putNumber("Debug/Limelight horizontal offset", RobotContainer.limelight.getXOffset());
         // SmartDashboard.putNumber("Debug/Balance Output",
         // RobotContainer.driveTrain.getBalanceControllerOutput());
         // SmartDashboard.putBoolean("Debug/Intake Deployed",
@@ -128,6 +130,7 @@ public class Robot extends TimedRobot {
     /** This function is called once when teleop is enabled. */
     @Override
     public void teleopInit() {
+        RobotContainer.limelight.setAimingPipelineEnabled(true);
         RobotContainer.driveTrain.setCoastMode();
         RobotContainer.driveTrain.resetGyro();
         RobotContainer.driveTrain.resetBalanceController();
@@ -139,8 +142,9 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         // Misc
 
-        if (IO.Operator.getStartButtonPressed()) {
-            RobotContainer.arm.pivotToggleBrakeMode();
+        if (IO.Driver.getStartButtonPressed()) {
+            // RobotContainer.arm.pivotToggleBrakeMode();
+            RobotContainer.limelight.toggleAimingPipeline();
         }
 
         // INTAKE
@@ -194,12 +198,15 @@ public class Robot extends TimedRobot {
             RobotContainer.driveTrain.toggleDropdownWheels();
         }
 
+        // Driving things
         if (IO.Driver.getButtonB()) {
             RobotContainer.driveTrain.balanceChargeStation();
         } else if (IO.Driver.getButtonBReleased()) {
             // We have to do this otherwise the we'll only be able to balance once.
             // This is because the controller'll think it's already done the setpoint
             RobotContainer.driveTrain.resetBalanceController();
+        } else if (IO.Driver.getButtonY()) {
+            RobotContainer.driveTrain.runDrive(0, RobotContainer.limelight.getTurnFromLimelight());
         } else {
             RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX());
         }
@@ -257,6 +264,7 @@ public class Robot extends TimedRobot {
     /** This function is called once when the robot is disabled. */
     @Override
     public void disabledInit() {
+        RobotContainer.limelight.setAimingPipelineEnabled(false);
         AutoContainer.resetAutoStep();
     }
 
