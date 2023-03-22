@@ -142,8 +142,9 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         // Misc
 
-        if (IO.Operator.getStartButtonPressed()) {
-            RobotContainer.arm.pivotToggleBrakeMode();
+        if (IO.Driver.getStartButtonPressed()) {
+            // RobotContainer.arm.pivotToggleBrakeMode();
+            RobotContainer.limelight.toggleAimingPipeline();
         }
 
         // INTAKE
@@ -199,8 +200,6 @@ public class Robot extends TimedRobot {
             RobotContainer.driveTrain.resetBalanceController();
         } else if (IO.Driver.getButtonY()) {
             RobotContainer.driveTrain.runDrive(0, RobotContainer.limelight.getTurnFromLimelight());
-        } else if (IO.Driver.getButtonYReleased()) {
-            RobotContainer.limelight.resetTurnController();
         } else {
             RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX());
         }

@@ -45,10 +45,10 @@ public class Constants {
 
     // Settings for arcade velocity drive
     public static class DT_Settings {
-        public static final double TARGETING_TURNING_PG = 0.3; // Proportional gain for limelight targeting
-        public static final double TARGETING_TURNING_IG = 0.0; // Integral gain for limelight targeting
-        public static final double TARGETING_TURNING_DG = 0.0; // Derivative gain for limelight targeting
-        public static final double TARGETING_TURNING_SG = 0.0; // Friction constant for limelight targeting
+        // public static final double TARGETING_TURNING_PG = 0.0; // Proportional gain
+        // public static final double TARGETING_TURNING_IG = 0.0; // Integral gain
+        // public static final double TARGETING_TURNING_DG = 0.0; // Derivative gain
+        public static final double TARGETING_TURNING_SG = 0.15; // Friction constant
 
         public static final double TURN_SENSITIVITY = 0.65; // Joystick turn scaling factor for Curve Drive
         public static final double MIN_TURN = 0.2;
