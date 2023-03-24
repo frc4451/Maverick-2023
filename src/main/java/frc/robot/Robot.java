@@ -5,12 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoContainer;
 import frc.robot.subsystems.SubIntakeModes;
-// import frc.robot.trajectories.TrajectoryContainer;
 import frc.robot.auto.AutoStates;
 import frc.robot.util.IO;
 
@@ -72,6 +72,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Gyro Pitch", RobotContainer.driveTrain.getGyroPitch());
         SmartDashboard.putNumber("Gyro Rotation", RobotContainer.driveTrain.getGyroAngle());
         SmartDashboard.putNumber("Gyro Absolute Rotation", RobotContainer.driveTrain.getGyroAngleAbsolute());
+        SmartDashboard.putNumber("Time Left", DriverStation.getMatchTime());
         // SmartDashboard.putNumber("Left Distance",
         // RobotContainer.driveTrain.getLeftPosition());
         // SmartDashboard.putNumber("Right Distance",
@@ -170,23 +171,18 @@ public class Robot extends TimedRobot {
                 RobotContainer.intake.stopIntake();
             }
         }
-        // PLATTER
 
-        if (!(IO.Operator.getButtonX()
-                || IO.Operator.getButtonY()
-                || IO.Operator.getLeftTrigger()
-                || IO.Operator.getRightTrigger())) {
-            RobotContainer.intake.stopPlatter();
+        // PLATTER
+        if (IO.Operator.getButtonX()) {
+            RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
+        } else if (IO.Operator.getButtonY()) {
+            RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+        } else if (IO.Operator.getLeftTrigger()) {
+            RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED_TURBO);
+        } else if (IO.Operator.getRightTrigger()) {
+            RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED_TURBO);
         } else {
-            if (IO.Operator.getButtonX()) {
-                RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
-            } else if (IO.Operator.getButtonY()) {
-                RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
-            } else if (IO.Operator.getLeftTrigger()) {
-                RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED_TURBO);
-            } else if (IO.Operator.getRightTrigger()) {
-                RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED_TURBO);
-            }
+            RobotContainer.intake.stopPlatter();
         }
 
         // DRIVER

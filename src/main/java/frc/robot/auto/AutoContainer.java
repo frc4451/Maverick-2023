@@ -164,17 +164,15 @@ public class AutoContainer {
                 doOnTimer(0.5, () -> {
                     RobotContainer.arm.setKickerOn();
                 });
+                break;
             case 2:
-                RobotContainer.arm.setKickerOff();
-                incAutoStep();
-            case 3:
                 doTrajectory(first);
                 break;
-            case 4:
+            case 3:
                 RobotContainer.driveTrain.setBrakeMode();
                 incAutoStep();
                 break;
-            case 5:
+            case 4:
                 RobotContainer.driveTrain.balanceChargeStation();
                 break;
         }
