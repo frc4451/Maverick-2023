@@ -456,15 +456,10 @@ public class SubDriveTrain {
     public void balanceChargeStation() {
         this.setBrakeMode();
 
-        if (BALANCE_CONTROLLER.atSetpoint()) {
+        if (Math.abs(this.getGyroPitch()) < this.BALANCE_CONTROLLER.getPositionTolerance()) {
             this.drive(0, 0);
             return;
         }
-        // if (Math.abs(this.getGyroPitch()) <
-        // this.BALANCE_CONTROLLER.getPositionTolerance()) {
-        // this.drive(0, 0);
-        // return;
-        // }
 
         final double speed = this.getBalanceControllerOutput() * Constants.Auto.BALANCE_MAX_VELOCITY;
 

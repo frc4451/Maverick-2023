@@ -197,10 +197,6 @@ public class Robot extends TimedRobot {
         // Driving things
         if (IO.Driver.getButtonB()) {
             RobotContainer.driveTrain.balanceChargeStation();
-        } else if (IO.Driver.getButtonBReleased()) {
-            // We have to do this otherwise the we'll only be able to balance once.
-            // This is because the controller'll think it's already done the setpoint
-            RobotContainer.driveTrain.resetBalanceController();
         } else if (IO.Driver.getButtonY()) {
             RobotContainer.driveTrain.runDrive(0, RobotContainer.limelight.getTurnFromLimelight());
         } else {
