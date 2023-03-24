@@ -32,4 +32,8 @@ public class RobotMath {
     public static double rad2deg(final double rad) {
         return rad * (180.0 / Math.PI);
     }
+
+    public static double distanceBetween(double x, double y) {
+        return Math.abs(x - y);
+    }
 }
