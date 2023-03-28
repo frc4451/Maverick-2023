@@ -214,11 +214,12 @@ public class AutoContainer {
                 break;
             case 3:
                 doTrajectory(second);
-                RobotContainer.intake.stopIntake();
+                RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
                 RobotContainer.arm.gotoTravel();
                 break;
             case 4:
                 RobotContainer.arm.resetMotionMagicTimer();
+                RobotContainer.intake.stopIntake();
                 incAutoStep();
                 break;
             case 5:
