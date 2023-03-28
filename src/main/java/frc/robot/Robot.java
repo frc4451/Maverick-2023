@@ -225,23 +225,22 @@ public class Robot extends TimedRobot {
         }
 
         if (IO.Operator.getPOVUp()) {
-            RobotContainer.arm.gotoHigh();
+            if (IO.Operator.getRightBumper()) {
+                RobotContainer.arm.gotoHighDrop();
+            } else {
+                RobotContainer.arm.gotoHigh();
+            }
         } else if (IO.Operator.getPOVRight()) {
-            // RobotContainer.arm.gotoMid();
             RobotContainer.arm.gotoTravel();
         } else if (IO.Operator.getPOVDown()) {
             RobotContainer.arm.gotoPlatter();
         } else if (IO.Operator.getPOVLeft()) {
-            // RobotContainer.arm.armPickCube();
-            RobotContainer.arm.gotoMid();
+            if (IO.Operator.getRightBumper()) {
+                RobotContainer.arm.gotoMidDrop();
+            } else {
+                RobotContainer.arm.gotoMid();
+            }
         } else {
-            // if (IO.Operator.getLeftBumper()) {
-            // RobotContainer.arm.runExtend(-Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
-            // true);
-            // } else if (IO.Operator.getRightBumper()) {
-            // RobotContainer.arm.runExtend(Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
-            // true);
-            // }
             RobotContainer.arm.resetMotionMagicTimer();
             if (IO.Operator.getRightY() != 0) {
                 RobotContainer.arm.runExtend(

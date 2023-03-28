@@ -158,7 +158,6 @@ public class Constants {
         public static final int TIMEOUT_MS = 30;
     }
 
-    // TODO: Don't forget about arm constants
     // Arm Settings
     public static class Arm_Settings {
 
@@ -192,6 +191,8 @@ public class Constants {
         public static final double EXTEND_OPERATOR_SPEED = 0.3; // was 0.3 in button control mode
 
         // Arm setpoints (degrees)
+        public static final double PIVOT_DROP_DISTANCE = 15; // Degrees
+
         public static final double PIVOT_HIGH = 165; // 160
         public static final double EXTEND_HIGH = 43_100;
 

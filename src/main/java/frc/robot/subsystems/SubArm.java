@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
@@ -69,7 +68,7 @@ public class SubArm {
         this.PIVOT.configClosedloopRamp(Constants.Arm_Settings.PIVOT_RAMP_RATE_SECS);
 
         // Pivot PIDF
-        // TODO: Figure out if we actually need this probably do EDIT: WE DON'T
+        // TO DO: Figure out if we actually need this probably do EDIT: WE DON'T
         // this.PIVOT.configSelectedFeedbackSensor(
         // FeedbackDevice.IntegratedSensor,
         // ARM_PIDF.PID_LOOP_INDEX,
@@ -141,7 +140,7 @@ public class SubArm {
     // */
     // public void armTo(double pivotDegrees, double extendEncoderCounts) {
     // // if goes throguh degrees of death AND arm is not tucked
-    // // TODO: make this work with extendBrakeTimer
+    // // TO DO: make this work with extendBrakeTimer
     // if (getPathPassedThroughDegreesOfDeath(pivotDegrees)) { // Get if the arm
     // passes through the top area
     // if (getArmTucked()) {
@@ -237,10 +236,18 @@ public class SubArm {
         // pivotTo(Constants.Arm_Settings.PIVOT_HIGH);
     }
 
+    public void gotoHighDrop() {
+        armTo(Constants.Arm_Settings.PIVOT_HIGH + Constants.Arm_Settings.PIVOT_DROP_DISTANCE,
+                Constants.Arm_Settings.EXTEND_HIGH);
+    }
+
     public void gotoMid() {
         armTo(Constants.Arm_Settings.PIVOT_MID, Constants.Arm_Settings.EXTEND_MID);
-        // extendTo(Constants.Arm_Settings.EXTEND_MID);
-        // pivotTo(Constants.Arm_Settings.PIVOT_MID);
+    }
+
+    public void gotoMidDrop() {
+        armTo(Constants.Arm_Settings.PIVOT_MID + Constants.Arm_Settings.PIVOT_DROP_DISTANCE,
+                Constants.Arm_Settings.EXTEND_MID);
     }
 
     public void gotoPlatter() {

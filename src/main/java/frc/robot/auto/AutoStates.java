@@ -1,13 +1,10 @@
 package frc.robot.auto;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Class that's only purpose is to store PathConstraints objects because they
