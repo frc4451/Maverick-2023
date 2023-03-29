@@ -191,9 +191,9 @@ public class Constants {
         public static final double EXTEND_OPERATOR_SPEED = 0.3; // was 0.3 in button control mode
 
         // Arm setpoints (degrees)
-        public static final double PIVOT_DROP_DISTANCE = 15; // Degrees
+        public static final double PIVOT_DUNK_DISTANCE = 10; // Degrees
 
-        public static final double PIVOT_HIGH = 165; // 160
+        public static final double PIVOT_HIGH = 160; // 160
         public static final double EXTEND_HIGH = 43_100;
 
         public static final double PIVOT_MID = 180;
@@ -205,13 +205,13 @@ public class Constants {
         public static final double PIVOT_TRAVEL = 0.0;
         public static final double EXTEND_TRAVEL = 2000;
 
-        public static final double PIVOT_PICK_CONE = -70;
+        public static final double PIVOT_PICK_CONE = -65;
         public static final double EXTEND_PICK_CONE = 15_700;
 
         public static final double PIVOT_PICK_CUBE = -37;
         public static final double EXTEND_PICK_CUBE = 0;
 
-        public static final double PIVOT_START = -45.0;
+        public static final double PIVOT_START = -43.0; // -45
         public static final double EXTEND_START = 0;
     }
 
@@ -223,7 +223,7 @@ public class Constants {
         public static final double EXTEND_F = 1023.0 / 20300.0; // feedforward
 
         // Feedback
-        public static final double PIVOT_PG = 10.0; // proportional
+        public static final double PIVOT_PG = 17.0; // proportional
         public static final double PIVOT_IG = 0.0; // integral
         public static final double PIVOT_DG = 1.0; // derivative
 

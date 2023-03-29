@@ -226,7 +226,7 @@ public class Robot extends TimedRobot {
 
         if (IO.Operator.getPOVUp()) {
             if (IO.Operator.getRightBumper()) {
-                RobotContainer.arm.gotoHighDrop();
+                RobotContainer.arm.gotoHighDunk();
             } else {
                 RobotContainer.arm.gotoHigh();
             }
@@ -236,7 +236,7 @@ public class Robot extends TimedRobot {
             RobotContainer.arm.gotoPlatter();
         } else if (IO.Operator.getPOVLeft()) {
             if (IO.Operator.getRightBumper()) {
-                RobotContainer.arm.gotoMidDrop();
+                RobotContainer.arm.gotoMidDunk();
             } else {
                 RobotContainer.arm.gotoMid();
             }

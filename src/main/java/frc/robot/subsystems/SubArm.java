@@ -236,8 +236,8 @@ public class SubArm {
         // pivotTo(Constants.Arm_Settings.PIVOT_HIGH);
     }
 
-    public void gotoHighDrop() {
-        armTo(Constants.Arm_Settings.PIVOT_HIGH + Constants.Arm_Settings.PIVOT_DROP_DISTANCE,
+    public void gotoHighDunk() {
+        armTo(Constants.Arm_Settings.PIVOT_HIGH + Constants.Arm_Settings.PIVOT_DUNK_DISTANCE,
                 Constants.Arm_Settings.EXTEND_HIGH);
     }
 
@@ -245,8 +245,8 @@ public class SubArm {
         armTo(Constants.Arm_Settings.PIVOT_MID, Constants.Arm_Settings.EXTEND_MID);
     }
 
-    public void gotoMidDrop() {
-        armTo(Constants.Arm_Settings.PIVOT_MID + Constants.Arm_Settings.PIVOT_DROP_DISTANCE,
+    public void gotoMidDunk() {
+        armTo(Constants.Arm_Settings.PIVOT_MID + Constants.Arm_Settings.PIVOT_DUNK_DISTANCE,
                 Constants.Arm_Settings.EXTEND_MID);
     }
 
