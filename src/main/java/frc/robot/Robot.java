@@ -119,7 +119,6 @@ public class Robot extends TimedRobot {
         RobotContainer.driveTrain.resetNavigation();
         RobotContainer.driveTrain.resetBalanceController();
         autoSelected = chooser.getSelected();
-        // System.out.println("Auto Selected: " + autoSelected);
     }
 
     /** This function is called periodically during autonomous. */

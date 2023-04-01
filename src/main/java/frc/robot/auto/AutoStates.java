@@ -25,10 +25,6 @@ public enum AutoStates {
             "Default",
             AutoContainer::nothing,
             PathPlanner.loadPathGroup("nothing", Speeds.none)),
-    LEFT_BALANCE(
-            "Left Balance",
-            AutoContainer::leftBalance,
-            PathPlanner.loadPathGroup("leftBalance", Speeds.slow)),
     LEFT_SCORE_BLUE(
             "Left Score Blue",
             AutoContainer::leftScoreBlue,
@@ -41,18 +37,18 @@ public enum AutoStates {
             "Center Balance Kick",
             AutoContainer::centerBalanceKick,
             PathPlanner.loadPathGroup("centerBalanceKick", Speeds.centerBalance)),
-    RIGHT_BALANCE(
-            "Right Balance",
-            AutoContainer::rightBalance,
-            PathPlanner.loadPathGroup("rightBalance", Speeds.fast)),
+    CENTER_BALANCE_PIECE_BLUE(
+            "Center Balance Piece Blue",
+            AutoContainer::centerBalancePieceBlue,
+            PathPlanner.loadPathGroup("centerBalancePieceBlue", Speeds.centerBalance)),
+    CENTER_BALANCE_PIECE_RED(
+            "Center Balance Piece Red",
+            AutoContainer::centerBalancePieceRed,
+            PathPlanner.loadPathGroup("centerBalancePieceRed", Speeds.centerBalance)),
     RIGHT_SCORE_RED(
             "Right Score Red",
             AutoContainer::rightScoreRed,
             PathPlanner.loadPathGroup("rightScoreRed", Speeds.medium));
-    // BOTTOM_SCORE_RED( // This shouldn't be needed
-    // "Bottom Score Red",
-    // AutoContainer::bottomScore,
-    // PathPlanner.loadPathGroup("bottomScoreRed", Speeds.medium));
 
     public final String label;
 

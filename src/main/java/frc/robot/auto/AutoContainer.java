@@ -95,6 +95,28 @@ public class AutoContainer {
         }
     }
 
+    private static void doUntilTime(double seconds, UnamedFunction fn) {
+        if (miniTimer.get() == 0.0) {
+            miniTimer.start();
+        }
+
+        if (!miniTimer.hasElapsed(seconds)) {
+            fn.callback();
+        }
+    }
+
+    private static void doInbetweenTime(double start, double end, UnamedFunction fn) {
+        final double currentTime = miniTimer.get();
+
+        if (currentTime == 0.0) {
+            miniTimer.start();
+        }
+
+        if (currentTime >= start && currentTime <= end) {
+            fn.callback();
+        }
+    }
+
     /**
      * Note that this function resets the timer after `seconds` has elapsed.
      * 
@@ -178,6 +200,51 @@ public class AutoContainer {
         }
     }
 
+    public static void centerBalancePieceBlue() {
+        centerBalanceAndPiece(AutoStates.CENTER_BALANCE_PIECE_BLUE.paths);
+    }
+
+    public static void centerBalancePieceRed() {
+        centerBalanceAndPiece(AutoStates.CENTER_BALANCE_PIECE_RED.paths);
+    }
+
+    public static void centerBalanceAndPiece(List<PathPlannerTrajectory> paths) {
+        final PathPlannerTrajectory first = paths.get(0);
+
+        switch (autoStep) {
+            case 0:
+                // Reset the drivetrain's odometry to the starting pose of the trajectory.
+                setNavigationToTrajectoryStart(first);
+                incAutoStep();
+                break;
+            case 1:
+                doOnTimer(0.5, () -> {
+                    RobotContainer.arm.setKickerOn();
+                });
+                break;
+            case 2:
+                doTrajectory(first);
+                RobotContainer.arm.gotoTravel();
+
+                doInbetweenTime(3.5, 3.9, () -> {
+                    RobotContainer.intake.setIntakeSolenoid(true);
+                });
+
+                doInbetweenTime(3.9, 5.9, () -> {
+                    RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
+                });
+
+                doAfterTime(6.0, () -> {
+                    RobotContainer.intake.stopIntake();
+                    RobotContainer.intake.setIntakeSolenoid(false);
+                });
+                break;
+            case 3:
+                RobotContainer.driveTrain.balanceChargeStation();
+                break;
+        }
+    }
+
     public static void leftScoreBlue() {
         kickOutGrabCubeBack(AutoStates.LEFT_SCORE_BLUE.paths);
     }
@@ -245,169 +312,6 @@ public class AutoContainer {
             case 9:
                 RobotContainer.arm.gotoMid();
                 RobotContainer.arm.openClaw();
-                break;
-        }
-    }
-
-    // TODO: FLIP PATH
-    public static void leftScoreRed() {
-        // final PathPlannerTrajectory first = AutoStates.LEFT_SCORE_RED.paths.get(0);
-        // final PathPlannerTrajectory second = AutoStates.LEFT_SCORE_RED.paths.get(1);
-
-        // switch (autoStep) {
-        // case 0:
-        // // Reset the drivetrain's odometry to the starting pose of the trajectory.
-        // setNavigationToTrajectoryStart(first);
-        // resetAutoTimer();
-        // autoStep++;
-        // break;
-        // case 1:
-        // doOnTimer(0.5, autoStep + 1, () -> {
-        // RobotContainer.arm.setKickerOn();
-        // });
-        // break;
-        // case 2:
-        // RobotContainer.arm.gotoTravel();
-        // doTrajectory(first, autoStep + 1);
-        // doAfterTime(0.5, () -> {
-        // RobotContainer.intake.setIntakeSolenoid(true);
-        // });
-        // doAfterTime(0.9, () -> {
-        // RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
-        // RobotContainer.arm.openClaw();
-        // });
-        // break;
-        // case 3:
-        // doTrajectory(second, autoStep + 1);
-        // RobotContainer.intake.stopIntake();
-        // RobotContainer.arm.gotoTravel();
-        // break;
-        // case 4:
-        // RobotContainer.arm.resetMotionMagicTimer();
-        // autoStep++;
-        // break;
-        // case 5:
-        // doOnTimer(3, autoStep + 1, () -> {
-        // RobotContainer.arm.gotoPlatter();
-        // });
-        // break;
-        // case 6:
-        // doOnTimer(0.5, autoStep + 1, () -> {
-        // RobotContainer.arm.closeClaw();
-        // RobotContainer.arm.gotoPlatter();
-        // });
-        // break;
-        // case 7:
-        // RobotContainer.arm.resetMotionMagicTimer();
-        // autoStep++;
-        // break;
-        // case 8:
-        // doOnTimer(3, autoStep + 1, () -> {
-        // RobotContainer.arm.gotoMid();
-        // });
-        // break;
-        // case 9:
-        // RobotContainer.arm.gotoMid();
-        // RobotContainer.arm.openClaw();
-        // break;
-        // }
-
-    }
-
-    public static void leftScore() {
-        // final PathPlannerTrajectory first = AutoStates.LEFT_SCORE.paths.get(0);
-        // final PathPlannerTrajectory second = AutoStates.LEFT_SCORE.paths.get(1);
-
-        // switch (autoStep) {
-        // case 0:
-        // // Reset the drivetrain's odometry to the starting pose of the trajectory.
-        // setNavigationToTrajectoryStart(first);
-        // resetAutoTimer();
-        // autoStep++;
-        // break;
-        // case 1:
-        // doOnTimer(5, autoStep + 1, () -> {
-        // // score the cone
-        // });
-        // break;
-        // case 2:
-        // doTrajectory(first, autoStep + 1);
-        // break;
-        // case 3:
-        // doTrajectory(second, autoStep + 1);
-        // break;
-        // case 4:
-        // doOnTimer(5, -1, () -> {
-        // // score cube
-        // });
-        // break;
-        // }
-    }
-
-    public static void rightBalance() {
-        final PathPlannerTrajectory first = AutoStates.RIGHT_BALANCE.paths.get(0);
-        final PathPlannerTrajectory second = AutoStates.RIGHT_BALANCE.paths.get(1);
-
-        switch (autoStep) {
-            case 0:
-                // Reset the drivetrain's odometry to the starting pose of the trajectory.
-                setNavigationToTrajectoryStart(first);
-                resetAutoTimer();
-                incAutoStep();
-                break;
-            case 1:
-                doOnTimer(5, () -> {
-                    // score the cone
-                });
-                break;
-            case 2:
-                doTrajectory(first);
-                break;
-            case 3:
-                doTrajectory(second);
-                break;
-            case 4:
-                RobotContainer.driveTrain.setBrakeMode();
-                incAutoStep();
-                break;
-            case 5:
-                RobotContainer.driveTrain.balanceChargeStation();
-                break;
-        }
-    }
-
-    public static void leftBalance() {
-        final PathPlannerTrajectory first = AutoStates.LEFT_BALANCE.paths.get(0);
-        final PathPlannerTrajectory second = AutoStates.LEFT_BALANCE.paths.get(1);
-
-        switch (autoStep) {
-            case 0:
-                // Reset the drivetrain's odometry to the starting pose of the trajectory.
-                setNavigationToTrajectoryStart(first);
-                incAutoStep();
-                break;
-            case 1:
-                doOnTimer(5, () -> {
-                    // score the cone
-                });
-                break;
-            case 2:
-                doTrajectory(first);
-                break;
-            case 3:
-                doOnTimer(5, () -> {
-                    // pick up the cube
-                });
-                break;
-            case 4:
-                doTrajectory(second);
-                break;
-            case 5:
-                RobotContainer.driveTrain.setBrakeMode();
-                incAutoStep();
-                break;
-            case 6:
-                RobotContainer.driveTrain.balanceChargeStation();
                 break;
         }
     }
