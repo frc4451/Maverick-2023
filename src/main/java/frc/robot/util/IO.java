@@ -94,6 +94,10 @@ public class IO {
                     && controller.getPOV() > 270 - Constants.Misc.CONTROLLER_POV_MARGIN;
         }
 
+        public static boolean getStartButton() {
+            return controller.getStartButton();
+        }
+
         public static boolean getStartButtonPressed() {
             return controller.getStartButtonPressed();
         }

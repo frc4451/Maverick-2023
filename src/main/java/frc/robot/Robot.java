@@ -4,14 +4,19 @@
 
 package frc.robot;
 
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoContainer;
-import frc.robot.subsystems.SubIntakeModes;
 import frc.robot.auto.AutoStates;
+import frc.robot.subsystems.SubIntakeModes;
 import frc.robot.util.IO;
 
 /**
@@ -40,12 +45,14 @@ public class Robot extends TimedRobot {
         RobotContainer.driveTrain.resetBalanceController();
         RobotContainer.driveTrain.setCoastMode();
 
+        RobotContainer.rearPhotoner.getCamera().setPipelineIndex(0);
+
         chooser.setDefaultOption("Default", AutoStates.DEFAULT);
         for (AutoStates state : AutoStates.values()) {
             chooser.addOption(state.label, state);
         }
 
-        SmartDashboard.putData("Auto Choices", chooser);
+        SmartDashboard.putData("Match/Auto Choices", chooser);
     }
 
     /**
@@ -60,12 +67,14 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        // Update Odemetry
+        // Update Stuff
         RobotContainer.driveTrain.updateOdometry();
+        RobotContainer.rearPhotoner.updateResult();
+
         // Update robot position on Field2d.
         RobotContainer.field.setRobotPose(RobotContainer.driveTrain.getPose2d());
 
-        SmartDashboard.putData("Field/Field", RobotContainer.field);
+        SmartDashboard.putData("Field", RobotContainer.field);
         SmartDashboard.putNumber("Pose2D X", RobotContainer.driveTrain.getPose2d().getX());
         SmartDashboard.putNumber("Pose2D Y", RobotContainer.driveTrain.getPose2d().getY());
         SmartDashboard.putNumber("Pose2D Rotation", RobotContainer.driveTrain.getPose2d().getRotation().getDegrees());
@@ -73,27 +82,30 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Gyro Rotation", RobotContainer.driveTrain.getGyroAngle());
         SmartDashboard.putNumber("Gyro Absolute Rotation", RobotContainer.driveTrain.getGyroAngleAbsolute());
         SmartDashboard.putNumber("Time Left", DriverStation.getMatchTime());
-        // SmartDashboard.putNumber("Left Distance",
-        // RobotContainer.driveTrain.getLeftPosition());
-        // SmartDashboard.putNumber("Right Distance",
-        // RobotContainer.driveTrain.getRightPosition());
-        // SmartDashboard.putNumber("Left Speed",
-        // RobotContainer.driveTrain.getLeftSpeed());
-        // SmartDashboard.putNumber("Right Speed",
-        // RobotContainer.driveTrain.getRightSpeed());
         SmartDashboard.putNumber("Extend Position", RobotContainer.arm.getExtendPosition());
         SmartDashboard.putNumber("Pivot Position", RobotContainer.arm.getPivotPosition());
         SmartDashboard.putNumber("Pivot Degrees", RobotContainer.arm.getPivotAngle());
         SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
-        SmartDashboard.putBoolean("Debug/Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
-        SmartDashboard.putBoolean("Debug/Limelight has target", RobotContainer.limelight.hasTargets());
-        SmartDashboard.putNumber("Debug/Limelight horizontal offset", RobotContainer.limelight.getXOffset());
-        // SmartDashboard.putNumber("Debug/Balance Output",
-        // RobotContainer.driveTrain.getBalanceControllerOutput());
-        // SmartDashboard.putBoolean("Debug/Intake Deployed",
-        // RobotContainer.intake.getIntakeDeployed());
-        // SmartDashboard.putBoolean("Debug/Beam Break",
-        // RobotContainer.intake.getLimitSwitch());
+        SmartDashboard.putBoolean("Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
+
+        final PhotonPipelineResult result = RobotContainer.rearPhotoner.getResult();
+        SmartDashboard.putNumber("Photon/Latency", result.getLatencyMillis());
+        SmartDashboard.putBoolean("Photon/Has Target", result.hasTargets());
+
+        if (!result.hasTargets()) {
+            return;
+        }
+
+        // final List<PhotonTrackedTarget> allTargets = result.getTargets();
+        final PhotonTrackedTarget target = result.getBestTarget();
+
+        final Transform3d targetPose = target.getBestCameraToTarget();
+
+        SmartDashboard.putNumber("Photon/ID", target.getFiducialId());
+        SmartDashboard.putNumber("Photon/Amibguity", target.getPoseAmbiguity());
+        SmartDashboard.putNumber("Photon/Forward Distance", targetPose.getX());
+        SmartDashboard.putNumber("Photon/Left Distance", targetPose.getY());
+        SmartDashboard.putNumber("Photon/Vertical Distance", targetPose.getZ());
     }
 
     /**
@@ -130,7 +142,7 @@ public class Robot extends TimedRobot {
     /** This function is called once when teleop is enabled. */
     @Override
     public void teleopInit() {
-        RobotContainer.limelight.setAimingPipelineEnabled(true);
+        // RobotContainer.limelight.setAimingPipelineEnabled(true);
         RobotContainer.driveTrain.setCoastMode();
         RobotContainer.driveTrain.resetGyro();
         RobotContainer.driveTrain.resetBalanceController();
@@ -141,11 +153,10 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         // Misc
-
-        if (IO.Driver.getStartButtonPressed()) {
-            // RobotContainer.arm.pivotToggleBrakeMode();
-            RobotContainer.limelight.toggleAimingPipeline();
-        }
+        // if (IO.Driver.getStartButtonPressed()) {
+        // // RobotContainer.arm.pivotToggleBrakeMode();
+        // // RobotContainer.limelight.toggleAimingPipeline();
+        // }
 
         // INTAKE
         if (RobotContainer.intake.getIntakeDeployed()) {
@@ -197,7 +208,8 @@ public class Robot extends TimedRobot {
         if (IO.Driver.getButtonB()) {
             RobotContainer.driveTrain.balanceChargeStation();
         } else if (IO.Driver.getButtonY()) {
-            RobotContainer.driveTrain.runDrive(0, RobotContainer.limelight.getTurnFromLimelight());
+            RobotContainer.driveTrain.runDrive(0, RobotContainer.rearPhotoner.getTurnTo(Units.inchesToMeters(-20)));
+            SmartDashboard.putNumber("Photon/Output", RobotContainer.rearPhotoner.getTurnTo(Units.inchesToMeters(-20)));
         } else {
             RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX());
         }
@@ -254,7 +266,7 @@ public class Robot extends TimedRobot {
     /** This function is called once when the robot is disabled. */
     @Override
     public void disabledInit() {
-        RobotContainer.limelight.setAimingPipelineEnabled(false);
+        // RobotContainer.limelight.setAimingPipelineEnabled(false);
         AutoContainer.resetAutoStep();
     }
 

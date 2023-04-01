@@ -299,12 +299,6 @@ public class SubDriveTrain {
         this.DROPDOWN_SOLENOID.set(!getDropDownSolenoid());
     }
 
-    // public void runMotionMagic(double targetDistanceL, double targetDistanceR) {
-    // this.LEFT_FRONT.set(ControlMode.MotionMagic, targetDistanceL);
-    // this.RIGHT_FRONT.set(ControlMode.MotionMagic, targetDistanceR);
-    // // at 6 seconds go back
-    // }
-
     // getters
     public boolean getDropDownSolenoid() {
         return this.DROPDOWN_SOLENOID.get();
