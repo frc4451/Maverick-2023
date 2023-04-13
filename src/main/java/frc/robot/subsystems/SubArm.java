@@ -195,6 +195,10 @@ public class SubArm {
     }
 
     public void armTo(final double pivotDegrees, final double extendEncoderCounts) {
+        this.armTo(pivotDegrees, extendEncoderCounts, false);
+    }
+
+    public void armTo(final double pivotDegrees, final double extendEncoderCounts, final boolean thisIsDunk) {
 
         if (Math.abs(Math.abs(this.getPivotAngle()) - Math.abs(pivotDegrees)) <= 15.0) {
             if (this.motionMagicTimer.get() == 0.0) {
@@ -208,7 +212,9 @@ public class SubArm {
             }
             this.pivotTo(pivotDegrees);
         } else {
-            this.tuckArm();
+            if (!thisIsDunk) {
+                this.tuckArm();
+            }
             if (this.getExtendPosition() < 5000) {
                 this.pivotTo(pivotDegrees);
             }
@@ -238,7 +244,7 @@ public class SubArm {
 
     public void gotoHighDunk() {
         armTo(Constants.Arm_Settings.PIVOT_HIGH + Constants.Arm_Settings.PIVOT_DUNK_DISTANCE,
-                Constants.Arm_Settings.EXTEND_HIGH);
+                Constants.Arm_Settings.EXTEND_HIGH, true);
     }
 
     public void gotoMid() {
@@ -247,7 +253,7 @@ public class SubArm {
 
     public void gotoMidDunk() {
         armTo(Constants.Arm_Settings.PIVOT_MID + Constants.Arm_Settings.PIVOT_DUNK_DISTANCE,
-                Constants.Arm_Settings.EXTEND_MID);
+                Constants.Arm_Settings.EXTEND_MID, true);
     }
 
     public void gotoPlatter() {
