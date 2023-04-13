@@ -198,7 +198,8 @@ public class SubArm {
         this.armTo(pivotDegrees, extendEncoderCounts, false);
     }
 
-    public void armTo(final double pivotDegrees, final double extendEncoderCounts, final boolean thisIsDunk) {
+    // Don't tuck is usually used by dunks so we don't tuck just to instantly untuck
+    public void armTo(final double pivotDegrees, final double extendEncoderCounts, final boolean dontTuck) {
 
         if (Math.abs(Math.abs(this.getPivotAngle()) - Math.abs(pivotDegrees)) <= 15.0) {
             if (this.motionMagicTimer.get() == 0.0) {
@@ -212,7 +213,7 @@ public class SubArm {
             }
             this.pivotTo(pivotDegrees);
         } else {
-            if (!thisIsDunk) {
+            if (!dontTuck) {
                 this.tuckArm();
             }
             if (this.getExtendPosition() < 5000) {
