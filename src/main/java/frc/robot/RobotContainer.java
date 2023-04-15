@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants.RioPortMaps;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SubArm;
 import frc.robot.subsystems.SubDriveTrain;
 import frc.robot.subsystems.SubIntake;
@@ -26,8 +25,6 @@ public class RobotContainer {
                         RioPortMaps.INTAKE_SOLENOID_REVERSE, RioPortMaps.PLATTER);
 
         public static final Field2d field = new Field2d();
-
-        public static final Limelight limelight = new Limelight("limelight-rear");
 
         public static final PowerDistribution pdp = new PowerDistribution(0, ModuleType.kCTRE);
 

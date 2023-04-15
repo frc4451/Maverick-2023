@@ -85,8 +85,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Pivot Degrees", RobotContainer.arm.getPivotAngle());
         SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
         SmartDashboard.putBoolean("Debug/Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
-        SmartDashboard.putBoolean("Debug/Limelight has target", RobotContainer.limelight.hasTargets());
-        SmartDashboard.putNumber("Debug/Limelight horizontal offset", RobotContainer.limelight.getXOffset());
         // SmartDashboard.putNumber("Debug/Balance Output",
         // RobotContainer.driveTrain.getBalanceControllerOutput());
         // SmartDashboard.putBoolean("Debug/Intake Deployed",
@@ -129,7 +127,6 @@ public class Robot extends TimedRobot {
     /** This function is called once when teleop is enabled. */
     @Override
     public void teleopInit() {
-        RobotContainer.limelight.setAimingPipelineEnabled(true);
         RobotContainer.driveTrain.setCoastMode();
         RobotContainer.driveTrain.resetGyro();
         RobotContainer.driveTrain.resetBalanceController();
@@ -139,13 +136,6 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        // Misc
-
-        if (IO.Driver.getStartButtonPressed()) {
-            // RobotContainer.arm.pivotToggleBrakeMode();
-            RobotContainer.limelight.toggleAimingPipeline();
-        }
-
         // INTAKE
         if (RobotContainer.intake.getIntakeDeployed()) {
             if (IO.Driver.getRightTrigger()) {
@@ -197,8 +187,6 @@ public class Robot extends TimedRobot {
         // Driving things
         if (IO.Driver.getButtonB()) {
             RobotContainer.driveTrain.balanceChargeStation();
-        } else if (IO.Driver.getButtonY()) {
-            RobotContainer.driveTrain.runDrive(0, RobotContainer.limelight.getTurnFromLimelight());
         } else {
             RobotContainer.driveTrain.runDrive(IO.Driver.getLeftY(), IO.Driver.getRightX());
         }
@@ -255,7 +243,6 @@ public class Robot extends TimedRobot {
     /** This function is called once when the robot is disabled. */
     @Override
     public void disabledInit() {
-        RobotContainer.limelight.setAimingPipelineEnabled(false);
         AutoContainer.resetAutoStep();
     }
 
