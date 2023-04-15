@@ -60,7 +60,7 @@ public class AutoContainer {
     }
 
     private static void doTrajectory(PathPlannerTrajectory trajectory, int nextAutoStep) {
-        if (autoTimer.get() < trajectory.getTotalTimeSeconds()) {
+        if (autoTimer.get() <= trajectory.getTotalTimeSeconds()) {
             // Get the desired pose from the trajectory.
             PathPlannerState desiredPose = (PathPlannerState) trajectory.sample(autoTimer.get());
 
@@ -68,9 +68,7 @@ public class AutoContainer {
             ChassisSpeeds refChassisSpeeds = RobotContainer.driveTrain.ramseteCalculate(desiredPose);
 
             // Set the linear and angular speeds.
-            RobotContainer.driveTrain.drive(
-                    refChassisSpeeds.vxMetersPerSecond,
-                    refChassisSpeeds.omegaRadiansPerSecond);
+            RobotContainer.driveTrain.drive(refChassisSpeeds);
         } else {
             RobotContainer.driveTrain.drive(0, 0);
             incAutoStep();
@@ -149,6 +147,10 @@ public class AutoContainer {
 
     // This is for the "Default" auto state as we want it to do nothing
     public static void nothing() {
+    }
+
+    public static void lonelyKick() {
+        RobotContainer.arm.setKickerOn();
     }
 
     public static void centerBalance() {
@@ -248,6 +250,14 @@ public class AutoContainer {
     public static void leftScoreBlue() {
         kickOutGrabCubeBack(AutoStates.LEFT_SCORE_BLUE.paths);
     }
+
+    public static void leftScoreRed() {
+        kickOutGrabCubeBack(AutoStates.LEFT_SCORE_RED.paths);
+    }
+
+    // public static void rightScoreBlue() {
+    // kickOutGrabCubeBack(AutoStates.RIGHT_SCORE_BLUE.paths);
+    // }
 
     public static void rightScoreRed() {
         kickOutGrabCubeBack(AutoStates.RIGHT_SCORE_RED.paths);

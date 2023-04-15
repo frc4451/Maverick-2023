@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -40,10 +39,10 @@ public class Robot extends TimedRobot {
         RobotContainer.driveTrain.resetBalanceController();
         RobotContainer.driveTrain.setCoastMode();
 
-        chooser.setDefaultOption("Default", AutoStates.DEFAULT);
         for (AutoStates state : AutoStates.values()) {
             chooser.addOption(state.label, state);
         }
+        chooser.setDefaultOption(AutoStates.NOTHING.label, AutoStates.NOTHING);
 
         SmartDashboard.putData("Auto Choices", chooser);
     }
@@ -158,6 +157,8 @@ public class Robot extends TimedRobot {
                 RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
             } else if (IO.Driver.getLeftTrigger()) {
                 RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
+            } else if (IO.Driver.getLeftBumper()) {
+                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE_SLOW);
             } else {
                 RobotContainer.intake.stopIntake();
             }
@@ -272,19 +273,19 @@ public class Robot extends TimedRobot {
 
         // If Y is pressed this'll set the field trajectories and reset the robot's
         // position to the trajectory's start
-        if (IO.Driver.getButtonY()) {
-            for (int i = 0; i < AutoStates.longestPathGroup; i++) {
-                final Trajectory path;
-                if (autoSelected.paths.get(i) != null) {
-                    path = autoSelected.paths.get(i);
-                } else {
-                    path = new Trajectory();
-                }
-                RobotContainer.field.getObject("Trajectory " + i).setTrajectory(path);
-            }
-            RobotContainer.driveTrain.resetNavigation(autoSelected.paths.get(0).getInitialPose());
-            System.out.println(autoSelected.paths.get(0).getInitialPose().getRotation().getDegrees());
-        }
+        // if (IO.Driver.getButtonY()) {
+        // for (int i = 0; i < AutoStates.longestPathGroup; i++) {
+        // final Trajectory path;
+        // if (autoSelected.paths.get(i) != null) {
+        // path = autoSelected.paths.get(i);
+        // } else {
+        // path = new Trajectory();
+        // }
+        // RobotContainer.field.getObject("Trajectory " + i).setTrajectory(path);
+        // }
+        // RobotContainer.driveTrain.resetNavigation(autoSelected.paths.get(0).getInitialPose());
+        // System.out.println(autoSelected.paths.get(0).getInitialPose().getRotation().getDegrees());
+        // }
 
         // Misc
 

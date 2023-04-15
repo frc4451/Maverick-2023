@@ -129,8 +129,8 @@ public class Constants {
         public static final double CUBE_INTAKE_SPEED = 0.4;
         public static final double CONE_INTAKE_SPEED = 0.525;
         public static final double REVERSE = -0.5;
+        public static final double REVERSE_SLOW = -0.25;
 
-        public static final double MID_EJECT = -0.5;
         public static final double HIGH_EJECT = -1.0;
         // Ripped docs from SupplyCurrentLimitConfiguration CTRE class
         /**

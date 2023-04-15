@@ -21,14 +21,22 @@ class Speeds {
 }
 
 public enum AutoStates {
-    DEFAULT(
-            "Default",
+    NOTHING(
+            "Nothing",
             AutoContainer::nothing,
+            PathPlanner.loadPathGroup("nothing", Speeds.none)),
+    LONELY_KICK(
+            "Lonely Kick",
+            AutoContainer::lonelyKick,
             PathPlanner.loadPathGroup("nothing", Speeds.none)),
     LEFT_SCORE_BLUE(
             "Left Score Blue",
             AutoContainer::leftScoreBlue,
             PathPlanner.loadPathGroup("leftScoreBlue", Speeds.fast)),
+    LEFT_SCORE_RED(
+            "Left Score Red",
+            AutoContainer::leftScoreRed,
+            PathPlanner.loadPathGroup("leftScoreRed", Speeds.fast)),
     CENTER_BALANCE(
             "Center Balance",
             AutoContainer::centerBalance,
@@ -45,8 +53,11 @@ public enum AutoStates {
             "Center Balance Piece Red",
             AutoContainer::centerBalancePieceRed,
             PathPlanner.loadPathGroup("centerBalancePieceRed", Speeds.centerBalance)),
-    RIGHT_SCORE_RED(
-            "Right Score Red",
+    // RIGHT_SCORE_BLUE(
+    // "Right Score Blue",
+    // AutoContainer::rightScoreBlue,
+    // PathPlanner.loadPathGroup("rightScoreBlue", Speeds.medium)),
+    RIGHT_SCORE_RED("Right Score Red",
             AutoContainer::rightScoreRed,
             PathPlanner.loadPathGroup("rightScoreRed", Speeds.medium));
 
@@ -55,28 +66,6 @@ public enum AutoStates {
     public final UnamedFunction routine;
 
     public final List<PathPlannerTrajectory> paths;
-
-    /**
-     * Static int storing the longest path group in the enum.
-     * This variable's intended purpose is for Shuffleboard
-     * to know how many Trajectory's it needs to deal with.
-     */
-    public final static int longestPathGroup = getLongestGroup();
-
-    /**
-     * We use this for the ShuffleBoard field widget to properly display paths
-     * 
-     * @see #longestPathGroup
-     */
-    private static int getLongestGroup() {
-        int longest = 0;
-        for (AutoStates state : AutoStates.values()) {
-            if (state.paths.size() > longest) {
-                longest = state.paths.size();
-            }
-        }
-        return longest;
-    }
 
     /**
      * @param label   Label that is mainly used for Shuffleboard

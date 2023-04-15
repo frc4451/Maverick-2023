@@ -24,15 +24,15 @@
     },
     {
       "anchorPoint": {
-        "x": 6.0,
+        "x": 6.15,
         "y": 3.25
       },
       "prevControl": {
-        "x": 5.003979943316687,
+        "x": 5.1539799433166875,
         "y": 3.25
       },
       "nextControl": {
-        "x": 5.003979943316687,
+        "x": 5.1539799433166875,
         "y": 3.25
       },
       "holonomicAngle": 0,
@@ -70,5 +70,8 @@
       }
     }
   ],
+  "maxVelocity": 1.2,
+  "maxAcceleration": 1.2,
+  "isReversed": null,
   "markers": []
 }

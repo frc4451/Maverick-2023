@@ -5,7 +5,7 @@ public enum SubIntakeModes {
     CUBE("cube"),
     CONE("cone"),
     REVERSE("reverse"),
-    EJECT_MID("eject_mid"),
+    REVERSE_SLOW("eject_mid"),
     EJECT_HIGH("eject_high");
 
     private String label;
