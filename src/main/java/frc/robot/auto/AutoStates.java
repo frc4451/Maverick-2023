@@ -53,10 +53,6 @@ public enum AutoStates {
             "Center Balance Piece Red",
             AutoContainer::centerBalancePieceRed,
             PathPlanner.loadPathGroup("centerBalancePieceRed", Speeds.centerBalance)),
-    // RIGHT_SCORE_BLUE(
-    // "Right Score Blue",
-    // AutoContainer::rightScoreBlue,
-    // PathPlanner.loadPathGroup("rightScoreBlue", Speeds.medium)),
     RIGHT_SCORE_RED("Right Score Red",
             AutoContainer::rightScoreRed,
             PathPlanner.loadPathGroup("rightScoreRed", Speeds.medium));

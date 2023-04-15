@@ -255,10 +255,6 @@ public class AutoContainer {
         kickOutGrabCubeBack(AutoStates.LEFT_SCORE_RED.paths);
     }
 
-    // public static void rightScoreBlue() {
-    // kickOutGrabCubeBack(AutoStates.RIGHT_SCORE_BLUE.paths);
-    // }
-
     public static void rightScoreRed() {
         kickOutGrabCubeBack(AutoStates.RIGHT_SCORE_RED.paths);
     }
