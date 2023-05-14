@@ -4,13 +4,15 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.server.PathPlannerServer;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoContainer;
-import frc.robot.subsystems.SubIntakeModes;
 import frc.robot.auto.AutoStates;
+import frc.robot.subsystems.SubIntakeModes;
 import frc.robot.util.IO;
 
 /**
@@ -34,6 +36,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        // We don't want to run this during real matches (for bandwidth reasons)
+        if (!DriverStation.isFMSAttached()) {
+            // 5811 = port number
+            PathPlannerServer.startServer(5811);
+        }
         RobotContainer.arm.resetArmEncoders();
         RobotContainer.driveTrain.resetNavigation();
         RobotContainer.driveTrain.resetBalanceController();
@@ -59,7 +66,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        // Update Odemetry
+        // Update Odometry
         RobotContainer.driveTrain.updateOdometry();
         // Update robot position on Field2d.
         RobotContainer.field.setRobotPose(RobotContainer.driveTrain.getPose2d());
@@ -93,23 +100,7 @@ public class Robot extends TimedRobot {
         // RobotContainer.intake.getLimitSwitch());
     }
 
-    /**
-     * This autonomous (along with the chooser code above) shows how to select
-     * between different
-     * autonomous modes using the dashboard. The sendable chooser code works with
-     * the Java
-     * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the
-     * chooser code and
-     * uncomment the getString line to get the auto name from the text box below the
-     * Gyro
-     *
-     * <p>
-     * You can add additional auto modes by adding additional comparisons to the
-     * switch structure
-     * below with additional strings. If using the SendableChooser make sure to add
-     * them to the
-     * chooser code above as well.
-     */
+    /** This function is called once when autonomous is enabled. */
     @Override
     public void autonomousInit() {
         RobotContainer.driveTrain.setCoastMode();

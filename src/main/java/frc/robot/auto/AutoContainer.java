@@ -9,9 +9,11 @@ import java.util.List;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SubIntakeModes;
@@ -62,10 +64,16 @@ public class AutoContainer {
     private static void doTrajectory(PathPlannerTrajectory trajectory, int nextAutoStep) {
         if (autoTimer.get() <= trajectory.getTotalTimeSeconds()) {
             // Get the desired pose from the trajectory.
-            PathPlannerState desiredPose = (PathPlannerState) trajectory.sample(autoTimer.get());
+            PathPlannerState pathState = (PathPlannerState) trajectory.sample(autoTimer.get());
+
+            // We don't run PathPlannerServer during matches
+            // (This check probably isn't *needed* but I'll keep it just in case)
+            if (!DriverStation.isFMSAttached()) {
+                PathPlannerServer.sendPathFollowingData(pathState.poseMeters, RobotContainer.driveTrain.getPose2d());
+            }
 
             // Get the reference chassis speeds from the Ramsete controller.
-            ChassisSpeeds refChassisSpeeds = RobotContainer.driveTrain.ramseteCalculate(desiredPose);
+            ChassisSpeeds refChassisSpeeds = RobotContainer.driveTrain.ramseteCalculate(pathState);
 
             // Set the linear and angular speeds.
             RobotContainer.driveTrain.drive(refChassisSpeeds);

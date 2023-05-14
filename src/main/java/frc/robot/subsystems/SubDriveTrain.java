@@ -440,6 +440,30 @@ public class SubDriveTrain {
         return this.RAMSETE.calculate(this.getPose2d(), desiredPose);
     }
 
+    /**
+     * Returns the next output of the Ramsete controller.
+     *
+     * <p>
+     * The reference pose, linear velocity, and angular velocity
+     *
+     * @param desiredPose                        The desired pose.
+     * @param linearVelocityRefMeters            The desired linear velocity in
+     *                                           meters per second.
+     * @param angularVelocityRefRadiansPerSecond The desired angular velocity in
+     *                                           radians per second.
+     * @return The next controller output.
+     */
+    public ChassisSpeeds ramseteCalculate(
+            Pose2d desiredPose,
+            double linearVelocityRefMeters,
+            double angularVelocityRefRadiansPerSecond) {
+        return this.RAMSETE.calculate(
+                this.getPose2d(),
+                desiredPose,
+                linearVelocityRefMeters,
+                angularVelocityRefRadiansPerSecond);
+    }
+
     public void resetBalanceController() {
         this.BALANCE_CONTROLLER.setSetpoint(0); // We want our pitch at 0 degrees
         this.BALANCE_CONTROLLER.setTolerance(4); // We'll accept a pitch within degrees
