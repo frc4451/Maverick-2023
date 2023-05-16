@@ -357,9 +357,6 @@ public class SubDriveTrain {
     /**
      * Called within the Teleop Periodic method, updates the Odometry with
      * the GyroRotation2d, LeftEncoderMeters, and RightEncoderMeters
-     * 
-     * @param void
-     * @returns void
      */
     public void updateOdometry() {
         this.ODOMETRY.update(

@@ -16,6 +16,10 @@ enum TeleopPoints {
             new Pose2d(2.0, 1.0, new Rotation2d(0)), // Blue
             new Pose2d(3.0, 4.0, new Rotation2d(0))); // Red
 
+    /**
+     * @param blue Point to use for the Blue Alliance
+     * @param red Point to use ffor the Red Alliance
+     */
     TeleopPoints(Pose2d blue, Pose2d red) {
         this.blue = blue;
         this.red = red;
@@ -25,14 +29,14 @@ enum TeleopPoints {
     private final Pose2d blue;
 
     /**
-     * @return Blue point
+     * @return Point for the Blue Alliance
      */
     public Pose2d getBlue() {
         return this.blue;
     }
 
     /**
-     * @return Red point
+     * @return Point for Red Alliance
      */
     public Pose2d getRed() {
         return this.red;
