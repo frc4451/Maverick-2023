@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoContainer;
-import frc.robot.subsystems.SubIntakeModes;
 import frc.robot.auto.AutoStates;
 import frc.robot.util.IO;
 
@@ -34,7 +33,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        RobotContainer.arm.resetArmEncoders();
+        // RobotContainer.arm.resetArmEncoders();
         RobotContainer.driveTrain.resetNavigation();
         RobotContainer.driveTrain.resetBalanceController();
         RobotContainer.driveTrain.setCoastMode();
@@ -80,11 +79,15 @@ public class Robot extends TimedRobot {
         // RobotContainer.driveTrain.getLeftSpeed());
         // SmartDashboard.putNumber("Right Speed",
         // RobotContainer.driveTrain.getRightSpeed());
-        SmartDashboard.putNumber("Extend Position", RobotContainer.arm.getExtendPosition());
-        SmartDashboard.putNumber("Pivot Position", RobotContainer.arm.getPivotPosition());
-        SmartDashboard.putNumber("Pivot Degrees", RobotContainer.arm.getPivotAngle());
-        SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
-        SmartDashboard.putBoolean("Debug/Pivot At Setpoint", RobotContainer.arm.getPivotAtSetpoint());
+        // SmartDashboard.putNumber("Extend Position",
+        // RobotContainer.arm.getExtendPosition());
+        // SmartDashboard.putNumber("Pivot Position",
+        // RobotContainer.arm.getPivotPosition());
+        // SmartDashboard.putNumber("Pivot Degrees",
+        // RobotContainer.arm.getPivotAngle());
+        // SmartDashboard.putNumber("Amp/Pivot", RobotContainer.arm.getPivotAmps());
+        // SmartDashboard.putBoolean("Debug/Pivot At Setpoint",
+        // RobotContainer.arm.getPivotAtSetpoint());
         // SmartDashboard.putNumber("Debug/Balance Output",
         // RobotContainer.driveTrain.getBalanceControllerOutput());
         // SmartDashboard.putBoolean("Debug/Intake Deployed",
@@ -130,55 +133,55 @@ public class Robot extends TimedRobot {
         RobotContainer.driveTrain.setCoastMode();
         RobotContainer.driveTrain.resetGyro();
         RobotContainer.driveTrain.resetBalanceController();
-        RobotContainer.arm.resetMotionMagicTimer();
+        // RobotContainer.arm.resetMotionMagicTimer();
     }
 
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
         // INTAKE
-        if (RobotContainer.intake.getIntakeDeployed()) {
-            if (IO.Driver.getRightTrigger()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.CONE);
-                RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
-            } else if (IO.Driver.getRightBumper()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
-            } else if (IO.Operator.getButtonB()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
-            } else if (IO.Driver.getLeftTrigger()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
-            } else if (IO.Driver.getLeftBumper()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE_SLOW);
-            } else {
-                RobotContainer.intake.stopIntake();
-            }
-        } else {
-            if (IO.Driver.getLeftTrigger()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
-            } else if (IO.Driver.getLeftBumper()) {
-                RobotContainer.intake.runIntake(SubIntakeModes.EJECT_HIGH);
-            } else {
-                RobotContainer.intake.stopIntake();
-            }
-        }
+        // if (RobotContainer.intake.getIntakeDeployed()) {
+        // if (IO.Driver.getRightTrigger()) {
+        // RobotContainer.intake.runIntake(SubIntakeModes.CONE);
+        // RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+        // } else if (IO.Driver.getRightBumper()) {
+        // RobotContainer.intake.runIntake(SubIntakeModes.CUBE_LIMITED);
+        // } else if (IO.Operator.getButtonB()) {
+        // RobotContainer.intake.runIntake(SubIntakeModes.CUBE);
+        // } else if (IO.Driver.getLeftTrigger()) {
+        // RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
+        // } else if (IO.Driver.getLeftBumper()) {
+        // RobotContainer.intake.runIntake(SubIntakeModes.REVERSE_SLOW);
+        // } else {
+        // RobotContainer.intake.stopIntake();
+        // }
+        // } else {
+        // if (IO.Driver.getLeftTrigger()) {
+        // RobotContainer.intake.runIntake(SubIntakeModes.REVERSE);
+        // } else if (IO.Driver.getLeftBumper()) {
+        // RobotContainer.intake.runIntake(SubIntakeModes.EJECT_HIGH);
+        // } else {
+        // RobotContainer.intake.stopIntake();
+        // }
+        // }
 
         // PLATTER
-        if (IO.Operator.getButtonX()) {
-            RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
-        } else if (IO.Operator.getButtonY()) {
-            RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
-        } else if (IO.Operator.getLeftTrigger()) {
-            RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED_TURBO);
-        } else if (IO.Operator.getRightTrigger()) {
-            RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED_TURBO);
-        } else {
-            RobotContainer.intake.stopPlatter();
-        }
+        // if (IO.Operator.getButtonX()) {
+        // RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED);
+        // } else if (IO.Operator.getButtonY()) {
+        // RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED);
+        // } else if (IO.Operator.getLeftTrigger()) {
+        // RobotContainer.intake.runPlatter(-Constants.Intake_Settings.PLATTER_SPEED_TURBO);
+        // } else if (IO.Operator.getRightTrigger()) {
+        // RobotContainer.intake.runPlatter(Constants.Intake_Settings.PLATTER_SPEED_TURBO);
+        // } else {
+        // RobotContainer.intake.stopPlatter();
+        // }
 
         // DRIVER
-        if (IO.Driver.getButtonXPressed()) {
-            RobotContainer.intake.toggleIntakeSolenoid();
-        }
+        // if (IO.Driver.getButtonXPressed()) {
+        // RobotContainer.intake.toggleIntakeSolenoid();
+        // }
 
         if (IO.Driver.getButtonAPressed()) {
             RobotContainer.driveTrain.toggleDropdownWheels();
@@ -192,9 +195,9 @@ public class Robot extends TimedRobot {
         }
 
         // DRIVER
-        if (IO.Operator.getButtonAPressed()) {
-            RobotContainer.arm.toggleClaw();
-        }
+        // if (IO.Operator.getButtonAPressed()) {
+        // RobotContainer.arm.toggleClaw();
+        // }
 
         // Manual arm control with buttons
         // if (IO.Operator.getLeftTrigger()) {
@@ -206,38 +209,39 @@ public class Robot extends TimedRobot {
         // }
 
         // Manual arm control with variable speed control
-        if (IO.Operator.getLeftY() != 0) {
-            RobotContainer.arm.runPivot(IO.Operator.getLeftY() * Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
-        } else {
-            RobotContainer.arm.stopPivot();
-        }
+        // if (IO.Operator.getLeftY() != 0) {
+        // RobotContainer.arm.runPivot(IO.Operator.getLeftY() *
+        // Constants.Arm_Settings.PIVOT_OPERATOR_SPEED);
+        // } else {
+        // RobotContainer.arm.stopPivot();
+        // }
 
-        if (IO.Operator.getPOVUp()) {
-            if (IO.Operator.getRightBumper()) {
-                RobotContainer.arm.gotoHighDunk();
-            } else {
-                RobotContainer.arm.gotoHigh();
-            }
-        } else if (IO.Operator.getPOVRight()) {
-            RobotContainer.arm.gotoTravel();
-        } else if (IO.Operator.getPOVDown()) {
-            RobotContainer.arm.gotoPlatter();
-        } else if (IO.Operator.getPOVLeft()) {
-            if (IO.Operator.getRightBumper()) {
-                RobotContainer.arm.gotoMidDunk();
-            } else {
-                RobotContainer.arm.gotoMid();
-            }
-        } else {
-            RobotContainer.arm.resetMotionMagicTimer();
-            if (IO.Operator.getRightY() != 0) {
-                RobotContainer.arm.runExtend(
-                        -IO.Operator.getRightY() * Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
-                        true);
-            } else {
-                RobotContainer.arm.stopExtend();
-            }
-        }
+        // if (IO.Operator.getPOVUp()) {
+        // if (IO.Operator.getRightBumper()) {
+        // RobotContainer.arm.gotoHighDunk();
+        // } else {
+        // RobotContainer.arm.gotoHigh();
+        // }
+        // } else if (IO.Operator.getPOVRight()) {
+        // RobotContainer.arm.gotoTravel();
+        // } else if (IO.Operator.getPOVDown()) {
+        // RobotContainer.arm.gotoPlatter();
+        // } else if (IO.Operator.getPOVLeft()) {
+        // if (IO.Operator.getRightBumper()) {
+        // RobotContainer.arm.gotoMidDunk();
+        // } else {
+        // RobotContainer.arm.gotoMid();
+        // }
+        // } else {
+        // RobotContainer.arm.resetMotionMagicTimer();
+        // if (IO.Operator.getRightY() != 0) {
+        // RobotContainer.arm.runExtend(
+        // -IO.Operator.getRightY() * Constants.Arm_Settings.EXTEND_OPERATOR_SPEED,
+        // true);
+        // } else {
+        // RobotContainer.arm.stopExtend();
+        // }
+        // }
     }
 
     /** This function is called once when the robot is disabled. */

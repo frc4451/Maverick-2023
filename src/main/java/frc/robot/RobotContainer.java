@@ -8,21 +8,21 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants.RioPortMaps;
-import frc.robot.subsystems.SubArm;
 import frc.robot.subsystems.SubDriveTrain;
-import frc.robot.subsystems.SubIntake;
 
 public class RobotContainer {
 
         public static final SubDriveTrain driveTrain = new SubDriveTrain(RioPortMaps.LEFT_FRONT_DRIVETRAIN,
                         RioPortMaps.LEFT_BACK_DRIVETRAIN, RioPortMaps.RIGHT_FRONT_DRIVETRAIN,
                         RioPortMaps.RIGHT_BACK_DRIVETRAIN, RioPortMaps.GYRO, RioPortMaps.WHEEL_DROPDOWN_SOLENOID);
-        public static final SubArm arm = new SubArm(RioPortMaps.PIVOT,
-                        RioPortMaps.EXTEND, RioPortMaps.EXTENSION_BRAKE_SOLENOID, RioPortMaps.CLAW_SOLENOID,
-                        RioPortMaps.KICKER_SOLENOID);
-        public static final SubIntake intake = new SubIntake(RioPortMaps.BOTTOM_INTAKE, RioPortMaps.TOP_INTAKE,
-                        RioPortMaps.INTAKE_LIMIT_SWITCH, RioPortMaps.INTAKE_SOLENOID_FORWARD,
-                        RioPortMaps.INTAKE_SOLENOID_REVERSE, RioPortMaps.PLATTER);
+        // public static final SubArm arm = new SubArm(RioPortMaps.PIVOT,
+        // RioPortMaps.EXTEND, RioPortMaps.EXTENSION_BRAKE_SOLENOID,
+        // RioPortMaps.CLAW_SOLENOID,
+        // RioPortMaps.KICKER_SOLENOID);
+        // public static final SubIntake intake = new
+        // SubIntake(RioPortMaps.BOTTOM_INTAKE, RioPortMaps.TOP_INTAKE,
+        // RioPortMaps.INTAKE_LIMIT_SWITCH, RioPortMaps.INTAKE_SOLENOID_FORWARD,
+        // RioPortMaps.INTAKE_SOLENOID_REVERSE, RioPortMaps.PLATTER);
 
         public static final Field2d field = new Field2d();
 

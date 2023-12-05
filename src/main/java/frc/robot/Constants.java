@@ -52,8 +52,8 @@ public class Constants {
 
         public static final double TURN_SENSITIVITY = 0.65; // Joystick turn scaling factor for Curve Drive
         public static final double MIN_TURN = 0.2;
-        public static final double QUICK_TURN = 0.3; // Joystick turn scaling factor for QuickTurn Drive
-        public static final double MAX_VELOCITY = 18_000.0; // Drive train max velocity encoder per 100ms
+        public static final double QUICK_TURN = 0.2; // Joystick turn scaling factor for QuickTurn Drive
+        public static final double MAX_VELOCITY = 12_000.0; // Drive train max velocity encoder per 100ms
         public static final double MIN_BALANCE_VELOCITY = 2000.0; // Drive train min velocity when balancing
         public static final double BALANCE_MAX_VELOCITY = 2000.0; // Drive train max velocity when balancing
         public static final double RAMP_RATE_SECS = 0.75; // Drive train ramp rate in velocity control
